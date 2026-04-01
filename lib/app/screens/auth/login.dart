@@ -1,7 +1,11 @@
 import 'package:camer_trip/app/config/colors_config.dart';
 import 'package:camer_trip/app/config/const_config.dart';
+import 'package:camer_trip/app/config/theme_provider.dart';
+import 'package:camer_trip/app/routes/app_routter.dart';
+import 'package:camer_trip/app/shared/buttons/theme_toogle.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -63,6 +67,7 @@ class _LoginPageState extends State<LoginPage>
     if (!mounted) return;
     setState(() => _isLoading = false);
 
+    AppRouter.setLoggedIn(true);
     context.go('/main');
   }
 
@@ -70,6 +75,7 @@ class _LoginPageState extends State<LoginPage>
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = context.watch<ThemeProvider>();
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
     final cs = theme.colorScheme;
@@ -108,6 +114,7 @@ class _LoginPageState extends State<LoginPage>
                               letterSpacing: -0.5,
                             ),
                           ),
+                          ThemeToggleButton(isDark: isDark, onTap: () => themeProvider.toggleTheme()),
                           const SizedBox(height: 4),
                           Text(
                             'Bon retour 👋  Heureux de te revoir.',

@@ -1,5 +1,6 @@
 import 'package:camer_trip/app/screens/auth/login.dart';
 import 'package:camer_trip/app/screens/auth/register.dart';
+import 'package:camer_trip/app/screens/notifications/notification_page.dart';
 import 'package:camer_trip/app/screens/onboarding/onboarding.dart';
 import 'package:camer_trip/app/screens/splash/splash.dart';
 import 'package:camer_trip/app/utils/main_page.dart';
@@ -13,6 +14,7 @@ class AppRouter {
   static const String login = 'login';
   static const String register = 'register';
   static const String main = 'main';
+  static const String notifications = 'notifications';
 
   // ── Chemins de routes ─────────────────────────────────────────────────────
   static const String splashPath = '/';
@@ -20,6 +22,7 @@ class AppRouter {
   static const String loginPath = '/login';
   static const String registerPath = '/register';
   static const String mainPath = '/main';
+  static const String notificationPath = '/notifications';
 
   // ── Simulation AuthService (à remplacer) ──────────────────────────────────
   static bool _isLoggedIn = false;
@@ -36,7 +39,12 @@ class AppRouter {
       final loc = state.matchedLocation;
 
       // Routes publiques (accessibles sans auth)
-      final publicRoutes = [splashPath, onboardingPath, loginPath, registerPath];
+      final publicRoutes = [
+        splashPath,
+        onboardingPath,
+        loginPath,
+        registerPath,
+      ];
       final isPublic = publicRoutes.contains(loc);
 
       if (!_isLoggedIn && !isPublic) {
@@ -83,6 +91,13 @@ class AppRouter {
         path: mainPath,
         name: main,
         builder: (context, state) => const MainPage(),
+      ),
+
+      // -- Notifications
+      GoRoute(
+        path: notificationPath,
+        name: notifications,
+        builder: (context, state) => const NotificationPage(),
       ),
     ],
   );

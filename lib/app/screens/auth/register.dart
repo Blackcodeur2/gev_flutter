@@ -1,7 +1,11 @@
 import 'package:camer_trip/app/config/colors_config.dart';
 import 'package:camer_trip/app/config/const_config.dart';
+import 'package:camer_trip/app/config/theme_provider.dart';
+import 'package:camer_trip/app/routes/app_routter.dart';
+import 'package:camer_trip/app/shared/buttons/theme_toogle.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -38,16 +42,11 @@ class _RegisterPageState extends State<RegisterPage>
       vsync: this,
       duration: const Duration(milliseconds: 900),
     );
-    _fadeAnim = CurvedAnimation(
-      parent: _animController,
-      curve: Curves.easeOut,
-    );
+    _fadeAnim = CurvedAnimation(parent: _animController, curve: Curves.easeOut);
     _slideAnim = Tween<Offset>(
       begin: const Offset(0, 0.12),
       end: Offset.zero,
-    ).animate(
-      CurvedAnimation(parent: _animController, curve: Curves.easeOut),
-    );
+    ).animate(CurvedAnimation(parent: _animController, curve: Curves.easeOut));
     _animController.forward();
   }
 
@@ -69,11 +68,14 @@ class _RegisterPageState extends State<RegisterPage>
     if (!_acceptTerms) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: const Text('Veuillez accepter les conditions d\'utilisation'),
+          content: const Text(
+            'Veuillez accepter les conditions d\'utilisation',
+          ),
           backgroundColor: AppColors.error,
           behavior: SnackBarBehavior.floating,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
         ),
       );
       return;
@@ -84,6 +86,7 @@ class _RegisterPageState extends State<RegisterPage>
     if (!mounted) return;
     setState(() => _isLoading = false);
 
+    AppRouter.setLoggedIn(true);
     context.go('/main');
   }
 
@@ -91,6 +94,7 @@ class _RegisterPageState extends State<RegisterPage>
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = context.watch<ThemeProvider>();
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
     final cs = theme.colorScheme;
@@ -104,7 +108,10 @@ class _RegisterPageState extends State<RegisterPage>
             children: [
               // ── Header / Hero ──────────────────────────────────────────
               _HeroHeader(isDark: isDark),
-
+              ThemeToggleButton(
+                isDark: isDark,
+                onTap: () => themeProvider.toggleTheme(),
+              ),
               // ── Formulaire animé ───────────────────────────────────────
               FadeTransition(
                 opacity: _fadeAnim,
@@ -289,9 +296,8 @@ class _RegisterPageState extends State<RegisterPage>
                                 height: 20,
                                 child: Checkbox(
                                   value: _acceptTerms,
-                                  onChanged: (v) => setState(
-                                    () => _acceptTerms = v ?? false,
-                                  ),
+                                  onChanged: (v) =>
+                                      setState(() => _acceptTerms = v ?? false),
                                   activeColor: cs.primary,
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(4),
@@ -303,10 +309,8 @@ class _RegisterPageState extends State<RegisterPage>
                                 child: RichText(
                                   text: TextSpan(
                                     text: "J'accepte les ",
-                                    style:
-                                        theme.textTheme.bodySmall?.copyWith(
-                                      color:
-                                          cs.onSurface.withOpacity(0.65),
+                                    style: theme.textTheme.bodySmall?.copyWith(
+                                      color: cs.onSurface.withOpacity(0.65),
                                     ),
                                     children: [
                                       WidgetSpan(
@@ -324,11 +328,12 @@ class _RegisterPageState extends State<RegisterPage>
                                       ),
                                       TextSpan(
                                         text: " et la ",
-                                        style:
-                                            theme.textTheme.bodySmall?.copyWith(
-                                          color:
-                                              cs.onSurface.withOpacity(0.65),
-                                        ),
+                                        style: theme.textTheme.bodySmall
+                                            ?.copyWith(
+                                              color: cs.onSurface.withOpacity(
+                                                0.65,
+                                              ),
+                                            ),
                                       ),
                                       WidgetSpan(
                                         child: GestureDetector(
@@ -434,10 +439,9 @@ class _RegisterPageState extends State<RegisterPage>
     return Text(
       label,
       style: Theme.of(context).textTheme.labelLarge?.copyWith(
-            fontWeight: FontWeight.w600,
-            color:
-                Theme.of(context).colorScheme.onSurface.withOpacity(0.8),
-          ),
+        fontWeight: FontWeight.w600,
+        color: Theme.of(context).colorScheme.onSurface.withOpacity(0.8),
+      ),
     );
   }
 }
@@ -487,7 +491,9 @@ class _PasswordStrengthIndicator extends StatelessWidget {
                   borderRadius: BorderRadius.circular(4),
                   color: i < strength
                       ? colors[index]
-                      : Theme.of(context).colorScheme.onSurface.withOpacity(0.12),
+                      : Theme.of(
+                          context,
+                        ).colorScheme.onSurface.withOpacity(0.12),
                 ),
               ),
             );
@@ -729,16 +735,14 @@ class _AppTextField extends StatelessWidget {
           vertical: 15,
         ),
         border: OutlineInputBorder(
-          borderRadius:
-              BorderRadius.circular(AppConstants.defaultBorderRadius),
+          borderRadius: BorderRadius.circular(AppConstants.defaultBorderRadius),
           borderSide: BorderSide(
             color: cs.primary.withOpacity(0.15),
             width: 1.2,
           ),
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius:
-              BorderRadius.circular(AppConstants.defaultBorderRadius),
+          borderRadius: BorderRadius.circular(AppConstants.defaultBorderRadius),
           borderSide: BorderSide(
             color: isDark
                 ? AppColors.textDisabledDark.withOpacity(0.3)
@@ -747,18 +751,15 @@ class _AppTextField extends StatelessWidget {
           ),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius:
-              BorderRadius.circular(AppConstants.defaultBorderRadius),
+          borderRadius: BorderRadius.circular(AppConstants.defaultBorderRadius),
           borderSide: BorderSide(color: cs.primary, width: 2),
         ),
         errorBorder: OutlineInputBorder(
-          borderRadius:
-              BorderRadius.circular(AppConstants.defaultBorderRadius),
+          borderRadius: BorderRadius.circular(AppConstants.defaultBorderRadius),
           borderSide: const BorderSide(color: AppColors.error, width: 1.2),
         ),
         focusedErrorBorder: OutlineInputBorder(
-          borderRadius:
-              BorderRadius.circular(AppConstants.defaultBorderRadius),
+          borderRadius: BorderRadius.circular(AppConstants.defaultBorderRadius),
           borderSide: const BorderSide(color: AppColors.error, width: 2),
         ),
       ),
@@ -789,8 +790,7 @@ class _RegisterButton extends StatelessWidget {
                 ? [AppColors.darkGreen, AppColors.primaryGreen]
                 : [AppColors.primaryGreen, AppColors.lightGreen],
           ),
-          borderRadius:
-              BorderRadius.circular(AppConstants.defaultBorderRadius),
+          borderRadius: BorderRadius.circular(AppConstants.defaultBorderRadius),
           boxShadow: [
             BoxShadow(
               color: cs.primary.withOpacity(0.35),
@@ -805,8 +805,9 @@ class _RegisterButton extends StatelessWidget {
             backgroundColor: Colors.transparent,
             shadowColor: Colors.transparent,
             shape: RoundedRectangleBorder(
-              borderRadius:
-                  BorderRadius.circular(AppConstants.defaultBorderRadius),
+              borderRadius: BorderRadius.circular(
+                AppConstants.defaultBorderRadius,
+              ),
             ),
           ),
           child: isLoading
@@ -853,8 +854,9 @@ class _DividerOr extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final dividerColor =
-        Theme.of(context).colorScheme.onSurface.withOpacity(0.15);
+    final dividerColor = Theme.of(
+      context,
+    ).colorScheme.onSurface.withOpacity(0.15);
     return Row(
       children: [
         Expanded(child: Divider(color: dividerColor, thickness: 1)),
@@ -863,8 +865,7 @@ class _DividerOr extends StatelessWidget {
           child: Text(
             'OU',
             style: TextStyle(
-              color:
-                  Theme.of(context).colorScheme.onSurface.withOpacity(0.4),
+              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.4),
               fontSize: 11,
               fontWeight: FontWeight.w600,
               letterSpacing: 1.2,
@@ -918,8 +919,7 @@ class _SocialButton extends StatelessWidget {
           width: 1.2,
         ),
         shape: RoundedRectangleBorder(
-          borderRadius:
-              BorderRadius.circular(AppConstants.defaultBorderRadius),
+          borderRadius: BorderRadius.circular(AppConstants.defaultBorderRadius),
         ),
       ),
     );

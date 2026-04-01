@@ -1,4 +1,6 @@
+import 'package:camer_trip/app/screens/history/reservation_page.dart';
 import 'package:camer_trip/app/screens/home/home_page.dart';
+import 'package:camer_trip/app/screens/settings/settings_page.dart';
 import 'package:flutter/material.dart';
 
 class MainPage extends StatefulWidget {
@@ -16,8 +18,8 @@ class _MainPageState extends State<MainPage> {
     HomePage(),
     Center(child: Text("Recherche")),
     SizedBox(), // bouton central (action sheet)
-    Center(child: Text("Favoris")),
-    Center(child: Text("Profil")),
+    ReservationsPages(),
+    SettingPage()
   ];
 
   /// 🔐 Simulation (remplace par ton AuthService)
@@ -45,7 +47,7 @@ class _MainPageState extends State<MainPage> {
       builder: (_) => const Padding(
         padding: EdgeInsets.all(20),
         child: Center(
-          child: Text("Page Publier (à implémenter)"),
+          child: Text("Agent IA "),
         ),
       ),
     );
@@ -79,20 +81,20 @@ class _MainPageState extends State<MainPage> {
             label: 'Accueil',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.search),
+            icon: Icon(Icons.add_circle),
             label: 'Recherche',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.add_circle, size: 32),
-            label: 'Publier',
+            icon: Icon(Icons.bolt, size: 32),
+            label: 'Assistant',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.favorite),
-            label: 'Favoris',
+            icon: Icon(Icons.history),
+            label: 'Reservations',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profil',
+            icon: Icon(Icons.settings),
+            label: 'Parametres',
           ),
         ],
       ),
