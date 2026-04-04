@@ -42,7 +42,7 @@ class _NotificationPageState extends State<NotificationPage>
         child: SafeArea(
           child: CustomScrollView(
             physics: const BouncingScrollPhysics(),
-            slivers: [SliverToBoxAdapter(child: MyAppBar())],
+            slivers: [const SliverToBoxAdapter(child: MyAppBar(title: 'Notifications'))],
           ),
         ),
       ),

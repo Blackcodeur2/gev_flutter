@@ -164,13 +164,28 @@ class _HomePageState extends State<HomePage>
           child: CustomScrollView(
             physics: const BouncingScrollPhysics(),
             slivers: [
-              SliverToBoxAdapter(child: MyAppBar()),
-              SliverToBoxAdapter(child: MySearchBar()),
+              // 🔝 Barre d'outils Profil & Notifications
+              SliverToBoxAdapter(child: MyAppBar(isHome: true)),
+
+              // 🔍 Recherche Flottante
+              SliverToBoxAdapter(child: const MySearchBar()),
+
+              // 🏷️ Filtres Rapides (Chips)
+              SliverToBoxAdapter(child: _buildQuickFilters(cs)),
+
+              // 🎭 Carousel de Promos
               SliverToBoxAdapter(child: PromoCarousel(promos: _promos)),
+
+              // 🏢 Agences partenaires (Horizontal Scroll pour aérer)
               SliverToBoxAdapter(
-                child: SectionTitle(title: '🚌 Catégories', action: ''),
+                child: SectionTitle(
+                  title: '🏢 Agences partenaires',
+                  action: 'Voir tout',
+                ),
               ),
-              SliverToBoxAdapter(child: buildCategories(context, cs)),
+              SliverToBoxAdapter(child: ListAgenceComponent(agences: _agences)),
+
+              // 📍 Destinations populaires
               SliverToBoxAdapter(
                 child: SectionTitle(
                   title: '📍 Destinations populaires',
@@ -180,22 +195,57 @@ class _HomePageState extends State<HomePage>
               SliverToBoxAdapter(
                 child: DestinationsList(destinations: _destinations),
               ),
+
+              // 🚌 Catégories de transport
               SliverToBoxAdapter(
-                child: SectionTitle(
-                  title: '🏢 Agences partenaires',
-                  action: 'Voir tout',
-                ),
+                child: SectionTitle(title: '🚌 Types de trajet', action: ''),
               ),
-              SliverToBoxAdapter(child: ListAgenceComponent(agences: _agences)),
+              SliverToBoxAdapter(child: buildCategories(context, cs)),
+
+              // 🎟️ Prochain voyage (Focus visuel)
               SliverToBoxAdapter(
-                child: SectionTitle(title: '🎟️ Prochain voyage', action: ''),
+                child: SectionTitle(title: '🎟️ Réservation en cours', action: 'Détails'),
               ),
               SliverToBoxAdapter(child: VoyageCard()),
 
-              const SliverToBoxAdapter(child: SizedBox(height: 24)),
+              const SliverToBoxAdapter(child: SizedBox(height: 120)), // Espace pour la barre flottante
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildQuickFilters(ColorScheme cs) {
+    final filters = ["Tous", "💸 Moins cher", "✨ VIP", "🌃 De nuit", "⚡ Direct"];
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      child: Row(
+        children: filters.map((label) {
+          final isFirst = label == "Tous";
+          return Container(
+            margin: const EdgeInsets.only(right: 8),
+            child: ChoiceChip(
+              label: Text(label),
+              selected: isFirst,
+              onSelected: (val) {},
+              backgroundColor: Colors.transparent,
+              selectedColor: cs.primary,
+              checkmarkColor: Colors.white,
+              labelStyle: TextStyle(
+                color: isFirst ? Colors.white : cs.onSurface.withOpacity(0.6),
+                fontSize: 13,
+                fontWeight: isFirst ? FontWeight.bold : FontWeight.normal,
+              ),
+              padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 0),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+              side: BorderSide(
+                color: isFirst ? cs.primary : cs.primary.withOpacity(0.15),
+              ),
+            ),
+          );
+        }).toList(),
       ),
     );
   }

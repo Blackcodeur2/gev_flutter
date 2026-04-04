@@ -13,12 +13,13 @@ class DestinationsList extends StatelessWidget {
     final isDark = theme.brightness == Brightness.dark;
     final cs = theme.colorScheme;
     return SizedBox(
-      height: 150,
+      height: 170, // Légère augmentation pour éviter les débordements
       child: ListView.separated(
         padding: const EdgeInsets.symmetric(
           horizontal: AppConstants.largePadding,
         ),
         scrollDirection: Axis.horizontal,
+        physics: const BouncingScrollPhysics(), // Force la réactivité du défilement
         itemCount: destinations.length,
         separatorBuilder: (_, __) => const SizedBox(width: 14),
         itemBuilder: (_, i) {

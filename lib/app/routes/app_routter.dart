@@ -1,8 +1,12 @@
+import 'package:camer_trip/app/screens/agences/agence_details_page.dart';
+import 'package:camer_trip/app/models/ag_model.dart';
 import 'package:camer_trip/app/screens/auth/login.dart';
 import 'package:camer_trip/app/screens/auth/register.dart';
+import 'package:camer_trip/app/screens/history/reservation_details_page.dart';
 import 'package:camer_trip/app/screens/notifications/notification_page.dart';
 import 'package:camer_trip/app/screens/onboarding/onboarding.dart';
 import 'package:camer_trip/app/screens/splash/splash.dart';
+import 'package:camer_trip/app/models/reservation_model.dart';
 import 'package:camer_trip/app/utils/main_page.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -15,7 +19,8 @@ class AppRouter {
   static const String register = 'register';
   static const String main = 'main';
   static const String notifications = 'notifications';
-
+  static const String reservationDetails = 'reservationDetails';
+  static const String agenceDetails = 'agenceDetails';
   // ── Chemins de routes ─────────────────────────────────────────────────────
   static const String splashPath = '/';
   static const String onboardingPath = '/onboarding';
@@ -23,7 +28,8 @@ class AppRouter {
   static const String registerPath = '/register';
   static const String mainPath = '/main';
   static const String notificationPath = '/notifications';
-
+  static const String reservationDetailsPath = '/reservation-details';
+  static const String agenceDetailsPath = '/agence-details';
   // ── Simulation AuthService (à remplacer) ──────────────────────────────────
   static bool _isLoggedIn = false;
 
@@ -98,6 +104,26 @@ class AppRouter {
         path: notificationPath,
         name: notifications,
         builder: (context, state) => const NotificationPage(),
+      ),
+
+      // -- Reservation Details
+      GoRoute(
+        path: reservationDetailsPath,
+        name: reservationDetails,
+        builder: (context, state) {
+          final res = state.extra as ReservationModel;
+          return ReservationDetailsPage(reservation: res);
+        },
+      ),
+
+      // -- Agence Details
+      GoRoute(
+        path: agenceDetailsPath,
+        name: agenceDetails,
+        builder: (context, state) {
+          final ag = state.extra as Agence;
+          return AgenceDetailsPage(agence: ag);
+        },
       ),
     ],
   );
