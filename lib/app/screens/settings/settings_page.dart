@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:camer_trip/app/config/theme_provider.dart';
+import 'package:camer_trip/app/routes/app_routter.dart';
 import 'package:camer_trip/app/shared/others/app_bar.dart';
+import 'package:go_router/go_router.dart';
 
 class SettingPage extends StatefulWidget {
   const SettingPage({super.key});
@@ -58,7 +60,15 @@ class _SettingPageState extends State<SettingPage> {
                   // 🔐 Sécurité & Données
                   _buildSectionTitle(cs, 'Sécurité'),
                   _buildSettingsCard(cs, isDark, [
-                    _buildSettingsTile(cs, isDark, Icons.verified_user_rounded, 'Vérification KWC', 'Soumettre ma CNI', Colors.teal),
+                    _buildSettingsTile(
+                      cs, 
+                      isDark, 
+                      Icons.verified_user_rounded, 
+                      'Vérification KWC', 
+                      'Soumettre ma CNI', 
+                      Colors.teal,
+                      onTap: () => context.pushNamed(AppRouter.kwc),
+                    ),
                     _buildSettingsTile(cs, isDark, Icons.lock_person_rounded, 'Confidentialité', 'Mot de passe et Accès', Colors.cyan),
                   ]),
 
@@ -109,28 +119,6 @@ class _SettingPageState extends State<SettingPage> {
       ),
       child: Row(
         children: [
-          Stack(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(3),
-                decoration: const BoxDecoration(color: Colors.white, shape: BoxShape.circle),
-                child: const CircleAvatar(
-                  radius: 38,
-                  backgroundImage: NetworkImage('https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400'),
-                ),
-              ),
-              Positioned(
-                bottom: 0,
-                right: 0,
-                child: Container(
-                  padding: const EdgeInsets.all(4),
-                  decoration: const BoxDecoration(color: Colors.amber, shape: BoxShape.circle),
-                  child: const Icon(Icons.star_rounded, color: Colors.white, size: 16),
-                ),
-              )
-            ],
-          ),
-          const SizedBox(width: 20),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -192,7 +180,7 @@ class _SettingPageState extends State<SettingPage> {
     );
   }
 
-  Widget _buildSettingsTile(ColorScheme cs, bool isDark, IconData icon, String title, String subtitle, Color iconBg) {
+  Widget _buildSettingsTile(ColorScheme cs, bool isDark, IconData icon, String title, String subtitle, Color iconBg, {VoidCallback? onTap}) {
     return ListTile(
       contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
       leading: Container(
@@ -206,7 +194,7 @@ class _SettingPageState extends State<SettingPage> {
       title: Text(title, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 15)),
       subtitle: Text(subtitle, style: TextStyle(color: cs.onSurface.withOpacity(0.4), fontSize: 13)),
       trailing: Icon(Icons.chevron_right_rounded, color: cs.onSurface.withOpacity(0.3)),
-      onTap: () {},
+      onTap: onTap,
     );
   }
 

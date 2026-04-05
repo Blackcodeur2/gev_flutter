@@ -5,11 +5,15 @@ import 'package:camer_trip/app/routes/app_routter.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 void main() {
   runApp(
-    ChangeNotifierProvider(
-      create: (_) => ThemeProvider(),
-      child: const MyApp(),
+    ProviderScope(
+      child: ChangeNotifierProvider(
+        create: (_) => ThemeProvider(),
+        child: const MyApp(),
+      ),
     ),
   );
 }

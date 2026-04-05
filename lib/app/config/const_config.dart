@@ -7,7 +7,7 @@ class AppConstants {
   // CONFIGURATIONS API
   static const String apiVersion = 'v1';
   static const Duration apiTimeOut = Duration(seconds: 10);
-  static const String apiBaseUrl = 'http://localhost:8000/api';
+  static const String apiBaseUrl = 'http://192.168.1.144:8000/api';
 
   // CONFIGURATIONS DIMENSIONS
   static const double defaultPadding = 11.0;

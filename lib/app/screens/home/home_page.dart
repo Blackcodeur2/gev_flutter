@@ -1,12 +1,8 @@
 import 'package:camer_trip/app/config/colors_config.dart';
 import 'package:camer_trip/app/config/const_config.dart';
-import 'package:camer_trip/app/config/theme_provider.dart';
 import 'package:camer_trip/app/models/ag_model.dart';
 import 'package:camer_trip/app/models/destination_model.dart';
 import 'package:camer_trip/app/models/promo_trip_model.dart';
-import 'package:camer_trip/app/screens/home/list_agence.dart';
-import 'package:camer_trip/app/shared/cards/destination_card.dart';
-import 'package:camer_trip/app/shared/cards/promo_card.dart';
 import 'package:camer_trip/app/shared/cards/voyage_card.dart';
 import 'package:camer_trip/app/shared/others/app_bar.dart';
 import 'package:camer_trip/app/shared/others/categorie_bloc.dart';
@@ -15,19 +11,19 @@ import 'package:camer_trip/app/shared/others/list_agence.dart';
 import 'package:camer_trip/app/shared/others/promo_carousel.dart';
 import 'package:camer_trip/app/shared/others/search_bar.dart';
 import 'package:camer_trip/app/shared/others/section_title.dart';
-import 'package:carousel_slider/carousel_slider.dart';
+import 'package:camer_trip/app/shared/others/scheduled_trips_list.dart';
+import 'package:camer_trip/app/shared/others/trip_filter_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class HomePage extends StatefulWidget {
+class HomePage extends ConsumerStatefulWidget {
   const HomePage({super.key});
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  ConsumerState<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage>
+class _HomePageState extends ConsumerState<HomePage>
     with SingleTickerProviderStateMixin {
   late AnimationController _animController;
   late Animation<double> _fadeAnim;
@@ -40,98 +36,21 @@ class _HomePageState extends State<HomePage>
       colors: [Color.fromARGB(255, 159, 97, 32), Color.fromARGB(255, 148, 108, 37)],
     ),
     PromoTrip(
-      title: 'Douala → Yaoundé',
-      subtitle: 'Dès 2 500 FCFA · 3h de trajet',
-      badge: '🔥 Populaire',
-      colors: [Color.fromARGB(255, 44, 38, 130), Color.fromARGB(255, 30, 93, 124)],
-    ),
-    PromoTrip(
-      title: 'Douala → Yaoundé',
-      subtitle: 'Dès 2 500 FCFA · 3h de trajet',
-      badge: '🔥 Populaire',
-      colors: [Color.fromARGB(255, 125, 14, 124), Color.fromARGB(255, 197, 82, 207)],
-    ),
-    PromoTrip(
       title: 'Yaoundé → Bafoussam',
       subtitle: 'Dès 3 000 FCFA · 4h de trajet',
       badge: '⚡ Rapide',
       colors: [Color(0xFF2E3192), Color(0xFF4C51BF)],
     ),
-    PromoTrip(
-      title: 'Douala → Limbé',
-      subtitle: 'Dès 1 500 FCFA · 1h30 de trajet',
-      badge: '🌊 Détente',
-      colors: [Color(0xFF319795), Color(0xFF4FD1C5)],
-    ),
   ];
 
   final List<Destination> _destinations = const [
-    Destination(
-      name: 'Yaoundé',
-      from: 'Douala',
-      price: '2 500',
-      duration: '3h',
-      emoji: '🏙️',
-    ),
-    Destination(
-      name: 'Bafoussam',
-      from: 'Yaoundé',
-      price: '3 000',
-      duration: '4h',
-      emoji: '🏔️',
-    ),
-    Destination(
-      name: 'Limbé',
-      from: 'Douala',
-      price: '1 500',
-      duration: '1h30',
-      emoji: '🌊',
-    ),
-    Destination(
-      name: 'Garoua',
-      from: 'Yaoundé',
-      price: '8 000',
-      duration: '8h',
-      emoji: '🌅',
-    ),
-    Destination(
-      name: 'Kribi',
-      from: 'Douala',
-      price: '2 000',
-      duration: '2h',
-      emoji: '🏖️',
-    ),
+    Destination(name: 'Yaoundé', from: 'Douala', price: '2 500', duration: '3h', emoji: '🏙️'),
+    Destination(name: 'Bafoussam', from: 'Yaoundé', price: '3 000', duration: '4h', emoji: '🏔️'),
   ];
 
   final List<Agence> _agences = const [
-    Agence(
-      name: 'General Express',
-      route: 'Douala ↔ Yaoundé',
-      rating: '4.8',
-      color: AppColors.primaryGreen,
-      icon: Icons.directions_bus_rounded,
-    ),
-    Agence(
-      name: 'Touristique Express',
-      route: 'Toutes destinations',
-      rating: '4.6',
-      color: Color.fromARGB(255, 52, 57, 207),
-      icon: Icons.airport_shuttle_rounded,
-    ),
-    Agence(
-      name: 'Finexs Voyages',
-      route: 'Nord-Sud Cameroun',
-      rating: '4.5',
-      color: Color.fromARGB(255, 152, 109, 22),
-      icon: Icons.directions_bus_filled_rounded,
-    ),
-    Agence(
-      name: 'Vatican Express',
-      route: 'Ouest Cameroun',
-      rating: '4.4',
-      color: AppColors.primaryRed,
-      icon: Icons.directions_bus_rounded,
-    ),
+    Agence(name: 'General Express', route: 'Douala ↔ Yaoundé', rating: '4.8', color: AppColors.primaryGreen, icon: Icons.directions_bus_rounded),
+    Agence(name: 'Finexs Voyages', route: 'Nord-Sud Cameroun', rating: '4.5', color: Color.fromARGB(255, 152, 109, 22), icon: Icons.directions_bus_filled_rounded),
   ];
 
   @override
@@ -164,19 +83,21 @@ class _HomePageState extends State<HomePage>
           child: CustomScrollView(
             physics: const BouncingScrollPhysics(),
             slivers: [
-              // 🔝 Barre d'outils Profil & Notifications
               SliverToBoxAdapter(child: MyAppBar(isHome: true)),
-
-              // 🔍 Recherche Flottante
               SliverToBoxAdapter(child: const MySearchBar()),
-
-              // 🏷️ Filtres Rapides (Chips)
               SliverToBoxAdapter(child: _buildQuickFilters(cs)),
-
-              // 🎭 Carousel de Promos
               SliverToBoxAdapter(child: PromoCarousel(promos: _promos)),
 
-              // 🏢 Agences partenaires (Horizontal Scroll pour aérer)
+              // 📅 SECTION VOYAGES ET FILTRES
+              SliverToBoxAdapter(
+                child: SectionTitle(
+                  title: '📅 Prochains Voyages',
+                  action: 'Filtres',
+                ),
+              ),
+              const SliverToBoxAdapter(child: TripFilterBar()),
+              const ScheduledTripsList(),
+
               SliverToBoxAdapter(
                 child: SectionTitle(
                   title: '🏢 Agences partenaires',
@@ -185,7 +106,6 @@ class _HomePageState extends State<HomePage>
               ),
               SliverToBoxAdapter(child: ListAgenceComponent(agences: _agences)),
 
-              // 📍 Destinations populaires
               SliverToBoxAdapter(
                 child: SectionTitle(
                   title: '📍 Destinations populaires',
@@ -196,19 +116,17 @@ class _HomePageState extends State<HomePage>
                 child: DestinationsList(destinations: _destinations),
               ),
 
-              // 🚌 Catégories de transport
               SliverToBoxAdapter(
                 child: SectionTitle(title: '🚌 Types de trajet', action: ''),
               ),
               SliverToBoxAdapter(child: buildCategories(context, cs)),
 
-              // 🎟️ Prochain voyage (Focus visuel)
               SliverToBoxAdapter(
                 child: SectionTitle(title: '🎟️ Réservation en cours', action: 'Détails'),
               ),
-              SliverToBoxAdapter(child: VoyageCard()),
+              const SliverToBoxAdapter(child: VoyageCard()),
 
-              const SliverToBoxAdapter(child: SizedBox(height: 120)), // Espace pour la barre flottante
+              const SliverToBoxAdapter(child: SizedBox(height: 120)), 
             ],
           ),
         ),
