@@ -1,37 +1,49 @@
+import 'package:camer_trip/app/models/user_model.dart';
+import 'package:camer_trip/app/services/providers.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:provider/provider.dart' as legacy_provider;
 
 import 'package:camer_trip/app/config/theme_provider.dart';
 import 'package:camer_trip/app/routes/app_routter.dart';
 import 'package:camer_trip/app/shared/others/app_bar.dart';
 import 'package:go_router/go_router.dart';
 
-class SettingPage extends StatefulWidget {
+class SettingPage extends ConsumerStatefulWidget {
   const SettingPage({super.key});
 
   @override
-  State<SettingPage> createState() => _SettingPageState();
+  ConsumerState<SettingPage> createState() => _SettingPageState();
 }
 
-class _SettingPageState extends State<SettingPage> {
+class _SettingPageState extends ConsumerState<SettingPage> {
   @override
   Widget build(BuildContext context) {
-    final themeProvider = Provider.of<ThemeProvider>(context);
+    final themeProvider = legacy_provider.Provider.of<ThemeProvider>(context);
     final theme = Theme.of(context);
     final cs = theme.colorScheme;
     final isDark = theme.brightness == Brightness.dark;
 
+    final userAsync = ref.watch(currentUserProvider);
+
     return Scaffold(
       backgroundColor: cs.surface,
       body: SafeArea(
-        bottom: false, // On laisse le contenu passer sous le bottom bar
+        bottom: false,
         child: ListView(
           padding: const EdgeInsets.symmetric(vertical: 0.0),
           children: [
             const MyAppBar(title: 'Réglages'),
             
-            // 👤 Section Profil Premium
-            _buildProfileHeader(cs, isDark),
+            // 👤 Section Profil
+            userAsync.when(
+              data: (user) => _buildProfileHeader(cs, isDark, user),
+              loading: () => const Center(child: Padding(
+                padding: EdgeInsets.all(20.0),
+                child: CircularProgressIndicator(),
+              )),
+              error: (e, s) => _buildProfileHeader(cs, isDark, null),
+            ),
 
             Padding(
               padding: const EdgeInsets.all(20.0),
@@ -63,11 +75,27 @@ class _SettingPageState extends State<SettingPage> {
                     _buildSettingsTile(
                       cs, 
                       isDark, 
-                      Icons.verified_user_rounded, 
-                      'Vérification KWC', 
-                      'Soumettre ma CNI', 
-                      Colors.teal,
-                      onTap: () => context.pushNamed(AppRouter.kwc),
+                      userAsync.value?.statut == "approuve" 
+                          ? Icons.check_circle_rounded 
+                          : Icons.verified_user_rounded, 
+                      'Vérification KWC ${userAsync.value?.statut == "approuve" ? " ✅" : ""}', 
+                      userAsync.value?.statut == "approuve" 
+                          ? 'Votre compte est vérifié' 
+                          : 'Soumettre ma CNI', 
+                      userAsync.value?.statut == "approuve" ? Colors.green : Colors.teal,
+                      onTap: () {
+                        if (userAsync.value?.statut == "approuve") {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Votre compte est déjà vérifié ! 🚀'),
+                              backgroundColor: Colors.green,
+                              behavior: SnackBarBehavior.floating,
+                            ),
+                          );
+                        } else {
+                          context.pushNamed(AppRouter.kwc);
+                        }
+                      },
                     ),
                     _buildSettingsTile(cs, isDark, Icons.lock_person_rounded, 'Confidentialité', 'Mot de passe et Accès', Colors.cyan),
                   ]),
@@ -76,10 +104,26 @@ class _SettingPageState extends State<SettingPage> {
 
                   // ❓ Support & Aide
                   _buildSectionTitle(cs, 'Assistance'),
-                  _buildSettingsCard(cs, isDark, [
-                    _buildSettingsTile(cs, isDark, Icons.help_center_rounded, 'Centre d\'aide', 'Questions fréquentes', Colors.purple),
-                    _buildSettingsTile(cs, isDark, Icons.info_outline_rounded, 'À propos', 'v1.4.2 Beta', Colors.grey),
-                  ]),
+                    _buildSettingsCard(cs, isDark, [
+                      _buildSettingsTile(
+                        cs, 
+                        isDark, 
+                        Icons.help_center_rounded, 
+                        'Centre d\'aide', 
+                        'Questions fréquentes', 
+                        Colors.purple,
+                        onTap: () => context.pushNamed(AppRouter.faq),
+                      ),
+                      _buildSettingsTile(
+                        cs, 
+                        isDark, 
+                        Icons.info_outline_rounded, 
+                        'À propos', 
+                        'v1.4.2 Beta', 
+                        Colors.grey,
+                        onTap: () => context.pushNamed(AppRouter.about),
+                      ),
+                    ]),
 
                   const SizedBox(height: 40),
 
@@ -96,7 +140,11 @@ class _SettingPageState extends State<SettingPage> {
     );
   }
 
-  Widget _buildProfileHeader(ColorScheme cs, bool isDark) {
+  Widget _buildProfileHeader(ColorScheme cs, bool isDark, UserModel? user) {
+    String name = user != null ? "${user.nom} ${user.prenom}" : "Non connecté";
+    String email = user?.email ?? "Session expirée";
+    String role = user?.role ?? "VISITEUR";
+
     return Container(
       margin: const EdgeInsets.fromLTRB(20, 10, 20, 10),
       padding: const EdgeInsets.all(20),
@@ -119,17 +167,29 @@ class _SettingPageState extends State<SettingPage> {
       ),
       child: Row(
         children: [
+          Container(
+            width: 60,
+            height: 60,
+            decoration: BoxDecoration(
+              color: Colors.white.withOpacity(0.2),
+              shape: BoxShape.circle,
+            ),
+            child: const Icon(Icons.person_rounded, color: Colors.white, size: 35),
+          ),
+          const SizedBox(width: 15),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  'John Doe',
-                  style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
+                Text(
+                  name,
+                  style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+                  overflow: TextOverflow.ellipsis,
                 ),
                 Text(
-                  'john.doe@gmail.com',
-                  style: TextStyle(color: Colors.white.withOpacity(0.8), fontSize: 13),
+                  email,
+                  style: TextStyle(color: Colors.white.withOpacity(0.8), fontSize: 12),
+                  overflow: TextOverflow.ellipsis,
                 ),
                 const SizedBox(height: 8),
                 Container(
@@ -138,7 +198,10 @@ class _SettingPageState extends State<SettingPage> {
                     color: Colors.white.withOpacity(0.2),
                     borderRadius: BorderRadius.circular(20),
                   ),
-                  child: const Text('MEMBRE GOLD', style: TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.w900)),
+                  child: Text(
+                    role == "CLIENT" ? 'MEMBRE PLATINIUM' : role, 
+                    style: const TextStyle(color: Colors.white, fontSize: 9, fontWeight: FontWeight.w900)
+                  ),
                 ),
               ],
             ),
@@ -217,6 +280,15 @@ class _SettingPageState extends State<SettingPage> {
     );
   }
 
+  Future<void> _handleLogout() async {
+    final authService = ref.read(authServiceProvider);
+    await authService.logout();
+    AppRouter.setLoggedIn(false);
+    if (mounted) {
+      context.go('/login');
+    }
+  }
+
   Widget _buildLogoutButton(ColorScheme cs, bool isDark) {
     return Container(
       width: double.infinity,
@@ -227,7 +299,7 @@ class _SettingPageState extends State<SettingPage> {
         border: Border.all(color: cs.error.withOpacity(0.2)),
       ),
       child: InkWell(
-        onTap: () {},
+        onTap: _handleLogout,
         borderRadius: BorderRadius.circular(20),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,

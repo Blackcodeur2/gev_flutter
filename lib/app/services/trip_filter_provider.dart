@@ -1,6 +1,7 @@
 import 'package:camer_trip/app/models/voyage_model.dart';
 import 'package:camer_trip/app/services/providers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/legacy.dart';
 
 enum FilterCategory { none, agence, destination, depart, heure }
 

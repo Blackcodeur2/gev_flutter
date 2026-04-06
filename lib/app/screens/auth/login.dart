@@ -2,19 +2,21 @@ import 'package:camer_trip/app/config/colors_config.dart';
 import 'package:camer_trip/app/config/const_config.dart';
 import 'package:camer_trip/app/config/theme_provider.dart';
 import 'package:camer_trip/app/routes/app_routter.dart';
+import 'package:camer_trip/app/services/providers.dart';
 import 'package:camer_trip/app/shared/buttons/theme_toogle.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
-class LoginPage extends StatefulWidget {
+class LoginPage extends ConsumerStatefulWidget {
   const LoginPage({super.key});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  ConsumerState<LoginPage> createState() => _LoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage>
+class _LoginPageState extends ConsumerState<LoginPage>
     with SingleTickerProviderStateMixin {
   // Controllers
   final _formKey = GlobalKey<FormState>();
@@ -38,10 +40,7 @@ class _LoginPageState extends State<LoginPage>
       vsync: this,
       duration: const Duration(milliseconds: 900),
     );
-    _fadeAnim = CurvedAnimation(
-      parent: _animController,
-      curve: Curves.easeOut,
-    );
+    _fadeAnim = CurvedAnimation(parent: _animController, curve: Curves.easeOut);
     _slideAnim = Tween<Offset>(
       begin: const Offset(0, 0.12),
       end: Offset.zero,
@@ -61,14 +60,33 @@ class _LoginPageState extends State<LoginPage>
 
   Future<void> _handleLogin() async {
     if (!_formKey.currentState!.validate()) return;
-
+    if (!mounted) return;
     setState(() => _isLoading = true);
-    await Future.delayed(const Duration(seconds: 2)); // Simule une requête API
+    final authService = ref.read(authServiceProvider);
+    final response = await authService.login(
+      _emailController.text,
+      _passwordController.text,
+    );
+
     if (!mounted) return;
     setState(() => _isLoading = false);
 
-    AppRouter.setLoggedIn(true);
-    context.go('/main');
+    if (response.success == true) {
+      AppRouter.setLoggedIn(true);
+      context.go('/main');
+    } else {
+      final String msg = response.message ?? "Erreur inconnue";
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Erreur : $msg"),
+          backgroundColor: AppColors.error,
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(AppConstants.defaultBorderRadius),
+          ),
+        ),
+      );
+    }
   }
 
   // ─── Build ────────────────────────────────────────────────────────────────
@@ -83,8 +101,9 @@ class _LoginPageState extends State<LoginPage>
     return Scaffold(
       backgroundColor: cs.surface,
       body: SafeArea(
+        top: false,
         child: SingleChildScrollView(
-          physics: const ClampingScrollPhysics(),
+          physics: const BouncingScrollPhysics(),
           child: Column(
             children: [
               // ── Header / Hero ──────────────────────────────────────────
@@ -106,32 +125,46 @@ class _LoginPageState extends State<LoginPage>
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           // Titre section
-                          Text(
-                            'Connexion',
-                            style: theme.textTheme.headlineSmall?.copyWith(
-                              fontWeight: FontWeight.w800,
-                              color: cs.onSurface,
-                              letterSpacing: -0.5,
-                            ),
-                          ),
-                          ThemeToggleButton(isDark: isDark, onTap: () => themeProvider.toggleTheme()),
-                          const SizedBox(height: 4),
-                          Text(
-                            'Bon retour 👋  Heureux de te revoir.',
-                            style: theme.textTheme.bodyMedium?.copyWith(
-                              color: cs.onSurface.withOpacity(0.55),
-                            ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Connexion',
+                                    style: theme.textTheme.headlineSmall
+                                        ?.copyWith(
+                                          fontWeight: FontWeight.w900,
+                                          color: cs.onSurface,
+                                          letterSpacing: -1.0,
+                                        ),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    'Bon retour 👋 Heureux de te revoir.',
+                                    style: theme.textTheme.bodyMedium?.copyWith(
+                                      color: cs.onSurface.withOpacity(0.55),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              ThemeToggleButton(
+                                isDark: isDark,
+                                onTap: () => themeProvider.toggleTheme(),
+                              ),
+                            ],
                           ),
 
-                          const SizedBox(height: 28),
+                          const SizedBox(height: 32),
 
                           // ── Champ Email ───────────────────────────────
                           _buildLabel(context, 'Adresse email'),
-                          const SizedBox(height: 8),
+                          const SizedBox(height: 10),
                           _AppTextField(
                             controller: _emailController,
                             hintText: 'exemple@email.com',
-                            prefixIcon: Icons.email_outlined,
+                            prefixIcon: Icons.email_rounded,
                             keyboardType: TextInputType.emailAddress,
                             validator: (v) {
                               if (v == null || v.isEmpty) {
@@ -166,17 +199,17 @@ class _LoginPageState extends State<LoginPage>
                                   style: TextStyle(
                                     color: cs.primary,
                                     fontSize: 12,
-                                    fontWeight: FontWeight.w600,
+                                    fontWeight: FontWeight.w700,
                                   ),
                                 ),
                               ),
                             ],
                           ),
-                          const SizedBox(height: 8),
+                          const SizedBox(height: 10),
                           _AppTextField(
                             controller: _passwordController,
                             hintText: '••••••••',
-                            prefixIcon: Icons.lock_outline_rounded,
+                            prefixIcon: Icons.lock_rounded,
                             obscureText: _obscurePassword,
                             validator: (v) {
                               if (v == null || v.isEmpty) {
@@ -190,10 +223,10 @@ class _LoginPageState extends State<LoginPage>
                             suffixIcon: IconButton(
                               icon: Icon(
                                 _obscurePassword
-                                    ? Icons.visibility_off_outlined
-                                    : Icons.visibility_outlined,
-                                color: cs.onSurface.withOpacity(0.5),
-                                size: 20,
+                                    ? Icons.visibility_off_rounded
+                                    : Icons.visibility_rounded,
+                                color: cs.primary.withOpacity(0.5),
+                                size: 22,
                               ),
                               onPressed: () => setState(
                                 () => _obscurePassword = !_obscurePassword,
@@ -201,35 +234,36 @@ class _LoginPageState extends State<LoginPage>
                             ),
                           ),
 
-                          const SizedBox(height: 14),
+                          const SizedBox(height: 16),
 
                           // ── Se souvenir de moi ────────────────────────
                           Row(
                             children: [
                               SizedBox(
-                                width: 20,
-                                height: 20,
+                                width: 22,
+                                height: 22,
                                 child: Checkbox(
                                   value: _rememberMe,
                                   onChanged: (v) =>
                                       setState(() => _rememberMe = v ?? false),
                                   activeColor: cs.primary,
                                   shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(4),
+                                    borderRadius: BorderRadius.circular(6),
                                   ),
                                 ),
                               ),
-                              const SizedBox(width: 10),
+                              const SizedBox(width: 12),
                               Text(
                                 'Se souvenir de moi',
-                                style: theme.textTheme.bodySmall?.copyWith(
+                                style: theme.textTheme.bodyMedium?.copyWith(
                                   color: cs.onSurface.withOpacity(0.7),
+                                  fontWeight: FontWeight.w500,
                                 ),
                               ),
                             ],
                           ),
 
-                          const SizedBox(height: 28),
+                          const SizedBox(height: 32),
 
                           // ── Bouton Se connecter ───────────────────────
                           _LoginButton(
@@ -237,12 +271,12 @@ class _LoginPageState extends State<LoginPage>
                             onPressed: _handleLogin,
                           ),
 
-                          const SizedBox(height: 28),
+                          const SizedBox(height: 32),
 
                           // ── Divider Social ────────────────────────────
                           _DividerOr(isDark: isDark),
 
-                          const SizedBox(height: 20),
+                          const SizedBox(height: 24),
 
                           // ── Boutons sociaux ───────────────────────────
                           Row(
@@ -254,7 +288,7 @@ class _LoginPageState extends State<LoginPage>
                                   onPressed: () {},
                                 ),
                               ),
-                              const SizedBox(width: 12),
+                              const SizedBox(width: 16),
                               Expanded(
                                 child: _SocialButton(
                                   label: 'Facebook',
@@ -265,27 +299,27 @@ class _LoginPageState extends State<LoginPage>
                             ],
                           ),
 
-                          const SizedBox(height: 32),
+                          const SizedBox(height: 40),
 
                           // ── Lien inscription ──────────────────────────
                           Center(
                             child: RichText(
                               text: TextSpan(
-                                text: "Pas encore de compte ?  ",
-                                style: theme.textTheme.bodySmall?.copyWith(
+                                text: "Pas encore de compte ? ",
+                                style: theme.textTheme.bodyMedium?.copyWith(
                                   color: cs.onSurface.withOpacity(0.55),
                                 ),
                                 children: [
                                   WidgetSpan(
                                     alignment: PlaceholderAlignment.middle,
                                     child: GestureDetector(
-                                      onTap: () => context.go('/register'),
+                                      onTap: () => context.push('/register'),
                                       child: Text(
                                         "S'inscrire",
                                         style: TextStyle(
                                           color: cs.primary,
-                                          fontWeight: FontWeight.w700,
-                                          fontSize: 13,
+                                          fontWeight: FontWeight.w800,
+                                          fontSize: 14,
                                         ),
                                       ),
                                     ),
@@ -295,7 +329,7 @@ class _LoginPageState extends State<LoginPage>
                             ),
                           ),
 
-                          const SizedBox(height: 20),
+                          const SizedBox(height: 40),
                         ],
                       ),
                     ),
@@ -313,9 +347,10 @@ class _LoginPageState extends State<LoginPage>
     return Text(
       label,
       style: Theme.of(context).textTheme.labelLarge?.copyWith(
-            fontWeight: FontWeight.w600,
-            color: Theme.of(context).colorScheme.onSurface.withOpacity(0.8),
-          ),
+        fontWeight: FontWeight.w700,
+        color: Theme.of(context).colorScheme.onSurface.withOpacity(0.8),
+        letterSpacing: 0.2,
+      ),
     );
   }
 }
@@ -332,7 +367,7 @@ class _HeroHeader extends StatelessWidget {
     return ClipPath(
       clipper: _WaveClipper(),
       child: Container(
-        height: 240,
+        height: 280,
         width: double.infinity,
         decoration: BoxDecoration(
           gradient: LinearGradient(
@@ -340,96 +375,119 @@ class _HeroHeader extends StatelessWidget {
             end: Alignment.bottomRight,
             colors: isDark
                 ? [
-                    const Color(0xFF1A2E25),
+                    const Color(0xFF13231C),
                     AppColors.darkGreen,
                     AppColors.primaryGreen,
                   ]
                 : [
                     AppColors.primaryGreen,
                     AppColors.lightGreen,
-                    const Color(0xFF9AE6B4),
+                    const Color(0xFFB0F2C2),
                   ],
           ),
         ),
         child: Stack(
           children: [
-            // Cercles décoratifs
+            // Cercles décoratifs avec animation subtile
             Positioned(
-              top: -30,
-              right: -30,
+              top: -40,
+              right: -40,
               child: _DecorCircle(
-                size: 130,
-                color: Colors.white.withOpacity(isDark ? 0.04 : 0.12),
+                size: 160,
+                color: Colors.white.withOpacity(isDark ? 0.05 : 0.15),
               ),
             ),
             Positioned(
-              top: 40,
-              right: 60,
+              top: 60,
+              right: 80,
               child: _DecorCircle(
-                size: 60,
-                color: Colors.white.withOpacity(isDark ? 0.06 : 0.15),
+                size: 70,
+                color: Colors.white.withOpacity(isDark ? 0.08 : 0.18),
               ),
             ),
             Positioned(
-              bottom: 50,
-              left: -20,
+              bottom: 60,
+              left: -30,
               child: _DecorCircle(
-                size: 90,
-                color: Colors.white.withOpacity(isDark ? 0.04 : 0.10),
+                size: 110,
+                color: Colors.white.withOpacity(isDark ? 0.05 : 0.12),
               ),
             ),
 
             // Contenu centré
             Padding(
-              padding: const EdgeInsets.only(bottom: 40),
+              padding: const EdgeInsets.only(bottom: 50),
               child: Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    // Logo container
-                    Container(
-                      width: 72,
-                      height: 72,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        shape: BoxShape.circle,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.15),
-                            blurRadius: 16,
-                            offset: const Offset(0, 6),
-                          ),
-                        ],
-                      ),
-                      child: ClipOval(
-                        child: Image.asset(
-                          'images/logo.png',
-                          fit: BoxFit.contain,
-                          errorBuilder: (_, __, ___) => Icon(
-                            Icons.directions_bus_rounded,
-                            size: 38,
-                            color: AppColors.primaryGreen,
+                    // Logo container avec effet de flottement
+                    TweenAnimationBuilder<double>(
+                      tween: Tween(begin: 0.0, end: 1.0),
+                      duration: const Duration(seconds: 2),
+                      builder: (context, value, child) {
+                        return Transform.translate(
+                          offset: Offset(0, 4 * (1 - (value * 2 - 1).abs())),
+                          child: child,
+                        );
+                      },
+                      child: Container(
+                        width: 86,
+                        height: 86,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          shape: BoxShape.circle,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.2),
+                              blurRadius: 20,
+                              offset: const Offset(0, 10),
+                            ),
+                          ],
+                        ),
+                        child: ClipOval(
+                          child: Padding(
+                            padding: const EdgeInsets.all(12),
+                            child: Image.asset(
+                              'images/logo.png',
+                              fit: BoxFit.contain,
+                              errorBuilder: (_, __, ___) => Icon(
+                                Icons.directions_bus_rounded,
+                                size: 44,
+                                color: AppColors.primaryGreen,
+                              ),
+                            ),
                           ),
                         ),
                       ),
                     ),
-                    const SizedBox(height: 14),
+                    const SizedBox(height: 18),
                     Text(
-                      AppConstants.appName,
+                      AppConstants.appName.toUpperCase(),
                       style: const TextStyle(
                         color: Colors.white,
-                        fontSize: 26,
-                        fontWeight: FontWeight.w800,
-                        letterSpacing: 0.5,
+                        fontSize: 28,
+                        fontWeight: FontWeight.w900,
+                        letterSpacing: 2.0,
                       ),
                     ),
-                    const SizedBox(height: 4),
-                    Text(
-                      'Voyage facilement au Cameroun 🌍',
-                      style: TextStyle(
-                        color: Colors.white.withOpacity(0.85),
-                        fontSize: 12.5,
-                        fontWeight: FontWeight.w400,
+                    const SizedBox(height: 6),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 4,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.black.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Text(
+                        'Voyagez malin au Cameroun 🌍',
+                        style: TextStyle(
+                          color: Colors.white.withOpacity(0.9),
+                          fontSize: 13,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                     ),
                   ],
@@ -443,23 +501,22 @@ class _HeroHeader extends StatelessWidget {
   }
 }
 
-// Vague bas du header
 class _WaveClipper extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {
     final path = Path();
-    path.lineTo(0, size.height - 40);
+    path.lineTo(0, size.height - 50);
     path.quadraticBezierTo(
       size.width / 4,
       size.height,
       size.width / 2,
-      size.height - 20,
+      size.height - 25,
     );
     path.quadraticBezierTo(
       size.width * 3 / 4,
-      size.height - 40,
+      size.height - 50,
       size.width,
-      size.height - 10,
+      size.height - 15,
     );
     path.lineTo(size.width, 0);
     path.close();
@@ -519,39 +576,36 @@ class _AppTextField extends StatelessWidget {
       validator: validator,
       style: TextStyle(
         color: cs.onSurface,
-        fontSize: 14,
-        fontWeight: FontWeight.w500,
+        fontSize: 15,
+        fontWeight: FontWeight.w600,
       ),
       decoration: InputDecoration(
         hintText: hintText,
         hintStyle: TextStyle(
-          color: cs.onSurface.withOpacity(0.35),
-          fontSize: 14,
+          color: cs.onSurface.withOpacity(0.3),
+          fontSize: 15,
         ),
-        prefixIcon: Icon(prefixIcon, color: cs.primary, size: 20),
+        prefixIcon: Icon(prefixIcon, color: cs.primary, size: 22),
         suffixIcon: suffixIcon,
         filled: true,
         fillColor: isDark
-            ? AppColors.darkCard
-            : AppColors.primaryGreen.withOpacity(0.05),
+            ? AppColors.darkCard.withOpacity(0.7)
+            : AppColors.primaryGreen.withOpacity(0.04),
         contentPadding: const EdgeInsets.symmetric(
-          horizontal: 16,
-          vertical: 15,
+          horizontal: 20,
+          vertical: 18,
         ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppConstants.defaultBorderRadius),
-          borderSide: BorderSide(
-            color: cs.primary.withOpacity(0.15),
-            width: 1.2,
-          ),
+          borderSide: BorderSide.none,
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppConstants.defaultBorderRadius),
           borderSide: BorderSide(
             color: isDark
-                ? AppColors.textDisabledDark.withOpacity(0.3)
-                : AppColors.primaryGreen.withOpacity(0.2),
-            width: 1.2,
+                ? Colors.white.withOpacity(0.05)
+                : AppColors.primaryGreen.withOpacity(0.1),
+            width: 1.5,
           ),
         ),
         focusedBorder: OutlineInputBorder(
@@ -560,7 +614,7 @@ class _AppTextField extends StatelessWidget {
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppConstants.defaultBorderRadius),
-          borderSide: const BorderSide(color: AppColors.error, width: 1.2),
+          borderSide: const BorderSide(color: AppColors.error, width: 1.5),
         ),
         focusedErrorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppConstants.defaultBorderRadius),
@@ -586,8 +640,8 @@ class _LoginButton extends StatelessWidget {
 
     return SizedBox(
       width: double.infinity,
-      height: AppConstants.buttonHeight + 4,
-      child: DecoratedBox(
+      height: 58,
+      child: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: isDark
@@ -597,9 +651,9 @@ class _LoginButton extends StatelessWidget {
           borderRadius: BorderRadius.circular(AppConstants.defaultBorderRadius),
           boxShadow: [
             BoxShadow(
-              color: cs.primary.withOpacity(0.35),
-              blurRadius: 14,
-              offset: const Offset(0, 5),
+              color: cs.primary.withOpacity(0.4),
+              blurRadius: 15,
+              offset: const Offset(0, 6),
             ),
           ],
         ),
@@ -609,36 +663,37 @@ class _LoginButton extends StatelessWidget {
             backgroundColor: Colors.transparent,
             shadowColor: Colors.transparent,
             shape: RoundedRectangleBorder(
-              borderRadius:
-                  BorderRadius.circular(AppConstants.defaultBorderRadius),
+              borderRadius: BorderRadius.circular(
+                AppConstants.defaultBorderRadius,
+              ),
             ),
           ),
           child: isLoading
               ? const SizedBox(
-                  width: 22,
-                  height: 22,
+                  width: 24,
+                  height: 24,
                   child: CircularProgressIndicator(
                     color: Colors.white,
-                    strokeWidth: 2.5,
+                    strokeWidth: 3,
                   ),
                 )
               : const Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      'Se connecter',
+                      'SE CONNECTER',
                       style: TextStyle(
                         color: Colors.white,
-                        fontSize: 15,
-                        fontWeight: FontWeight.w700,
-                        letterSpacing: 0.3,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w900,
+                        letterSpacing: 1.2,
                       ),
                     ),
-                    SizedBox(width: 8),
+                    SizedBox(width: 12),
                     Icon(
-                      Icons.arrow_forward_rounded,
+                      Icons.login_rounded,
                       color: Colors.white,
-                      size: 18,
+                      size: 20,
                     ),
                   ],
                 ),
@@ -648,41 +703,36 @@ class _LoginButton extends StatelessWidget {
   }
 }
 
-// ══════════════════════════════════════════════════════════════════════════════
-// Divider "OU"
-// ══════════════════════════════════════════════════════════════════════════════
 class _DividerOr extends StatelessWidget {
   final bool isDark;
   const _DividerOr({required this.isDark});
 
   @override
   Widget build(BuildContext context) {
-    final dividerColor =
-        Theme.of(context).colorScheme.onSurface.withOpacity(0.15);
+    final dividerColor = Theme.of(
+      context,
+    ).colorScheme.onSurface.withOpacity(0.1);
     return Row(
       children: [
-        Expanded(child: Divider(color: dividerColor, thickness: 1)),
+        Expanded(child: Divider(color: dividerColor, thickness: 1.5)),
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 14),
+          padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Text(
-            'OU',
+            'OU CONTINUER AVEC',
             style: TextStyle(
               color: Theme.of(context).colorScheme.onSurface.withOpacity(0.4),
               fontSize: 11,
-              fontWeight: FontWeight.w600,
-              letterSpacing: 1.2,
+              fontWeight: FontWeight.w800,
+              letterSpacing: 1.5,
             ),
           ),
         ),
-        Expanded(child: Divider(color: dividerColor, thickness: 1)),
+        Expanded(child: Divider(color: dividerColor, thickness: 1.5)),
       ],
     );
   }
 }
 
-// ══════════════════════════════════════════════════════════════════════════════
-// Bouton Social
-// ══════════════════════════════════════════════════════════════════════════════
 class _SocialButton extends StatelessWidget {
   final String label;
   final IconData icon;
@@ -700,25 +750,25 @@ class _SocialButton extends StatelessWidget {
 
     return OutlinedButton.icon(
       onPressed: onPressed,
-      icon: Icon(icon, size: 20, color: cs.onSurface.withOpacity(0.7)),
+      icon: Icon(icon, size: 24, color: cs.onSurface.withOpacity(0.8)),
       label: Text(
         label,
         style: TextStyle(
-          color: cs.onSurface.withOpacity(0.75),
-          fontSize: 13,
-          fontWeight: FontWeight.w600,
+          color: cs.onSurface.withOpacity(0.8),
+          fontSize: 14,
+          fontWeight: FontWeight.w700,
         ),
       ),
       style: OutlinedButton.styleFrom(
-        padding: const EdgeInsets.symmetric(vertical: 13),
+        padding: const EdgeInsets.symmetric(vertical: 16),
         backgroundColor: isDark
-            ? AppColors.darkCard
-            : AppColors.primaryGreen.withOpacity(0.04),
+            ? AppColors.darkCard.withOpacity(0.4)
+            : Colors.white,
         side: BorderSide(
           color: isDark
-              ? AppColors.textDisabledDark.withOpacity(0.25)
-              : AppColors.primaryGreen.withOpacity(0.2),
-          width: 1.2,
+              ? Colors.white.withOpacity(0.1)
+              : Colors.black.withOpacity(0.08),
+          width: 1.5,
         ),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(AppConstants.defaultBorderRadius),

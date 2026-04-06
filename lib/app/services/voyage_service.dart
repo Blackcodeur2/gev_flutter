@@ -18,8 +18,8 @@ class VoyageService {
   // Simulation des voyages programmés en attendant la route API
   Future<List<VoyageModel>> getScheduledTrips() async {
     // Simuler latence réseau
-    await Future.delayed(const Duration(milliseconds: 800)); 
-    
+    await Future.delayed(const Duration(milliseconds: 800));
+
     return [
       VoyageModel(
         id: 1,

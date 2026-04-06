@@ -63,7 +63,7 @@ final List<AnnonceModel> dummyAnnonces = [
       icon: Icons.beach_access,
     ),
     content: '🌴 Nouveau Trajet : Nous desservons désormais la ville de Kribi ! Profitez de nos bus climatisés pour vos week-ends au bord de mer.',
-    imageUrl: 'https://images.unsplash.com/photo-1590523278191-995ccd139e90?w=800', // Image de plage
+    imageUrl: 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=800', // Image de plage
     date: DateTime.now().subtract(const Duration(days: 1)),
     isPromo: false,
     actionLabel: 'Détails Trajet',

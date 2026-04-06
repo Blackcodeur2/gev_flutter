@@ -1,20 +1,23 @@
 import 'dart:io';
+import 'package:camer_trip/app/services/providers.dart';
+import 'package:camer_trip/app/shared/others/app_bar.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:camer_trip/app/shared/others/app_bar.dart';
 
-class KwcPage extends StatefulWidget {
+class KwcPage extends ConsumerStatefulWidget {
   const KwcPage({super.key});
 
   @override
-  State<KwcPage> createState() => _KwcPageState();
+  ConsumerState<KwcPage> createState() => _KwcPageState();
 }
 
-class _KwcPageState extends State<KwcPage> {
+class _KwcPageState extends ConsumerState<KwcPage> {
   File? _selectedFile;
   String? _fileName;
   bool _isPdf = false;
+  bool _isLoading = false;
   final ImagePicker _picker = ImagePicker();
 
   Future<void> _pickImage(ImageSource source) async {
@@ -34,7 +37,7 @@ class _KwcPageState extends State<KwcPage> {
       allowedExtensions: ['pdf'],
     );
 
-    if (result != null) {
+    if (result != null && result.files.single.path != null) {
       setState(() {
         _selectedFile = File(result.files.single.path!);
         _fileName = result.files.single.name;
@@ -43,22 +46,43 @@ class _KwcPageState extends State<KwcPage> {
     }
   }
 
-  void _submit() {
+  Future<void> _submit() async {
     if (_selectedFile == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Veuillez sélectionner un fichier')),
+        const SnackBar(
+          content: Text('Veuillez sélectionner un fichier'),
+          behavior: SnackBarBehavior.floating,
+        ),
       );
       return;
     }
 
-    // TODO: Relier au backend
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Soumission envoyée avec succès (Simulation)'),
-        backgroundColor: Colors.green,
-      ),
-    );
-    Navigator.pop(context);
+    setState(() => _isLoading = true);
+
+    final authService = ref.read(authServiceProvider);
+    final response = await authService.uploadKwcDocument(_selectedFile!);
+
+    if (!mounted) return;
+    setState(() => _isLoading = false);
+
+    if (response.success) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(response.message ?? 'Document envoyé avec succès'),
+          backgroundColor: Colors.green,
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+      Navigator.pop(context);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(response.message ?? "Erreur lors de l'envoi"),
+          backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+    }
   }
 
   @override
@@ -170,14 +194,16 @@ class _KwcPageState extends State<KwcPage> {
                       width: double.infinity,
                       height: 56,
                       child: ElevatedButton(
-                        onPressed: _submit,
+                        onPressed: _isLoading ? null : _submit,
                         style: ElevatedButton.styleFrom(
                           backgroundColor: cs.primary,
                           foregroundColor: Colors.white,
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                           elevation: 0,
                         ),
-                        child: const Text('SOUMETTRE POUR VÉRIFICATION', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                        child: _isLoading 
+                          ? const CircularProgressIndicator(color: Colors.white)
+                          : const Text('SOUMETTRE POUR VÉRIFICATION', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
                       ),
                     ),
                   ],

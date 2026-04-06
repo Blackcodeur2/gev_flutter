@@ -8,6 +8,8 @@ import 'package:camer_trip/app/screens/onboarding/onboarding.dart';
 import 'package:camer_trip/app/screens/splash/splash.dart';
 import 'package:camer_trip/app/models/reservation_model.dart';
 import 'package:camer_trip/app/screens/settings/kwc_page.dart';
+import 'package:camer_trip/app/screens/settings/about_page.dart';
+import 'package:camer_trip/app/screens/settings/faq_page.dart';
 import 'package:camer_trip/app/utils/main_page.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -23,6 +25,8 @@ class AppRouter {
   static const String reservationDetails = 'reservationDetails';
   static const String agenceDetails = 'agenceDetails';
   static const String kwc = 'kwc';
+  static const String about = 'about';
+  static const String faq = 'faq';
   // ── Chemins de routes ─────────────────────────────────────────────────────
   static const String splashPath = '/';
   static const String onboardingPath = '/onboarding';
@@ -33,6 +37,8 @@ class AppRouter {
   static const String reservationDetailsPath = '/reservation-details';
   static const String agenceDetailsPath = '/agence-details';
   static const String kwcPath = '/kwc';
+  static const String aboutPath = '/about';
+  static const String faqPath = '/faq';
   // ── Simulation AuthService (à remplacer) ──────────────────────────────────
   static bool _isLoggedIn = false;
 
@@ -134,6 +140,16 @@ class AppRouter {
         path: kwcPath,
         name: kwc,
         builder: (context, state) => const KwcPage(),
+      ),
+      GoRoute(
+        path: aboutPath,
+        name: about,
+        builder: (context, state) => const AboutPage(),
+      ),
+      GoRoute(
+        path: faqPath,
+        name: faq,
+        builder: (context, state) => const FaqPage(),
       ),
     ],
   );

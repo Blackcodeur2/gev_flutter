@@ -6,7 +6,7 @@ class AppConstants {
 
   // CONFIGURATIONS API
   static const String apiVersion = 'v1';
-  static const Duration apiTimeOut = Duration(seconds: 10);
+  static const Duration apiTimeOut = Duration(seconds: 30);
   static const String apiBaseUrl = 'http://192.168.1.144:8000/api';
 
   // CONFIGURATIONS DIMENSIONS

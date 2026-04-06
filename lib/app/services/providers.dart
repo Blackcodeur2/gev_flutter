@@ -1,3 +1,4 @@
+import 'package:camer_trip/app/models/user_model.dart';
 import 'package:riverpod/riverpod.dart';
 import 'api_client_service.dart';
 import 'auth_service.dart';
@@ -28,4 +29,20 @@ final voyageServiceProvider = Provider<VoyageService>((ref) {
 final isLoggedInProvider = FutureProvider<bool>((ref) async {
   final authService = ref.watch(authServiceProvider);
   return await authService.isLoggedIn();
+});
+
+// Provider pour récupérer l'utilisateur actuel
+final currentUserProvider = FutureProvider<UserModel?>((ref) async {
+  final authService = ref.watch(authServiceProvider);
+  return await authService.getUser();
+});
+
+// Méthode pour forcer la synchronisation avec le serveur
+final syncUserProvider = FutureProvider<AuthResponse>((ref) async {
+  final authService = ref.watch(authServiceProvider);
+  final response = await authService.syncUser();
+  if (response.success) {
+    ref.invalidate(currentUserProvider);
+  }
+  return response;
 });

@@ -105,7 +105,7 @@ class _MainPageState extends State<MainPage> {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     _buildNavItem(0, Icons.home_rounded, Icons.home_outlined, 'Accueil'),
-                    _buildNavItem(1, Icons.add_circle_rounded, Icons.add_circle_outline, 'Nouveautés'),
+                    _buildNavItem(1, Icons.newspaper_outlined, Icons.newspaper_outlined, 'Nouveautés'),
                     _buildAssistantItem(cs, 'Assistant'), 
                     _buildNavItem(3, Icons.history_rounded, Icons.history_outlined, 'Billets'),
                     _buildNavItem(4, Icons.settings_rounded, Icons.settings_outlined, 'Profil'),
