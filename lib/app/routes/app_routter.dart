@@ -10,6 +10,9 @@ import 'package:camer_trip/app/models/reservation_model.dart';
 import 'package:camer_trip/app/screens/settings/kwc_page.dart';
 import 'package:camer_trip/app/screens/settings/about_page.dart';
 import 'package:camer_trip/app/screens/settings/faq_page.dart';
+import 'package:camer_trip/app/screens/books/booking_page.dart';
+import 'package:camer_trip/app/screens/books/payment_page.dart';
+import 'package:camer_trip/app/models/voyage_model.dart';
 import 'package:camer_trip/app/utils/main_page.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -27,6 +30,8 @@ class AppRouter {
   static const String kwc = 'kwc';
   static const String about = 'about';
   static const String faq = 'faq';
+  static const String booking = 'booking';
+  static const String payment = 'payment';
   // ── Chemins de routes ─────────────────────────────────────────────────────
   static const String splashPath = '/';
   static const String onboardingPath = '/onboarding';
@@ -39,6 +44,8 @@ class AppRouter {
   static const String kwcPath = '/kwc';
   static const String aboutPath = '/about';
   static const String faqPath = '/faq';
+  static const String bookingPath = '/booking';
+  static const String paymentPath = '/payment';
   // ── Simulation AuthService (à remplacer) ──────────────────────────────────
   static bool _isLoggedIn = false;
 
@@ -150,6 +157,25 @@ class AppRouter {
         path: faqPath,
         name: faq,
         builder: (context, state) => const FaqPage(),
+      ),
+      GoRoute(
+        path: bookingPath,
+        name: booking,
+        builder: (context, state) {
+          final voyage = state.extra as VoyageModel;
+          return BookingPage(voyage: voyage);
+        },
+      ),
+      GoRoute(
+        path: paymentPath,
+        name: payment,
+        builder: (context, state) {
+          final data = state.extra as Map<String, dynamic>;
+          return PaymentPage(
+            voyage: data['voyage'] as VoyageModel,
+            seat: data['seat'] as String,
+          );
+        },
       ),
     ],
   );

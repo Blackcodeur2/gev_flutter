@@ -4,6 +4,8 @@ import 'package:camer_trip/app/shared/others/kwc_restriction_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:go_router/go_router.dart';
+import 'package:camer_trip/app/routes/app_routter.dart';
 
 class ScheduledTripCard extends ConsumerWidget {
   final VoyageModel voyage;
@@ -46,8 +48,7 @@ class ScheduledTripCard extends ConsumerWidget {
                 if (onTap != null) {
                   onTap!();
                 } else {
-                  // Par défaut, si pas de callback, on peut imaginer une navigation
-                  // context.pushNamed('voyageDetails', extra: voyage);
+                  context.pushNamed(AppRouter.booking, extra: voyage);
                 }
               }
             });

@@ -86,7 +86,7 @@ class ReservationDetailsPage extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              reservation.agenceName,
+                              reservation.agenceName ?? 'Agence',
                               style: const TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.w900,
@@ -100,7 +100,7 @@ class ReservationDetailsPage extends StatelessWidget {
                                 borderRadius: BorderRadius.circular(12),
                               ),
                               child: Text(
-                                reservation.status,
+                                reservation.status ?? 'À venir',
                                 style: const TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold,
@@ -119,18 +119,18 @@ class ReservationDetailsPage extends StatelessWidget {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                _buildCityTime(reservation.route.split(' ↔ ').first, theme, cs),
+                                _buildCityTime(reservation.route?.split(' ↔ ').first ?? '', theme, cs),
                                 Icon(Icons.arrow_forward_rounded, color: cs.primary.withOpacity(0.5), size: 30),
-                                _buildCityTime(reservation.route.split(' ↔ ').last, theme, cs, isEnd: true),
+                                _buildCityTime(reservation.route?.split(' ↔ ').last ?? '', theme, cs, isEnd: true),
                               ],
                             ),
                             const SizedBox(height: 30),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                _buildInfoBlock('Date', reservation.date, theme),
-                                _buildInfoBlock('Heure', reservation.time, theme),
-                                _buildInfoBlock('Siège', reservation.seatNumber, theme, highlight: true),
+                                _buildInfoBlock('Date', reservation.date ?? 'N/A', theme),
+                                _buildInfoBlock('Heure', reservation.time ?? 'N/A', theme),
+                                _buildInfoBlock('Siège', reservation.place, theme, highlight: true),
                               ],
                             ),
                             const SizedBox(height: 24),
@@ -138,7 +138,7 @@ class ReservationDetailsPage extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 _buildInfoBlock('Passager', 'Client (Moi)', theme),
-                                _buildInfoBlock('Prix payé', reservation.price, theme, highlight: true),
+                                _buildInfoBlock('Prix payé', '${reservation.prix.toInt()} FCFA', theme, highlight: true),
                               ],
                             ),
                           ],
@@ -206,7 +206,7 @@ class ReservationDetailsPage extends StatelessWidget {
                                   border: Border.all(color: Colors.grey.shade300),
                                 ),
                                 child: QrImageView(
-                                  data: reservation.qrCodeId,
+                                  data: reservation.numReservation ?? 'N/A',
                                   version: QrVersions.auto,
                                   size: 180.0,
                                   backgroundColor: Colors.white,

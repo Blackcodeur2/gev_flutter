@@ -15,49 +15,61 @@ class _ReservationsPagesState extends State<ReservationsPages>
   late TabController _tabController;
 
   final List<ReservationModel> dummyReservations = [
-    const ReservationModel(
-      id: 'RES-001',
+    ReservationModel(
+      id: 1,
+      numReservation: 'RES-001',
       agenceName: 'General Express',
       route: 'Douala ↔ Yaoundé',
       date: '12 Avril 2026',
       time: '08:00',
       status: 'À venir',
-      price: '2 500 FCFA',
-      seatNumber: '12A',
-      qrCodeId: 'GF-2026-A12',
+      prix: 2500,
+      place: '12A',
+      userId: 1,
+      gareId: 1,
+      voyageId: 1,
     ),
-    const ReservationModel(
-      id: 'RES-002',
+    ReservationModel(
+      id: 2,
+      numReservation: 'RES-002',
       agenceName: 'Touristique Express',
       route: 'Yaoundé ↔ Bafoussam',
       date: '05 Avril 2026',
       time: '14:30',
       status: 'Passé',
-      price: '3 000 FCFA',
-      seatNumber: '05B',
-      qrCodeId: 'GF-2026-B05',
+      prix: 3000,
+      place: '05B',
+      userId: 1,
+      gareId: 2,
+      voyageId: 2,
     ),
-    const ReservationModel(
-      id: 'RES-003',
+    ReservationModel(
+      id: 3,
+      numReservation: 'RES-003',
       agenceName: 'Finexs Voyages',
       route: 'Douala ↔ Kribi',
       date: '20 Mars 2026',
       time: '09:00',
       status: 'Passé',
-      price: '2 000 FCFA',
-      seatNumber: '15C',
-      qrCodeId: 'GF-2026-C15',
+      prix: 2000,
+      place: '15C',
+      userId: 1,
+      gareId: 1,
+      voyageId: 3,
     ),
-    const ReservationModel(
-      id: 'RES-004',
+    ReservationModel(
+      id: 4,
+      numReservation: 'RES-004',
       agenceName: 'Vatican Express',
       route: 'Douala ↔ Yaoundé',
       date: '10 Mars 2026',
       time: '07:00',
       status: 'Annulé',
-      price: '2 500 FCFA',
-      seatNumber: '02A',
-      qrCodeId: 'GF-2026-A02',
+      prix: 2500,
+      place: '02A',
+      userId: 1,
+      gareId: 1,
+      voyageId: 1,
     ),
   ];
 
@@ -144,14 +156,14 @@ class _ReservationsPagesState extends State<ReservationsPages>
     final isDark = theme.brightness == Brightness.dark;
 
     Color statusColor;
-    switch (res.status) {
-      case 'À venir':
+    switch (res.status ?? 'en attente') {
+      case 'en attente':
         statusColor = cs.primary;
         break;
-      case 'Annulé':
+      case 'annulee':
         statusColor = cs.error;
         break;
-      case 'Passé':
+      case 'validee':
       default:
         statusColor = Colors.grey;
         break;
@@ -201,7 +213,7 @@ class _ReservationsPagesState extends State<ReservationsPages>
                         ),
                         const SizedBox(width: 12),
                         Text(
-                          res.agenceName,
+                          res.agenceName ?? 'Agence',
                           style: theme.textTheme.titleMedium?.copyWith(
                             fontWeight: FontWeight.w900,
                             color: cs.onSurface,
@@ -218,7 +230,7 @@ class _ReservationsPagesState extends State<ReservationsPages>
                         border: Border.all(color: statusColor.withOpacity(0.3)),
                       ),
                       child: Text(
-                        res.status,
+                        res.status ?? 'À venir',
                         style: theme.textTheme.labelSmall?.copyWith(
                           color: statusColor,
                           fontWeight: FontWeight.bold,
@@ -236,7 +248,7 @@ class _ReservationsPagesState extends State<ReservationsPages>
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            res.route.split(' ↔ ').first,
+                            res.route?.split(' ↔ ').first ?? '',
                             style: theme.textTheme.titleMedium?.copyWith(
                               fontWeight: FontWeight.bold,
                             ),
@@ -257,7 +269,7 @@ class _ReservationsPagesState extends State<ReservationsPages>
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           Text(
-                            res.route.split(' ↔ ').last,
+                            res.route?.split(' ↔ ').last ?? '',
                             style: theme.textTheme.titleMedium?.copyWith(
                               fontWeight: FontWeight.bold,
                             ),
@@ -265,7 +277,7 @@ class _ReservationsPagesState extends State<ReservationsPages>
                           ),
                           const SizedBox(height: 4),
                           Text(
-                            'Siège: ${res.seatNumber}',
+                            'Siège: ${res.place}',
                             style: theme.textTheme.bodySmall?.copyWith(
                               color: cs.primary,
                               fontWeight: FontWeight.bold,
@@ -294,7 +306,7 @@ class _ReservationsPagesState extends State<ReservationsPages>
                         ),
                       ),
                       Text(
-                        res.price,
+                        '${res.prix.toInt()} FCFA',
                         style: theme.textTheme.titleMedium?.copyWith(
                           color: cs.primary,
                           fontWeight: FontWeight.w900,

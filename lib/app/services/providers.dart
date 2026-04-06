@@ -4,6 +4,7 @@ import 'api_client_service.dart';
 import 'auth_service.dart';
 import 'kwc_service.dart';
 import 'voyage_service.dart';
+import 'reservation_service.dart';
 
 // Fournit l'instance Singleton de l'ApiClient (Dio)
 final apiClientProvider = Provider<ApiClient>((ref) {
@@ -23,6 +24,10 @@ final kwcServiceProvider = Provider<KwcService>((ref) {
 // Fournit le VoyageService
 final voyageServiceProvider = Provider<VoyageService>((ref) {
   return VoyageService();
+});
+
+final reservationServiceProvider = Provider<ReservationService>((ref) {
+  return ReservationService();
 });
 
 // Provider pour vérifier l'état de connexion de l'utilisateur
