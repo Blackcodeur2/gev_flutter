@@ -6,17 +6,60 @@ class ApiClient {
   late Dio dio;
   final storage = const FlutterSecureStorage();
 
-  // Singleton instance
-  static final ApiClient _instance = ApiClient._internal();
-  
+  static final ApiClient _instance = ApiClient._private();
+  static bool _initialized = false;
+
   factory ApiClient() {
+    if (!_initialized) {
+      throw StateError('ApiClient doit être initialisé en appelant ApiClient.init() avant toute utilisation.');
+    }
     return _instance;
   }
 
-  ApiClient._internal() {
+  ApiClient._private();
+
+  static Future<ApiClient> init() async {
+    if (_initialized) {
+      return _instance;
+    }
+
+    final baseUrl = await _instance._findAvailableBaseUrl();
+    _instance._configureDio(baseUrl);
+    _initialized = true;
+    return _instance;
+  }
+
+  Future<String> _findAvailableBaseUrl() async {
+    for (final url in AppConstants.apiBaseUrls) {
+      try {
+        final testDio = Dio(
+          BaseOptions(
+            baseUrl: url,
+            connectTimeout: AppConstants.apiTimeOut,
+            receiveTimeout: AppConstants.apiTimeOut,
+          ),
+        );
+
+        await testDio.get(
+          '',
+          options: Options(validateStatus: (_) => true),
+        );
+
+        print('ApiClient: base URL disponible -> $url');
+        return url;
+      } catch (_) {
+        print('ApiClient: échec de connexion à $url');
+      }
+    }
+
+    print('ApiClient: aucune base URL disponible, utilisation de la valeur par défaut.');
+    return AppConstants.apiBaseUrl;
+  }
+
+  void _configureDio(String baseUrl) {
     dio = Dio(
       BaseOptions(
-        baseUrl: AppConstants.apiBaseUrl,
+        baseUrl: baseUrl,
         connectTimeout: AppConstants.apiTimeOut,
         receiveTimeout: AppConstants.apiTimeOut,
         headers: {
@@ -46,7 +89,6 @@ class ApiClient {
         },
         onError: (DioException e, handler) async {
           if (e.response?.statusCode == 401) {
-            // Logic for auto-logout (e.g., deleting token)
             await storage.delete(key: AppConstants.tokenKey);
             print("Session expirée (401)");
           }

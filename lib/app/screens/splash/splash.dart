@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:camer_trip/app/routes/app_routter.dart';
+import 'package:camer_trip/app/services/auth_service.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
@@ -75,6 +77,15 @@ class _SplashPageState extends State<SplashPage>
 
     if (isFirstOpen) {
       context.go('/onboarding');
+      return;
+    }
+
+    final authService = AuthService();
+    final isLoggedIn = await authService.isLoggedIn();
+
+    if (isLoggedIn) {
+      AppRouter.setLoggedIn(true);
+      context.go('/main');
     } else {
       context.go('/login');
     }

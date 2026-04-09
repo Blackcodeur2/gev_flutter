@@ -2,12 +2,16 @@ import 'package:camer_trip/app/config/theme_provider.dart';
 import 'package:camer_trip/app/config/const_config.dart';
 import 'package:camer_trip/app/config/theme_config.dart';
 import 'package:camer_trip/app/routes/app_routter.dart';
+import 'package:camer_trip/app/services/api_client_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await ApiClient.init();
+
   runApp(
     ProviderScope(
       child: ChangeNotifierProvider(

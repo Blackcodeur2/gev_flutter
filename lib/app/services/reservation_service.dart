@@ -1,3 +1,4 @@
+import 'package:camer_trip/app/models/reservation_model.dart';
 import 'package:dio/dio.dart';
 import 'api_client_service.dart';
 
@@ -45,6 +46,18 @@ class ReservationService {
       print("Erreur places occupées: $e");
       // Simulation pour le moment
       return ["1", "5", "12", "18"];
+    }
+  }
+
+  // Récupérer l'historique des réservations de l'utilisateur
+  Future<List<ReservationModel>> getMyReservations() async {
+    try {
+      final response = await dio.get('/client/reservations');
+      final List<dynamic> data = response.data['data']; 
+      return data.map((json) => ReservationModel.fromJson(json)).toList();
+    } catch (e) {
+      print("Erreur getMyReservations: $e");
+      return [];
     }
   }
 }

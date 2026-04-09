@@ -32,7 +32,22 @@ class ReservationDetailsPage extends StatelessWidget {
     final theme = Theme.of(context);
     final cs = theme.colorScheme;
     final isDark = theme.brightness == Brightness.dark;
-    final isUpcoming = reservation.status == 'À venir';
+    
+    String statusLabel;
+    switch (reservation.status) {
+      case 'validee':
+        statusLabel = 'Validée';
+        break;
+      case 'annule':
+        statusLabel = 'Annulée';
+        break;
+      case 'en attente':
+      default:
+        statusLabel = 'En attente';
+        break;
+    }
+
+    final isUpcoming = reservation.status == 'validee' || reservation.status == 'en attente';
 
     return Scaffold(
       appBar: AppBar(
@@ -85,14 +100,19 @@ class ReservationDetailsPage extends StatelessWidget {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(
-                              reservation.agenceName ?? 'Agence',
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.w900,
-                                fontSize: 20,
+                            Expanded(
+                              child: Text(
+                                reservation.agenceName ?? 'Agence',
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w900,
+                                  fontSize: 20,
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 1,
                               ),
                             ),
+                            const SizedBox(width: 12),
                             Container(
                               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                               decoration: BoxDecoration(
@@ -100,7 +120,7 @@ class ReservationDetailsPage extends StatelessWidget {
                                 borderRadius: BorderRadius.circular(12),
                               ),
                               child: Text(
-                                reservation.status ?? 'À venir',
+                                statusLabel,
                                 style: const TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold,
@@ -119,26 +139,29 @@ class ReservationDetailsPage extends StatelessWidget {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                _buildCityTime(reservation.route?.split(' ↔ ').first ?? '', theme, cs),
-                                Icon(Icons.arrow_forward_rounded, color: cs.primary.withOpacity(0.5), size: 30),
-                                _buildCityTime(reservation.route?.split(' ↔ ').last ?? '', theme, cs, isEnd: true),
+                                Flexible(child: _buildCityTime(reservation.route?.split(' ↔ ').first ?? '', theme, cs)),
+                                const Padding(
+                                  padding: EdgeInsets.symmetric(horizontal: 8.0),
+                                  child: Icon(Icons.arrow_forward_rounded, color: Colors.grey, size: 24),
+                                ),
+                                Flexible(child: _buildCityTime(reservation.route?.split(' ↔ ').last ?? '', theme, cs, isEnd: true)),
                               ],
                             ),
                             const SizedBox(height: 30),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                _buildInfoBlock('Date', reservation.date ?? 'N/A', theme),
-                                _buildInfoBlock('Heure', reservation.time ?? 'N/A', theme),
-                                _buildInfoBlock('Siège', reservation.place, theme, highlight: true),
+                                Flexible(child: _buildInfoBlock('Date', reservation.date ?? 'N/A', theme)),
+                                Flexible(child: _buildInfoBlock('Heure', reservation.time ?? 'N/A', theme)),
+                                Flexible(child: _buildInfoBlock('Siège', reservation.place, theme, highlight: true)),
                               ],
                             ),
                             const SizedBox(height: 24),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                _buildInfoBlock('Passager', 'Client (Moi)', theme),
-                                _buildInfoBlock('Prix payé', '${reservation.prix.toInt()} FCFA', theme, highlight: true),
+                                Flexible(child: _buildInfoBlock('Passager', 'Client (Moi)', theme)),
+                                Flexible(child: _buildInfoBlock('Prix payé', '${reservation.prix.toInt()} FCFA', theme, highlight: true)),
                               ],
                             ),
                           ],
@@ -244,17 +267,6 @@ class ReservationDetailsPage extends StatelessWidget {
                       label: const Text('Sauvegarder le ticket (PDF)'),
                     ),
                   ),
-                  const SizedBox(height: 16),
-                  SizedBox(
-                    width: double.infinity,
-                    child: TextButton(
-                      style: TextButton.styleFrom(
-                        foregroundColor: cs.error,
-                      ),
-                      onPressed: () {},
-                      child: const Text('Demander une annulation'),
-                    ),
-                  ),
                 ] else ...[
                   SizedBox(
                     width: double.infinity,
@@ -294,6 +306,8 @@ class ReservationDetailsPage extends StatelessWidget {
           style: theme.textTheme.titleSmall?.copyWith(
             color: cs.onSurface.withOpacity(0.7),
           ),
+          overflow: TextOverflow.ellipsis,
+          maxLines: 1,
         ),
       ],
     );
@@ -318,6 +332,8 @@ class ReservationDetailsPage extends StatelessWidget {
             fontWeight: FontWeight.bold,
             color: highlight ? theme.colorScheme.primary : theme.colorScheme.onSurface,
           ),
+          overflow: TextOverflow.ellipsis,
+          maxLines: 1,
         ),
       ],
     );

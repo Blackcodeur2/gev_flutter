@@ -1,13 +1,9 @@
+import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:camer_trip/app/shared/others/app_bar.dart';
+import 'package:camer_trip/app/models/chat_message_model.dart';
+import 'package:camer_trip/app/services/chat_service.dart';
 import 'package:flutter/material.dart';
-
-class ChatMessage {
-  final String text;
-  final bool isUser;
-  final DateTime time;
-
-  ChatMessage({required this.text, required this.isUser, required this.time});
-}
 
 class ChatBotPage extends StatefulWidget {
   const ChatBotPage({super.key});
@@ -18,8 +14,11 @@ class ChatBotPage extends StatefulWidget {
 
 class _ChatBotPageState extends State<ChatBotPage> {
   final TextEditingController _controller = TextEditingController();
+  final ScrollController _scrollController = ScrollController();
+  final ChatService _chatService = ChatService();
+  
   bool _isTyping = false;
-  final List<ChatMessage> _messages = [
+  List<ChatMessage> _messages = [
     ChatMessage(
       text: "Bonjour ! Je suis votre assistant CamerTrip conçu avec une IA avancée. Comment puis-je vous aider aujourd'hui ?",
       isUser: false,
@@ -27,32 +26,117 @@ class _ChatBotPageState extends State<ChatBotPage> {
     ),
   ];
 
-  void _handleSend() {
-    if (_controller.text.trim().isEmpty) return;
+  @override
+  void initState() {
+    super.initState();
+    _loadHistory();
+  }
+
+  Future<void> _loadHistory() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final String? historyJson = prefs.getString('chatbot_history');
+      if (historyJson != null) {
+        final List<dynamic> decodedList = jsonDecode(historyJson);
+        final List<ChatMessage> loadedMessages = decodedList.map((item) => ChatMessage.fromJson(item)).toList();
+        if (loadedMessages.isNotEmpty && mounted) {
+          setState(() {
+            _messages = loadedMessages;
+          });
+        }
+      }
+    } catch (e) {
+      debugPrint("Erreur chargement historique : \$e");
+    }
+  }
+
+  Future<void> _saveHistory() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final messagesToSave = _messages.take(50).toList();
+      final String historyJson = jsonEncode(messagesToSave.map((m) => m.toJson()).toList());
+      await prefs.setString('chatbot_history', historyJson);
+    } catch (e) {
+      debugPrint("Erreur sauvegarde historique : \$e");
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _scrollToBottom() {
+    if (_scrollController.hasClients) {
+      _scrollController.animateTo(
+        0.0,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeOut,
+      );
+    }
+  }
+
+  Future<void> _handleSend({String? hardcodedText}) async {
+    final textToSend = hardcodedText ?? _controller.text.trim();
+    if (textToSend.isEmpty) return;
+
+    final userMessage = ChatMessage(
+      text: textToSend,
+      isUser: true,
+      time: DateTime.now(),
+    );
 
     setState(() {
-      _messages.add(ChatMessage(
-        text: _controller.text,
-        isUser: true,
-        time: DateTime.now(),
-      ));
+      _messages.insert(0, userMessage); // Insertion au début car on a reverse: true
       _controller.clear();
       _isTyping = true;
     });
 
-    // Simulation de réponse après un court délai
-    Future.delayed(const Duration(milliseconds: 1500), () {
+    _scrollToBottom();
+    _saveHistory();
+    
+    // Extraire l'historique : prendre les 10 derniers messages (hors erreurs et le message actuel) 
+    // Attention _messages est en ordre chronologique inverse (index 0 = le plus récent)
+    // On doit préparer la liste `history` dans le bon ordre chronologique pour l'API.
+    final historyToSend = _messages
+        .skip(1) // skip the newly added user message
+        .where((m) => !m.isError)
+        .take(10)
+        .toList()
+        .reversed
+        .map((m) => m.toHistory())
+        .toList();
+
+    try {
+      final answer = await _chatService.sendMessage(textToSend, historyToSend);
       if (mounted) {
         setState(() {
           _isTyping = false;
-          _messages.add(ChatMessage(
-            text: "C'est une excellente question ! Je recherche les disponibilités de voyages et les meilleurs tarifs pour vous. Souhaitez-vous que je filtre par agence ou par prix ?",
+          _messages.insert(0, ChatMessage(
+            text: answer,
             isUser: false,
             time: DateTime.now(),
           ));
         });
+        _scrollToBottom();
+        _saveHistory();
       }
-    });
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _isTyping = false;
+          _messages.insert(0, ChatMessage(
+            text: e.toString().replaceFirst("Exception: ", ""),
+            isUser: false,
+            time: DateTime.now(),
+            isError: true,
+          ));
+        });
+        _scrollToBottom();
+      }
+    }
   }
 
   @override
@@ -74,6 +158,7 @@ class _ChatBotPageState extends State<ChatBotPage> {
           ),
         ),
         child: SafeArea(
+          bottom: false,
           child: Column(
             children: [
               const MyAppBar(title: "Assistant IA"),
@@ -81,11 +166,12 @@ class _ChatBotPageState extends State<ChatBotPage> {
               // Messages
               Expanded(
                 child: ListView.builder(
+                  controller: _scrollController,
                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  reverse: true,
+                  reverse: true, // Le fond de la liste est au bas de l'écran
                   itemCount: _messages.length,
                   itemBuilder: (context, index) {
-                    final message = _messages[_messages.length - 1 - index];
+                    final message = _messages[index];
                     return _buildPremiumBubble(message, cs, isDark);
                   },
                 ),
@@ -95,7 +181,7 @@ class _ChatBotPageState extends State<ChatBotPage> {
               if (_isTyping) _buildTypingIndicator(cs, isDark),
 
               // Suggestions rapides
-              if (_messages.length == 1 && !_isTyping) _buildQuickActions(cs),
+              if (_messages.length <= 2 && !_isTyping) _buildQuickActions(cs),
 
               // Zone de saisie
               _buildModernInputArea(cs, theme, isDark),
@@ -152,11 +238,15 @@ class _ChatBotPageState extends State<ChatBotPage> {
               height: 32,
               margin: const EdgeInsets.only(right: 8, bottom: 4),
               decoration: BoxDecoration(
-                color: cs.primary.withOpacity(0.1),
+                color: message.isError ? Colors.red.withOpacity(0.1) : cs.primary.withOpacity(0.1),
                 shape: BoxShape.circle,
-                border: Border.all(color: cs.primary.withOpacity(0.2)),
+                border: Border.all(color: message.isError ? Colors.red.withOpacity(0.2) : cs.primary.withOpacity(0.2)),
               ),
-              child: Icon(Icons.auto_awesome, color: cs.primary, size: 16),
+              child: Icon(
+                message.isError ? Icons.error_outline : Icons.auto_awesome, 
+                color: message.isError ? Colors.red : cs.primary, 
+                size: 16
+              ),
             ),
           ],
           Flexible(
@@ -170,7 +260,9 @@ class _ChatBotPageState extends State<ChatBotPage> {
                       end: Alignment.bottomRight,
                     )
                   : null,
-                color: message.isUser ? null : (isDark ? cs.surfaceContainerHigh : Colors.white),
+                color: message.isUser 
+                    ? null 
+                    : (message.isError ? Colors.red.withOpacity(isDark ? 0.2 : 0.05) : (isDark ? cs.surfaceContainerHigh : Colors.white)),
                 borderRadius: BorderRadius.only(
                   topLeft: const Radius.circular(22),
                   topRight: const Radius.circular(22),
@@ -185,13 +277,13 @@ class _ChatBotPageState extends State<ChatBotPage> {
                   )
                 ],
                 border: !message.isUser 
-                    ? Border.all(color: isDark ? Colors.white10 : cs.primary.withOpacity(0.05)) 
+                    ? Border.all(color: message.isError ? Colors.red.withOpacity(0.3) : (isDark ? Colors.white10 : cs.primary.withOpacity(0.05))) 
                     : null,
               ),
               child: Text(
                 message.text,
                 style: TextStyle(
-                  color: message.isUser ? Colors.white : cs.onSurface,
+                  color: message.isUser ? Colors.white : (message.isError ? Colors.red : cs.onSurface),
                   fontSize: 15,
                   fontWeight: message.isUser ? FontWeight.w500 : FontWeight.normal,
                   height: 1.4,
@@ -212,7 +304,7 @@ class _ChatBotPageState extends State<ChatBotPage> {
   }
 
   Widget _buildQuickActions(ColorScheme cs) {
-    final actions = ["Horaires de bus", "Réserver un billet", "Tarifs Douala-Ydé"];
+    final actions = ["Quels sont les voyages de demain ?", "Quelles sont mes réservations ?", "Où sont vos agences ?"];
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -222,8 +314,7 @@ class _ChatBotPageState extends State<ChatBotPage> {
           child: ActionChip(
             label: Text(text),
             onPressed: () {
-              _controller.text = text;
-              _handleSend();
+              _handleSend(hardcodedText: text);
             },
             backgroundColor: cs.primary.withOpacity(0.05),
             labelStyle: TextStyle(color: cs.primary, fontSize: 13, fontWeight: FontWeight.bold),
@@ -236,10 +327,11 @@ class _ChatBotPageState extends State<ChatBotPage> {
   }
 
   Widget _buildModernInputArea(ColorScheme cs, ThemeData theme, bool isDark) {
+    // Adding extra bottom padding if needed for iOS SafeArea or navigation bar is handled by SafeArea widget above.
     return Container(
-      padding: const EdgeInsets.fromLTRB(16, 8, 16, 20),
-      decoration: BoxDecoration(
-        color: Colors.transparent, // Laisse passer le gradient de fond
+      padding: const EdgeInsets.fromLTRB(16, 8, 16, 100), // Push chat bar up away from main navigation bar
+      decoration: const BoxDecoration(
+        color: Colors.transparent, 
       ),
       child: Row(
         children: [
@@ -264,6 +356,9 @@ class _ChatBotPageState extends State<ChatBotPage> {
                   Expanded(
                     child: TextField(
                       controller: _controller,
+                      minLines: 1,
+                      maxLines: 4,
+                      textInputAction: TextInputAction.send,
                       decoration: InputDecoration(
                         hintText: "Posez votre question...",
                         hintStyle: TextStyle(color: cs.onSurface.withOpacity(0.3), fontSize: 14),
@@ -272,10 +367,6 @@ class _ChatBotPageState extends State<ChatBotPage> {
                       ),
                       onSubmitted: (_) => _handleSend(),
                     ),
-                  ),
-                  IconButton(
-                    icon: Icon(Icons.mic_none_rounded, color: cs.primary),
-                    onPressed: () {},
                   ),
                 ],
               ),

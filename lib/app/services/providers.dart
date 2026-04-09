@@ -2,6 +2,7 @@ import 'package:camer_trip/app/models/user_model.dart';
 import 'package:riverpod/riverpod.dart';
 import 'api_client_service.dart';
 import 'auth_service.dart';
+import 'home_service.dart';
 import 'kwc_service.dart';
 import 'voyage_service.dart';
 import 'reservation_service.dart';
@@ -30,10 +31,30 @@ final reservationServiceProvider = Provider<ReservationService>((ref) {
   return ReservationService();
 });
 
+final homeServiceProvider = Provider<HomeService>((ref) {
+  return HomeService();
+});
+
+final agencesProvider = FutureProvider((ref) async {
+  return ref.watch(homeServiceProvider).getAgencesPartenaires();
+});
+
+final destinationsProvider = FutureProvider((ref) async {
+  return ref.watch(homeServiceProvider).getDestinationsPopulaires();
+});
+
+final promosProvider = FutureProvider((ref) async {
+  return ref.watch(homeServiceProvider).getPromoTrips();
+});
+
 // Provider pour vérifier l'état de connexion de l'utilisateur
 final isLoggedInProvider = FutureProvider<bool>((ref) async {
   final authService = ref.watch(authServiceProvider);
   return await authService.isLoggedIn();
+});
+
+final myReservationsProvider = FutureProvider((ref) async {
+  return ref.watch(reservationServiceProvider).getMyReservations();
 });
 
 // Provider pour récupérer l'utilisateur actuel

@@ -8,6 +8,7 @@ class VoyageModel {
   final int chauffeurId;
   final String statut;
   final int gareId;
+  final int nbPlaces;
   
   // Extra fields for UI and filtering
   final String? nomAgence;
@@ -24,6 +25,7 @@ class VoyageModel {
     required this.chauffeurId, 
     required this.statut, 
     required this.gareId,
+    this.nbPlaces = 44,
     this.nomAgence,
     this.villeSource,
     this.villeDestination,
@@ -40,6 +42,7 @@ class VoyageModel {
       chauffeurId: json['chauffeur_id'] != null ? int.parse(json['chauffeur_id'].toString()) : 0, 
       statut: json['statut'] ?? '', 
       gareId: json['gare_id'] != null ? int.parse(json['gare_id'].toString()) : 0,
+      nbPlaces: json['nb_places'] != null ? int.parse(json['nb_places'].toString()) : (json['bus']?['nb_places'] != null ? int.parse(json['bus']['nb_places'].toString()) : 44),
       nomAgence: json['nom_agence'],
       villeSource: json['ville_source'],
       villeDestination: json['ville_destination'],
@@ -57,6 +60,7 @@ class VoyageModel {
       'chauffeur_id': chauffeurId,
       'statut': statut,
       'gare_id': gareId,
+      'nb_places': nbPlaces,
       'nom_agence': nomAgence,
       'ville_source': villeSource,
       'ville_destination': villeDestination,

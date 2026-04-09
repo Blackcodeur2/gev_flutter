@@ -1,77 +1,20 @@
-import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:camer_trip/app/models/reservation_model.dart';
+import 'package:camer_trip/app/services/providers.dart';
 import 'package:camer_trip/app/shared/others/app_bar.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
-class ReservationsPages extends StatefulWidget {
+class ReservationsPages extends ConsumerStatefulWidget {
   const ReservationsPages({super.key});
 
   @override
-  State<ReservationsPages> createState() => _ReservationsPagesState();
+  ConsumerState<ReservationsPages> createState() => _ReservationsPagesState();
 }
 
-class _ReservationsPagesState extends State<ReservationsPages>
+class _ReservationsPagesState extends ConsumerState<ReservationsPages>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
-
-  final List<ReservationModel> dummyReservations = [
-    ReservationModel(
-      id: 1,
-      numReservation: 'RES-001',
-      agenceName: 'General Express',
-      route: 'Douala ↔ Yaoundé',
-      date: '12 Avril 2026',
-      time: '08:00',
-      status: 'À venir',
-      prix: 2500,
-      place: '12A',
-      userId: 1,
-      gareId: 1,
-      voyageId: 1,
-    ),
-    ReservationModel(
-      id: 2,
-      numReservation: 'RES-002',
-      agenceName: 'Touristique Express',
-      route: 'Yaoundé ↔ Bafoussam',
-      date: '05 Avril 2026',
-      time: '14:30',
-      status: 'Passé',
-      prix: 3000,
-      place: '05B',
-      userId: 1,
-      gareId: 2,
-      voyageId: 2,
-    ),
-    ReservationModel(
-      id: 3,
-      numReservation: 'RES-003',
-      agenceName: 'Finexs Voyages',
-      route: 'Douala ↔ Kribi',
-      date: '20 Mars 2026',
-      time: '09:00',
-      status: 'Passé',
-      prix: 2000,
-      place: '15C',
-      userId: 1,
-      gareId: 1,
-      voyageId: 3,
-    ),
-    ReservationModel(
-      id: 4,
-      numReservation: 'RES-004',
-      agenceName: 'Vatican Express',
-      route: 'Douala ↔ Yaoundé',
-      date: '10 Mars 2026',
-      time: '07:00',
-      status: 'Annulé',
-      prix: 2500,
-      place: '02A',
-      userId: 1,
-      gareId: 1,
-      voyageId: 1,
-    ),
-  ];
 
   @override
   void initState() {
@@ -89,6 +32,7 @@ class _ReservationsPagesState extends State<ReservationsPages>
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final reservationsAsync = ref.watch(myReservationsProvider);
 
     return Scaffold(
       backgroundColor: colorScheme.surface,
@@ -102,20 +46,26 @@ class _ReservationsPagesState extends State<ReservationsPages>
               labelColor: colorScheme.primary,
               unselectedLabelColor: colorScheme.onSurface.withOpacity(0.5),
               indicatorColor: colorScheme.primary,
+              indicatorWeight: 3,
+              labelStyle: const TextStyle(fontWeight: FontWeight.bold),
               tabs: const [
-                Tab(text: 'À venir'),
-                Tab(text: 'Passés'),
-                Tab(text: 'Annulés'),
+                Tab(text: 'Validées'),
+                Tab(text: 'En attente'),
+                Tab(text: 'Annulées'),
               ],
             ),
             Expanded(
-              child: TabBarView(
-                controller: _tabController,
-                children: [
-                  _buildReservationList('À venir'),
-                  _buildReservationList('Passé'),
-                  _buildReservationList('Annulé'),
-                ],
+              child: reservationsAsync.when(
+                data: (reservations) => TabBarView(
+                  controller: _tabController,
+                  children: [
+                    _buildReservationList(reservations, 'validee'),
+                    _buildReservationList(reservations, 'en attente'),
+                    _buildReservationList(reservations, 'annule'),
+                  ],
+                ),
+                loading: () => const Center(child: CircularProgressIndicator()),
+                error: (e, s) => Center(child: Text('Erreur: $e')),
               ),
             ),
           ],
@@ -124,29 +74,47 @@ class _ReservationsPagesState extends State<ReservationsPages>
     );
   }
 
-  Widget _buildReservationList(String statusFilter) {
-    final filtered = dummyReservations
-        .where((element) => element.status == statusFilter)
-        .toList();
+  Widget _buildReservationList(List<ReservationModel> all, String statusFilter) {
+    final filtered = all.where((element) => element.status == statusFilter).toList();
 
     if (filtered.isEmpty) {
-      return Center(
-        child: Text(
-          'Aucune réservation',
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-            color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+      return RefreshIndicator(
+        onRefresh: () => ref.refresh(myReservationsProvider.future),
+        child: SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          child: SizedBox(
+            height: MediaQuery.of(context).size.height * 0.6,
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.history_rounded, size: 64, color: Theme.of(context).colorScheme.onSurface.withOpacity(0.1)),
+                  const SizedBox(height: 16),
+                  Text(
+                    'Aucune réservation ${statusFilter == 'validee' ? 'validée' : statusFilter}',
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ),
         ),
       );
     }
 
-    return ListView.builder(
-      padding: const EdgeInsets.all(16.0),
-      itemCount: filtered.length,
-      itemBuilder: (context, index) {
-        final res = filtered[index];
-        return _buildReservationCard(res);
-      },
+    return RefreshIndicator(
+      onRefresh: () => ref.refresh(myReservationsProvider.future),
+      child: ListView.builder(
+        padding: const EdgeInsets.all(16.0),
+        physics: const AlwaysScrollableScrollPhysics(),
+        itemCount: filtered.length,
+        itemBuilder: (context, index) {
+          final res = filtered[index];
+          return _buildReservationCard(res);
+        },
+      ),
     );
   }
 
@@ -156,47 +124,45 @@ class _ReservationsPagesState extends State<ReservationsPages>
     final isDark = theme.brightness == Brightness.dark;
 
     Color statusColor;
-    switch (res.status ?? 'en attente') {
-      case 'en attente':
-        statusColor = cs.primary;
-        break;
-      case 'annulee':
-        statusColor = cs.error;
-        break;
+    String statusLabel;
+    switch (res.status) {
       case 'validee':
+        statusColor = Colors.green;
+        statusLabel = 'Validée';
+        break;
+      case 'annule':
+        statusColor = cs.error;
+        statusLabel = 'Annulée';
+        break;
+      case 'en attente':
       default:
-        statusColor = Colors.grey;
+        statusColor = Colors.orange;
+        statusLabel = 'En attente';
         break;
     }
 
     return Container(
       margin: const EdgeInsets.only(bottom: 16.0),
       decoration: BoxDecoration(
-        color: isDark ? cs.surface.withOpacity(0.8) : Colors.white,
-        borderRadius: BorderRadius.circular(20),
+        color: isDark ? cs.surfaceContainerHigh : Colors.white,
+        borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: isDark ? Colors.black.withOpacity(0.4) : cs.shadow.withOpacity(0.08),
-            blurRadius: 15,
-            offset: const Offset(0, 5),
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
           ),
         ],
-        border: Border.all(
-          color: isDark ? Colors.white10 : cs.primary.withOpacity(0.1),
-        ),
       ),
       child: Material(
         color: Colors.transparent,
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(24),
         child: InkWell(
-          borderRadius: BorderRadius.circular(20),
-          onTap: () {
-            context.pushNamed('reservationDetails', extra: res);
-          },
+          onTap: () => context.pushNamed('reservationDetails', extra: res),
+          borderRadius: BorderRadius.circular(24),
           child: Padding(
             padding: const EdgeInsets.all(20.0),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -209,33 +175,24 @@ class _ReservationsPagesState extends State<ReservationsPages>
                             color: cs.primary.withOpacity(0.1),
                             shape: BoxShape.circle,
                           ),
-                          child: Icon(Icons.directions_bus, color: cs.primary, size: 18),
+                          child: Icon(Icons.directions_bus_rounded, color: cs.primary, size: 20),
                         ),
                         const SizedBox(width: 12),
                         Text(
                           res.agenceName ?? 'Agence',
-                          style: theme.textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.w900,
-                            color: cs.onSurface,
-                            letterSpacing: -0.3,
-                          ),
+                          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                         ),
                       ],
                     ),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                       decoration: BoxDecoration(
-                        color: statusColor.withOpacity(0.15),
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: statusColor.withOpacity(0.3)),
+                        color: statusColor.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(30),
                       ),
                       child: Text(
-                        res.status ?? 'À venir',
-                        style: theme.textTheme.labelSmall?.copyWith(
-                          color: statusColor,
-                          fontWeight: FontWeight.bold,
-                          letterSpacing: 0.5,
-                        ),
+                        statusLabel,
+                        style: TextStyle(color: statusColor, fontWeight: FontWeight.bold, fontSize: 12),
                       ),
                     ),
                   ],
@@ -247,70 +204,39 @@ class _ReservationsPagesState extends State<ReservationsPages>
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            res.route?.split(' ↔ ').first ?? '',
-                            style: theme.textTheme.titleMedium?.copyWith(
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
+                          Text(res.route?.split(' ↔ ').first ?? '...', style: const TextStyle(fontWeight: FontWeight.bold)),
                           const SizedBox(height: 4),
-                          Text(
-                            '${res.date} • ${res.time}',
-                            style: theme.textTheme.bodySmall?.copyWith(
-                              color: cs.onSurface.withOpacity(0.6),
-                            ),
-                          ),
+                          Text('${res.date} • ${res.time}', style: const TextStyle(color: Colors.grey, fontSize: 12)),
                         ],
                       ),
                     ),
-                    Icon(Icons.arrow_forward_rounded, color: cs.primary.withOpacity(0.5)),
+                    Icon(Icons.arrow_forward_rounded, color: cs.primary.withOpacity(0.3), size: 20),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
-                          Text(
-                            res.route?.split(' ↔ ').last ?? '',
-                            style: theme.textTheme.titleMedium?.copyWith(
-                              fontWeight: FontWeight.bold,
-                            ),
-                            textAlign: TextAlign.right,
-                          ),
+                          Text(res.route?.split(' ↔ ').last ?? '...', style: const TextStyle(fontWeight: FontWeight.bold)),
                           const SizedBox(height: 4),
-                          Text(
-                            'Siège: ${res.place}',
-                            style: theme.textTheme.bodySmall?.copyWith(
-                              color: cs.primary,
-                              fontWeight: FontWeight.bold,
-                            ),
-                            textAlign: TextAlign.right,
-                          ),
+                          Text('Siège #${res.place}', style: TextStyle(color: cs.primary, fontWeight: FontWeight.bold, fontSize: 12)),
                         ],
                       ),
                     ),
                   ],
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 20),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: isDark ? Colors.black26 : const Color(0xFFF8F9FA),
-                    borderRadius: BorderRadius.circular(12),
+                    color: cs.primary.withOpacity(0.05),
+                    borderRadius: BorderRadius.circular(16),
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        'Total payé',
-                        style: theme.textTheme.bodyMedium?.copyWith(
-                          color: cs.onSurface.withOpacity(0.7),
-                        ),
-                      ),
+                      Text('Référence: ${res.numReservation}', style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500)),
                       Text(
                         '${res.prix.toInt()} FCFA',
-                        style: theme.textTheme.titleMedium?.copyWith(
-                          color: cs.primary,
-                          fontWeight: FontWeight.w900,
-                        ),
+                        style: TextStyle(color: cs.primary, fontWeight: FontWeight.w900, fontSize: 16),
                       ),
                     ],
                   ),

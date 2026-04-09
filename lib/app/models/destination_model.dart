@@ -11,4 +11,14 @@ class Destination {
     required this.duration,
     required this.emoji,
   });
+
+  factory Destination.fromJson(Map<String, dynamic> json) {
+    return Destination(
+      name: json['arrivee']?['ville'] ?? json['arrivee']?['nom'] ?? 'Inconnu',
+      from: json['depart']?['ville'] ?? json['depart']?['nom'] ?? 'Inconnu',
+      price: json['prix']?.toString() ?? '...',
+      duration: 'Intercités',
+      emoji: '📍',
+    );
+  }
 }

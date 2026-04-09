@@ -3,6 +3,7 @@ import 'package:camer_trip/app/routes/app_routter.dart';
 import 'package:camer_trip/app/services/providers.dart';
 import 'package:camer_trip/app/shared/others/app_bar.dart';
 import 'package:flutter/material.dart';
+import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -18,11 +19,14 @@ class _BookingPageState extends ConsumerState<BookingPage> {
   String? selectedSeat;
   List<String> occupiedSeats = [];
   bool isLoading = true;
+  Timer? _refreshTimer;
 
   @override
   void initState() {
     super.initState();
     _loadOccupiedSeats();
+    // Rafraîchissement automatique toutes les 10 secondes
+    _refreshTimer = Timer.periodic(const Duration(seconds: 10), (_) => _loadOccupiedSeats());
   }
 
   Future<void> _loadOccupiedSeats() async {
@@ -31,9 +35,19 @@ class _BookingPageState extends ConsumerState<BookingPage> {
     if (mounted) {
       setState(() {
         occupiedSeats = seats;
+        // La place 1 est toujours occupée par le chauffeur
+        if (!occupiedSeats.contains("1")) {
+          occupiedSeats.add("1");
+        }
         isLoading = false;
       });
     }
+  }
+
+  @override
+  void dispose() {
+    _refreshTimer?.cancel();
+    super.dispose();
   }
 
   @override
@@ -68,19 +82,24 @@ class _BookingPageState extends ConsumerState<BookingPage> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                '${widget.voyage.villeSource} → ${widget.voyage.villeDestination}',
-                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-              ),
-              Text(
-                'Départ: ${widget.voyage.dateDepart.hour}:${widget.voyage.dateDepart.minute.toString().padLeft(2, '0')}',
-                style: TextStyle(color: cs.onSurface.withOpacity(0.6), fontSize: 13),
-              ),
-            ],
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  '${widget.voyage.villeSource} → ${widget.voyage.villeDestination}',
+                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 2,
+                ),
+                Text(
+                  'Départ: ${widget.voyage.dateDepart.hour}:${widget.voyage.dateDepart.minute.toString().padLeft(2, '0')}',
+                  style: TextStyle(color: cs.onSurface.withOpacity(0.6), fontSize: 13),
+                ),
+              ],
+            ),
           ),
+          const SizedBox(width: 8),
           Text(
             '${widget.voyage.prix.toInt()} FCFA',
             style: TextStyle(fontWeight: FontWeight.w900, color: cs.primary, fontSize: 18),
@@ -121,26 +140,26 @@ class _BookingPageState extends ConsumerState<BookingPage> {
               crossAxisSpacing: 12,
               childAspectRatio: 1,
             ),
-            itemCount: 44, // 11 rangées de 4
+            itemCount: widget.voyage.nbPlaces,
             itemBuilder: (context, index) {
-              // Simuler un couloir au milieu (entre index % 4 == 1 et index % 4 == 2)
-              // Mais le GridView 4 colonnes ne gère pas bien les couloirs vides
-              // On va juste faire une grille simple pour le moment
               String seatNum = (index + 1).toString();
               bool isOccupied = occupiedSeats.contains(seatNum);
+              bool isDriver = seatNum == "1";
               bool isSelected = selectedSeat == seatNum;
 
               return InkWell(
-                onTap: isOccupied ? null : () {
+                onTap: (isOccupied || isDriver) ? null : () {
                   setState(() => selectedSeat = isSelected ? null : seatNum);
                 },
                 child: Container(
                   decoration: BoxDecoration(
-                    color: isOccupied 
-                        ? Colors.grey.withOpacity(0.3) 
-                        : isSelected 
-                            ? cs.primary 
-                            : isDark ? cs.surfaceContainerHigh : Colors.white,
+                    color: isDriver 
+                        ? Colors.blueGrey 
+                        : isOccupied 
+                            ? Colors.grey.withOpacity(0.3) 
+                            : isSelected 
+                                ? cs.primary 
+                                : isDark ? cs.surfaceContainerHigh : Colors.white,
                     borderRadius: BorderRadius.circular(10),
                     border: Border.all(
                       color: isSelected ? cs.primary : cs.primary.withOpacity(0.1),
@@ -148,7 +167,9 @@ class _BookingPageState extends ConsumerState<BookingPage> {
                     ),
                   ),
                   child: Center(
-                    child: Text(
+                    child: isDriver 
+                    ? const Icon(Icons.settings_input_component_rounded, color: Colors.white, size: 20)
+                    : Text(
                       seatNum,
                       style: TextStyle(
                         fontWeight: FontWeight.bold,

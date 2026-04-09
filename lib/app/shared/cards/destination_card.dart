@@ -62,19 +62,27 @@ class DestinationCard extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                '${dest.price} F',
-                style: TextStyle(
-                  fontWeight: FontWeight.w800,
-                  fontSize: 13,
-                  color: cs.primary,
+              Flexible(
+                child: Text(
+                  '${dest.price} F',
+                  style: TextStyle(
+                    fontWeight: FontWeight.w800,
+                    fontSize: 12,
+                    color: cs.primary,
+                  ),
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
-              Text(
-                dest.duration,
-                style: TextStyle(
-                  fontSize: 10,
-                  color: cs.onSurface.withOpacity(0.5),
+              const SizedBox(width: 4),
+              Flexible(
+                child: Text(
+                  dest.duration,
+                  style: TextStyle(
+                    fontSize: 9,
+                    color: cs.onSurface.withOpacity(0.5),
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.right,
                 ),
               ),
             ],

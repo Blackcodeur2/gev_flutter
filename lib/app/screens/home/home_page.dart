@@ -14,6 +14,7 @@ import 'package:camer_trip/app/shared/others/scheduled_trips_list.dart';
 import 'package:camer_trip/app/shared/others/trip_filter_bar.dart';
 import 'package:camer_trip/app/shared/others/kwc_reminder_banner.dart';
 import 'package:camer_trip/app/services/providers.dart';
+import 'package:camer_trip/app/services/trip_filter_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -29,30 +30,7 @@ class _HomePageState extends ConsumerState<HomePage>
   late AnimationController _animController;
   late Animation<double> _fadeAnim;
 
-  final List<PromoTrip> _promos = const [
-    PromoTrip(
-      title: 'Douala → Yaoundé',
-      subtitle: 'Dès 2 500 FCFA · 3h de trajet',
-      badge: '🔥 Populaire',
-      colors: [Color.fromARGB(255, 159, 97, 32), Color.fromARGB(255, 148, 108, 37)],
-    ),
-    PromoTrip(
-      title: 'Yaoundé → Bafoussam',
-      subtitle: 'Dès 3 000 FCFA · 4h de trajet',
-      badge: '⚡ Rapide',
-      colors: [Color(0xFF2E3192), Color(0xFF4C51BF)],
-    ),
-  ];
-
-  final List<Destination> _destinations = const [
-    Destination(name: 'Yaoundé', from: 'Douala', price: '2 500', duration: '3h', emoji: '🏙️'),
-    Destination(name: 'Bafoussam', from: 'Yaoundé', price: '3 000', duration: '4h', emoji: '🏔️'),
-  ];
-
-  final List<Agence> _agences = const [
-    Agence(name: 'General Express', route: 'Douala ↔ Yaoundé', rating: '4.8', color: AppColors.primaryGreen, icon: Icons.directions_bus_rounded),
-    Agence(name: 'Finexs Voyages', route: 'Nord-Sud Cameroun', rating: '4.5', color: Color.fromARGB(255, 152, 109, 22), icon: Icons.directions_bus_filled_rounded),
-  ];
+  // L'état est désormais géré à 100% par des Riverpod FutureProviders.
 
   @override
   void initState() {
@@ -81,6 +59,9 @@ class _HomePageState extends ConsumerState<HomePage>
     final theme = Theme.of(context);
     final cs = theme.colorScheme;
     final userAsync = ref.watch(currentUserProvider);
+    final promosAsync = ref.watch(promosProvider);
+    final agencesAsync = ref.watch(agencesProvider);
+    final destinationsAsync = ref.watch(destinationsProvider);
 
     return Scaffold(
       backgroundColor: cs.surface,
@@ -89,6 +70,10 @@ class _HomePageState extends ConsumerState<HomePage>
         child: SafeArea(
           child: RefreshIndicator(
             onRefresh: () async {
+              ref.invalidate(promosProvider);
+              ref.invalidate(agencesProvider);
+              ref.invalidate(destinationsProvider);
+              ref.invalidate(allScheduledTripsProvider);
               await ref.refresh(syncUserProvider.future);
             },
             displacement: 20,
@@ -109,7 +94,13 @@ class _HomePageState extends ConsumerState<HomePage>
                   error: (e, s) => const SliverToBoxAdapter(child: SizedBox.shrink()),
                 ),
   
-                SliverToBoxAdapter(child: PromoCarousel(promos: _promos)),
+                promosAsync.when(
+                  data: (promos) => promos.isNotEmpty 
+                      ? SliverToBoxAdapter(child: PromoCarousel(promos: promos)) 
+                      : const SliverToBoxAdapter(child: SizedBox.shrink()),
+                  loading: () => const SliverToBoxAdapter(child: Padding(padding: EdgeInsets.all(20), child: Center(child: CircularProgressIndicator()))),
+                  error: (e, s) => const SliverToBoxAdapter(child: SizedBox.shrink()),
+                ),
   
                 // 📅 SECTION VOYAGES ET FILTRES
                 SliverToBoxAdapter(
@@ -127,7 +118,11 @@ class _HomePageState extends ConsumerState<HomePage>
                     action: 'Voir tout',
                   ),
                 ),
-                SliverToBoxAdapter(child: ListAgenceComponent(agences: _agences)),
+                agencesAsync.when(
+                  data: (agences) => SliverToBoxAdapter(child: ListAgenceComponent(agences: agences)),
+                  loading: () => const SliverToBoxAdapter(child: Padding(padding: EdgeInsets.all(20), child: Center(child: CircularProgressIndicator()))),
+                  error: (e, s) => const SliverToBoxAdapter(child: SizedBox.shrink()),
+                ),
   
                 SliverToBoxAdapter(
                   child: SectionTitle(
@@ -135,8 +130,10 @@ class _HomePageState extends ConsumerState<HomePage>
                     action: 'Voir tout',
                   ),
                 ),
-                SliverToBoxAdapter(
-                  child: DestinationsList(destinations: _destinations),
+                destinationsAsync.when(
+                  data: (destinations) => SliverToBoxAdapter(child: DestinationsList(destinations: destinations)),
+                  loading: () => const SliverToBoxAdapter(child: Padding(padding: EdgeInsets.all(20), child: Center(child: CircularProgressIndicator()))),
+                  error: (e, s) => const SliverToBoxAdapter(child: SizedBox.shrink()),
                 ),
   
                 SliverToBoxAdapter(
