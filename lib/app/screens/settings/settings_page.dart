@@ -100,9 +100,24 @@ class _SettingPageState extends ConsumerState<SettingPage> {
                     _buildSettingsTile(cs, isDark, Icons.lock_person_rounded, 'Confidentialité', 'Mot de passe et Accès', Colors.cyan),
                   ]),
 
+                  // 📦 Mes Services
+                  _buildSectionTitle(cs, 'Mes Activités'),
+                  _buildSettingsCard(cs, isDark, [
+                    _buildSettingsTile(
+                      cs, 
+                      isDark, 
+                      Icons.inventory_2_rounded, 
+                      'Mes Colis', 
+                      'Suivre mes envois et réceptions', 
+                      Colors.blueAccent,
+                      onTap: () => context.pushNamed(AppRouter.myColis),
+                    ),
+                  ]),
+
                   const SizedBox(height: 24),
 
                   // ❓ Support & Aide
+
                   _buildSectionTitle(cs, 'Assistance'),
                     _buildSettingsCard(cs, isDark, [
                       _buildSettingsTile(

@@ -12,10 +12,10 @@ import 'package:camer_trip/app/screens/settings/about_page.dart';
 import 'package:camer_trip/app/screens/settings/faq_page.dart';
 import 'package:camer_trip/app/screens/books/booking_page.dart';
 import 'package:camer_trip/app/screens/books/payment_page.dart';
+import 'package:camer_trip/app/screens/colis/my_colis_page.dart';
 import 'package:camer_trip/app/models/voyage_model.dart';
 import 'package:camer_trip/app/utils/main_page.dart';
 import 'package:go_router/go_router.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class AppRouter {
   // ── Noms de routes ────────────────────────────────────────────────────────
@@ -32,6 +32,8 @@ class AppRouter {
   static const String faq = 'faq';
   static const String booking = 'booking';
   static const String payment = 'payment';
+  static const String myColis = 'myColis';
+
   // ── Chemins de routes ─────────────────────────────────────────────────────
   static const String splashPath = '/';
   static const String onboardingPath = '/onboarding';
@@ -46,137 +48,59 @@ class AppRouter {
   static const String faqPath = '/faq';
   static const String bookingPath = '/booking';
   static const String paymentPath = '/payment';
-  // ── Simulation AuthService (à remplacer) ──────────────────────────────────
-  static bool _isLoggedIn = false;
+  static const String myColisPath = '/my-colis';
 
+  // ── Simulation AuthService ──────────────────────────────────
+  static bool _isLoggedIn = false;
   static void setLoggedIn(bool value) => _isLoggedIn = value;
 
   // ── Routeur GoRouter ──────────────────────────────────────────────────────
   static final GoRouter router = GoRouter(
     initialLocation: splashPath,
     debugLogDiagnostics: true,
-
-    // 🔐 Redirection globale
     redirect: (context, state) async {
       final loc = state.matchedLocation;
-
-      // Routes publiques (accessibles sans auth)
-      final publicRoutes = [
-        splashPath,
-        onboardingPath,
-        loginPath,
-        registerPath,
-      ];
+      final publicRoutes = [splashPath, onboardingPath, loginPath, registerPath];
       final isPublic = publicRoutes.contains(loc);
 
-      if (!_isLoggedIn && !isPublic) {
-        return loginPath;
-      }
-
-      // Si connecté et va vers login/register → redirige vers main
-      if (_isLoggedIn && (loc == loginPath || loc == registerPath)) {
-        return mainPath;
-      }
-
+      if (!_isLoggedIn && !isPublic) return loginPath;
+      if (_isLoggedIn && (loc == loginPath || loc == registerPath)) return mainPath;
       return null;
     },
-
     routes: [
-      // ── Splash ─────────────────────────────────────────────────────────
-      GoRoute(
-        path: splashPath,
-        name: splash,
-        builder: (context, state) => const SplashPage(),
-      ),
-
-      // ── Onboarding ─────────────────────────────────────────────────────
-      GoRoute(
-        path: onboardingPath,
-        name: onboarding,
-        builder: (context, state) => const OnboardingScreen(),
-      ),
-
-      // ── Auth ───────────────────────────────────────────────────────────
-      GoRoute(
-        path: loginPath,
-        name: login,
-        builder: (context, state) => const LoginPage(),
-      ),
-      GoRoute(
-        path: registerPath,
-        name: register,
-        builder: (context, state) => const RegisterPage(),
-      ),
-
-      // ── App principale ─────────────────────────────────────────────────
-      GoRoute(
-        path: mainPath,
-        name: main,
-        builder: (context, state) => const MainPage(),
-      ),
-
-      // -- Notifications
-      GoRoute(
-        path: notificationPath,
-        name: notifications,
-        builder: (context, state) => const NotificationPage(),
-      ),
-
-      // -- Reservation Details
+      GoRoute(path: splashPath, name: splash, builder: (context, state) => const SplashPage()),
+      GoRoute(path: onboardingPath, name: onboarding, builder: (context, state) => const OnboardingScreen()),
+      GoRoute(path: loginPath, name: login, builder: (context, state) => const LoginPage()),
+      GoRoute(path: registerPath, name: register, builder: (context, state) => const RegisterPage()),
+      GoRoute(path: mainPath, name: main, builder: (context, state) => const MainPage()),
+      GoRoute(path: notificationPath, name: notifications, builder: (context, state) => const NotificationPage()),
       GoRoute(
         path: reservationDetailsPath,
         name: reservationDetails,
-        builder: (context, state) {
-          final res = state.extra as ReservationModel;
-          return ReservationDetailsPage(reservation: res);
-        },
+        builder: (context, state) => ReservationDetailsPage(reservation: state.extra as ReservationModel),
       ),
-
-      // -- Agence Details
       GoRoute(
         path: agenceDetailsPath,
         name: agenceDetails,
-        builder: (context, state) {
-          final ag = state.extra as Agence;
-          return AgenceDetailsPage(agence: ag);
-        },
+        builder: (context, state) => AgenceDetailsPage(agence: state.extra as Agence),
       ),
-
-      // -- KWC Verification
-      GoRoute(
-        path: kwcPath,
-        name: kwc,
-        builder: (context, state) => const KwcPage(),
-      ),
-      GoRoute(
-        path: aboutPath,
-        name: about,
-        builder: (context, state) => const AboutPage(),
-      ),
-      GoRoute(
-        path: faqPath,
-        name: faq,
-        builder: (context, state) => const FaqPage(),
-      ),
+      GoRoute(path: kwcPath, name: kwc, builder: (context, state) => const KwcPage()),
+      GoRoute(path: aboutPath, name: about, builder: (context, state) => const AboutPage()),
+      GoRoute(path: faqPath, name: faq, builder: (context, state) => const FaqPage()),
       GoRoute(
         path: bookingPath,
         name: booking,
-        builder: (context, state) {
-          final voyage = state.extra as VoyageModel;
-          return BookingPage(voyage: voyage);
-        },
+        builder: (context, state) => BookingPage(voyage: state.extra as VoyageModel),
       ),
       GoRoute(
         path: paymentPath,
         name: payment,
         builder: (context, state) {
           final data = state.extra as Map<String, dynamic>;
-          return PaymentPage(
-            voyage: data['voyage'] as VoyageModel,
-            seat: data['seat'] as String,
-          );
+          return PaymentPage(voyage: data['voyage'] as VoyageModel, seat: data['seat'] as String);
         },
       ),
+      GoRoute(path: myColisPath, name: myColis, builder: (context, state) => const MyColisPage()),
     ],
   );
 }

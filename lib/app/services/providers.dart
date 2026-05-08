@@ -7,6 +7,10 @@ import 'kwc_service.dart';
 import 'voyage_service.dart';
 import 'reservation_service.dart';
 import 'paiement_service.dart';
+import 'colis_service.dart';
+import '../models/colis_model.dart';
+
+
 
 // Fournit l'instance Singleton de l'ApiClient (Dio)
 final apiClientProvider = Provider<ApiClient>((ref) {
@@ -40,6 +44,15 @@ final homeServiceProvider = Provider<HomeService>((ref) {
 final paiementServiceProvider = Provider<PaiementService>((ref) {
   return PaiementService();
 });
+
+final colisServiceProvider = Provider<ColisService>((ref) {
+  return ColisService();
+});
+
+final myColisProvider = FutureProvider<List<ColisModel>>((ref) async {
+  return ref.watch(colisServiceProvider).getMyColis();
+});
+
 
 
 final agencesProvider = FutureProvider((ref) async {
