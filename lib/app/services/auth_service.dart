@@ -148,8 +148,9 @@ class AuthService {
 
   Future<AuthResponse> syncUser() async {
     try {
-      print("Syncing user data from /user...");
-      final response = await dio.get("/user");
+      print("Syncing user data from /profile...");
+      final response = await dio.get("/profile");
+
       if (response.statusCode == 200) {
         final userData = response.data["data"];
         print("Sync Success! New Statut: ${userData['statut']}");
@@ -204,4 +205,62 @@ class AuthService {
       return AuthResponse(success: false, message: e.toString());
     }
   }
+  Future<AuthResponse> updateProfile({
+    String? nom,
+    String? prenom,
+    String? email,
+    String? telephone,
+    String? dateNaissance,
+    String? sexe,
+    File? avatar,
+  }) async {
+    try {
+      Map<String, dynamic> data = {};
+      if (nom != null) data['nom'] = nom;
+      if (prenom != null) data['prenom'] = prenom;
+      if (email != null) data['email'] = email;
+      if (telephone != null) data['telephone'] = telephone;
+      if (dateNaissance != null) data['date_naissance'] = dateNaissance;
+      if (sexe != null) data['sexe'] = sexe;
+
+      if (avatar != null) {
+        String fileName = avatar.path.split('/').last;
+        data['avatar'] = await MultipartFile.fromFile(avatar.path, filename: fileName);
+      }
+
+      FormData formData = FormData.fromMap(data);
+
+      final response = await dio.post(
+        "/user/update-profile",
+        data: formData,
+        options: Options(headers: {"Content-Type": "multipart/form-data"}),
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final userData = response.data["data"];
+        await storage.write(
+          key: AppConstants.userDataKey,
+          value: jsonEncode(userData),
+        );
+        return AuthResponse(success: true, user: UserModel.fromJson(userData));
+      }
+
+      return AuthResponse(success: false, message: "Échec de la mise à jour");
+    } on DioException catch (e) {
+      print("Update Profile Error: ${e.response?.data}");
+      String message = "Une erreur est survenue lors de la mise à jour";
+      if (e.response?.statusCode == 422) {
+        final errors = e.response?.data['errors'];
+        if (errors != null && errors is Map) {
+          message = errors.values.first[0].toString();
+        }
+      } else {
+        message = e.response?.data['message'] ?? message;
+      }
+      return AuthResponse(success: false, message: message);
+    } catch (e) {
+      return AuthResponse(success: false, message: e.toString());
+    }
+  }
 }
+

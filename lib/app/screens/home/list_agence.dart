@@ -47,15 +47,24 @@ class AgenceListItem extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
             child: Row(
               children: [
-                // Icône agence
+                // Logo ou Icône agence
                 Container(
-                  width: 46,
-                  height: 46,
+                  width: 50,
+                  height: 50,
                   decoration: BoxDecoration(
-                    color: agence.color.withOpacity(0.15),
+                    color: agence.logoUrl != null ? Colors.transparent : agence.color.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(12),
+                    image: agence.logoUrl != null
+                        ? DecorationImage(
+                            image: NetworkImage(agence.logoUrl!),
+                            fit: BoxFit.contain, // Contain est souvent mieux pour les logos
+                          )
+                        : null,
                   ),
-                  child: Icon(agence.icon, color: agence.color, size: 22),
+
+                  child: agence.logoUrl == null
+                      ? Icon(agence.icon, color: agence.color, size: 24)
+                      : null,
                 ),
                 const SizedBox(width: 14),
 
@@ -67,14 +76,14 @@ class AgenceListItem extends StatelessWidget {
                       Text(
                         agence.name,
                         style: TextStyle(
-                          fontWeight: FontWeight.w700,
-                          fontSize: 14,
+                          fontWeight: FontWeight.w800,
+                          fontSize: 15,
                           color: cs.onSurface,
                         ),
                       ),
                       const SizedBox(height: 2),
                       Text(
-                        agence.route,
+                        '${agence.stations.length} gares • Réseau National',
                         style: TextStyle(
                           fontSize: 12,
                           color: cs.onSurface.withOpacity(0.5),
@@ -84,32 +93,33 @@ class AgenceListItem extends StatelessWidget {
                   ),
                 ),
 
-                // Rating
+                // Rating (Simulé car non présent en BD)
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
-                    color: AppColors.primaryGreen.withOpacity(0.12),
+                    color: Colors.amber.withOpacity(0.12),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Row(
                     children: [
                       const Icon(
                         Icons.star_rounded,
-                        color: AppColors.primaryGreen,
+                        color: Colors.amber,
                         size: 14,
                       ),
                       const SizedBox(width: 3),
                       Text(
-                        agence.rating,
-                        style: const TextStyle(
+                        '4.8',
+                        style: TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.w700,
-                          color: AppColors.primaryGreen,
+                          color: isDark ? Colors.amber : Colors.orange.shade800,
                         ),
                       ),
                     ],
                   ),
                 ),
+
               ],
             ),
           ),

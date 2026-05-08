@@ -18,6 +18,9 @@ class ApiClient {
 
   ApiClient._private();
 
+  String get baseUrl => dio.options.baseUrl;
+
+
   static Future<ApiClient> init() async {
     if (_initialized) {
       return _instance;

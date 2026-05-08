@@ -9,11 +9,15 @@ import 'package:provider/provider.dart';
 class MyAppBar extends StatelessWidget {
   final bool isHome;
   final String title;
+  final Widget? trailing;
+  final bool showActions;
 
   const MyAppBar({
     super.key,
     this.isHome = false,
     this.title = '',
+    this.trailing,
+    this.showActions = true,
   });
 
   @override
@@ -90,30 +94,44 @@ class MyAppBar extends StatelessWidget {
                       ),
                     ],
                   )
-                : Padding(
-                    padding: const EdgeInsets.only(left: 8.0),
-                    child: Text(
-                      title,
-                      style: theme.textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.w900,
-                        color: cs.onSurface,
-                        letterSpacing: 0.5,
+                : Row(
+                    children: [
+                      if (!isHome && Navigator.of(context).canPop())
+                        IconButton(
+                          icon: const Icon(Icons.arrow_back_ios_new_rounded, size: 20),
+                          onPressed: () => context.pop(),
+                        ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 8.0),
+                        child: Text(
+                          title,
+                          style: theme.textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.w900,
+                            color: cs.onSurface,
+                            letterSpacing: 0.5,
+                          ),
+                        ),
                       ),
-                    ),
+                    ],
                   ),
           ),
 
-          // Toggle thème
-          ThemeToggleButton(
-            isDark: isDark,
-            onTap: () => themeProvider.toggleTheme(),
-          ),
-          const SizedBox(width: 4),
+          if (trailing != null) trailing!,
 
-          // Notifications
-          NotificationButton(),
+          if (showActions && trailing == null) ...[
+            // Toggle thème
+            ThemeToggleButton(
+              isDark: isDark,
+              onTap: () => themeProvider.toggleTheme(),
+            ),
+            const SizedBox(width: 4),
+
+            // Notifications
+            NotificationButton(),
+          ],
         ],
       ),
     );
   }
 }
+

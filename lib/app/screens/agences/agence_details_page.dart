@@ -16,24 +16,25 @@ class AgenceDetailsPage extends StatefulWidget {
 class _AgenceDetailsPageState extends State<AgenceDetailsPage> with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
-  final List<Map<String, String>> dummyGares = [
-    {'ville': 'Douala', 'nom': 'Gare Akwa', 'adresse': 'Bld de la Liberté, Akwa'},
-    {'ville': 'Yaoundé', 'nom': 'Gare Mvan', 'adresse': 'Carrefour Mvan'},
-    {'ville': 'Bafoussam', 'nom': 'Gare Routière', 'adresse': 'Marché A'},
-    {'ville': 'Kribi', 'nom': 'Gare Principale', 'adresse': 'Centre Ville'},
-  ];
+  List<VoyageModel> get upcomingVoyages => widget.agence.allVoyages
+      .where((v) => v.statut == 'en attente')
+      .toList();
 
-  final List<Map<String, dynamic>> dummyVoyages = [
-    {'route': 'Douala → Yaoundé', 'date': 'Aujourd\'hui', 'time': '14:00', 'price': '2 500 FCFA', 'places': 12},
-    {'route': 'Yaoundé → Douala', 'date': 'Aujourd\'hui', 'time': '16:30', 'price': '2 500 FCFA', 'places': 4},
-    {'route': 'Douala → Kribi', 'date': 'Demain', 'time': '08:00', 'price': '2 000 FCFA', 'places': 32},
-  ];
-
-  final List<Map<String, String>> dummyTrajets = [
-    {'depart': 'Douala', 'arrivee': 'Yaoundé', 'prix': '2 500 FCFA', 'duree': '3h 30m'},
-    {'depart': 'Yaoundé', 'arrivee': 'Bafoussam', 'prix': '3 000 FCFA', 'duree': '5h 00m'},
-    {'depart': 'Douala', 'arrivee': 'Kribi', 'prix': '2 000 FCFA', 'duree': '2h 30m'},
-  ];
+  List<Map<String, dynamic>> get uniqueTrajets {
+    final trajets = <String, Map<String, dynamic>>{};
+    for (var v in widget.agence.allVoyages) {
+      final key = '${v.villeSource}-${v.villeDestination}';
+      if (!trajets.containsKey(key)) {
+        trajets[key] = {
+          'depart': v.villeSource,
+          'arrivee': v.villeDestination,
+          'prix': '${v.prix.toInt()} FCFA',
+          'duree': '...', // Info non dispo dans VoyageModel direct
+        };
+      }
+    }
+    return trajets.values.toList();
+  }
 
   @override
   void initState() {
@@ -46,6 +47,7 @@ class _AgenceDetailsPageState extends State<AgenceDetailsPage> with SingleTicker
     _tabController.dispose();
     super.dispose();
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -74,15 +76,23 @@ class _AgenceDetailsPageState extends State<AgenceDetailsPage> with SingleTicker
                   fit: StackFit.expand,
                   children: [
                     Container(
-                      color: widget.agence.color.withOpacity(0.8),
+                      color: widget.agence.logoUrl != null ? Colors.transparent : widget.agence.color.withOpacity(0.8),
                     ),
-                    Center(
-                      child: Icon(
-                        widget.agence.icon, 
-                        size: 100, 
-                        color: Colors.white.withOpacity(0.2)
+                    if (widget.agence.logoUrl != null)
+                      Image.network(
+                        widget.agence.logoUrl!,
+                        fit: BoxFit.contain, // Pour ne pas couper le logo
+                      )
+
+                    else
+                      Center(
+                        child: Icon(
+                          widget.agence.icon, 
+                          size: 100, 
+                          color: Colors.white.withOpacity(0.2)
+                        ),
                       ),
-                    ),
+
                     // Dégradé au bas pour améliorer la lisibilité du titre
                     Positioned(
                       bottom: 0,
@@ -144,11 +154,15 @@ class _AgenceDetailsPageState extends State<AgenceDetailsPage> with SingleTicker
   }
 
   Widget _buildGaresList(ColorScheme cs) {
+    final stations = widget.agence.stations;
+    if (stations.isEmpty) {
+      return _buildEmptyState(cs, 'Aucune station trouvée', Icons.location_off);
+    }
     return ListView.builder(
       padding: const EdgeInsets.all(16),
-      itemCount: dummyGares.length,
+      itemCount: stations.length,
       itemBuilder: (context, index) {
-        final gare = dummyGares[index];
+        final station = stations[index];
         return Card(
           margin: const EdgeInsets.only(bottom: 12),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
@@ -161,11 +175,11 @@ class _AgenceDetailsPageState extends State<AgenceDetailsPage> with SingleTicker
                 backgroundColor: widget.agence.color.withOpacity(0.15),
                 child: Icon(Icons.location_city, color: widget.agence.color),
               ),
-              title: Text(gare['ville']!, style: const TextStyle(fontWeight: FontWeight.bold)),
-              subtitle: Text('${gare['nom']} - ${gare['adresse']}'),
+              title: Text(station['ville'] ?? 'Station', style: const TextStyle(fontWeight: FontWeight.bold)),
+              subtitle: Text('${station['nom']} - ${station['adresse'] ?? ''}'),
               trailing: IconButton(
                 icon: Icon(Icons.map, color: cs.primary),
-                onPressed: () {}, // Peut rediriger vers Maps plus tard
+                onPressed: () {}, 
               ),
             ),
           ),
@@ -175,11 +189,15 @@ class _AgenceDetailsPageState extends State<AgenceDetailsPage> with SingleTicker
   }
 
   Widget _buildVoyagesList(ColorScheme cs) {
+    final voyages = upcomingVoyages;
+    if (voyages.isEmpty) {
+      return _buildEmptyState(cs, 'Aucun voyage en attente', Icons.event_busy);
+    }
     return ListView.builder(
       padding: const EdgeInsets.all(16),
-      itemCount: dummyVoyages.length,
+      itemCount: voyages.length,
       itemBuilder: (context, index) {
-        final voy = dummyVoyages[index];
+        final voy = voyages[index];
         return Card(
           margin: const EdgeInsets.only(bottom: 16),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
@@ -195,10 +213,10 @@ class _AgenceDetailsPageState extends State<AgenceDetailsPage> with SingleTicker
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Expanded(
-                      child: Text(voy['route'], style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 16)),
+                      child: Text('${voy.villeSource} → ${voy.villeDestination}', style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 16)),
                     ),
                     const SizedBox(width: 8),
-                    Text(voy['price'], style: TextStyle(fontWeight: FontWeight.bold, color: widget.agence.color, fontSize: 16)),
+                    Text('${voy.prix.toInt()} FCFA', style: TextStyle(fontWeight: FontWeight.bold, color: widget.agence.color, fontSize: 16)),
                   ],
                 ),
                 const SizedBox(height: 12),
@@ -207,7 +225,7 @@ class _AgenceDetailsPageState extends State<AgenceDetailsPage> with SingleTicker
                     Icon(Icons.access_time, size: 18, color: cs.onSurface.withOpacity(0.6)),
                     const SizedBox(width: 6),
                     Expanded(
-                      child: Text('${voy['date']} à ${voy['time']}', style: TextStyle(color: cs.onSurface.withOpacity(0.8), fontWeight: FontWeight.w500)),
+                      child: Text('${voy.dateStr} à ${voy.timeStr}', style: TextStyle(color: cs.onSurface.withOpacity(0.8), fontWeight: FontWeight.w500)),
                     ),
                   ],
                 ),
@@ -224,7 +242,7 @@ class _AgenceDetailsPageState extends State<AgenceDetailsPage> with SingleTicker
                             color: Colors.orange.withOpacity(0.1),
                             borderRadius: BorderRadius.circular(8),
                           ),
-                          child: Text('${voy['places']} places restantes', 
+                          child: Text('Sièges disponibles', 
                             style: const TextStyle(color: Colors.deepOrange, fontWeight: FontWeight.bold, fontSize: 12),
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -240,24 +258,7 @@ class _AgenceDetailsPageState extends State<AgenceDetailsPage> with SingleTicker
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12)
                       ),
-                      onPressed: () {
-                        context.pushNamed(AppRouter.booking, extra: VoyageModel(
-                          id: index + 10, // Temporaire
-                          numVoyage: voy['route'],
-                          trajetId: 0,
-                          busId: 0,
-                          dateDepart: DateFormat('yyyy-MM-dd').format(DateTime.now()),
-                          heureDepart: voy['time'],
-                          prix: double.parse(voy['price'].replaceAll(' FCFA', '').replaceAll(' ', '')),
-                          chauffeurId: 0,
-                          statut: 'PROGRAMMÉ',
-                          stationId: 0,
-                          nomAgence: widget.agence.name,
-                          villeSource: voy['route'].split(' → ')[0],
-                          villeDestination: voy['route'].split(' → ')[1],
-                        ));
-
-                      },
+                      onPressed: () => context.pushNamed(AppRouter.booking, extra: voy),
                       child: const Text('Réserver', style: TextStyle(fontWeight: FontWeight.bold)),
                     )
                   ],
@@ -271,11 +272,15 @@ class _AgenceDetailsPageState extends State<AgenceDetailsPage> with SingleTicker
   }
 
   Widget _buildTrajetsList(ColorScheme cs) {
+    final trajets = uniqueTrajets;
+    if (trajets.isEmpty) {
+      return _buildEmptyState(cs, 'Aucun trajet disponible', Icons.alt_route);
+    }
     return ListView.builder(
       padding: const EdgeInsets.all(16),
-      itemCount: dummyTrajets.length,
+      itemCount: trajets.length,
       itemBuilder: (context, index) {
-        final traj = dummyTrajets[index];
+        final traj = trajets[index];
         return Card(
           margin: const EdgeInsets.only(bottom: 12),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
@@ -293,15 +298,28 @@ class _AgenceDetailsPageState extends State<AgenceDetailsPage> with SingleTicker
                 child: Icon(Icons.route, color: widget.agence.color),
               ),
               title: Text('${traj['depart']} ↔ ${traj['arrivee']}', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
-              subtitle: Padding(
-                padding: const EdgeInsets.only(top: 4.0),
-                child: Text('Durée estimée: ${traj['duree']}'),
+              subtitle: const Padding(
+                padding: EdgeInsets.only(top: 4.0),
+                child: Text('Réseau GEV'),
               ),
               trailing: Text(traj['prix']!, style: TextStyle(fontWeight: FontWeight.w900, color: widget.agence.color, fontSize: 15)),
             ),
           ),
         );
       },
+    );
+  }
+
+  Widget _buildEmptyState(ColorScheme cs, String message, IconData icon) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(icon, size: 64, color: cs.onSurface.withOpacity(0.1)),
+          const SizedBox(height: 16),
+          Text(message, style: TextStyle(color: cs.onSurface.withOpacity(0.4), fontWeight: FontWeight.bold)),
+        ],
+      ),
     );
   }
 }

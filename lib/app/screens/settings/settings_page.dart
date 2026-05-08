@@ -7,7 +7,10 @@ import 'package:provider/provider.dart' as legacy_provider;
 import 'package:camer_trip/app/config/theme_provider.dart';
 import 'package:camer_trip/app/routes/app_routter.dart';
 import 'package:camer_trip/app/shared/others/app_bar.dart';
+import 'package:camer_trip/app/services/api_client_service.dart';
+import 'package:camer_trip/app/config/const_config.dart';
 import 'package:go_router/go_router.dart';
+
 
 class SettingPage extends ConsumerStatefulWidget {
   const SettingPage({super.key});
@@ -183,13 +186,23 @@ class _SettingPageState extends ConsumerState<SettingPage> {
       child: Row(
         children: [
           Container(
-            width: 60,
-            height: 60,
+            width: 65,
+            height: 65,
             decoration: BoxDecoration(
               color: Colors.white.withOpacity(0.2),
               shape: BoxShape.circle,
+              border: Border.all(color: Colors.white24, width: 2),
+              image: user?.profilUrl != null
+                  ? DecorationImage(
+                      image: NetworkImage("${ApiClient().baseUrl.replaceAll('/api', '')}/storage/${user!.profilUrl}"),
+                      fit: BoxFit.cover,
+                    )
+                  : null,
+
             ),
-            child: const Icon(Icons.person_rounded, color: Colors.white, size: 35),
+            child: user?.profilUrl == null
+                ? const Icon(Icons.person_rounded, color: Colors.white, size: 35)
+                : null,
           ),
           const SizedBox(width: 15),
           Expanded(
@@ -221,13 +234,15 @@ class _SettingPageState extends ConsumerState<SettingPage> {
               ],
             ),
           ),
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.edit_note_rounded, color: Colors.white, size: 28),
-          ),
+          if (user != null)
+            IconButton(
+              onPressed: () => context.pushNamed(AppRouter.editProfile, extra: user),
+              icon: const Icon(Icons.edit_note_rounded, color: Colors.white, size: 32),
+            ),
         ],
       ),
     );
+
   }
 
   Widget _buildSectionTitle(ColorScheme cs, String title) {

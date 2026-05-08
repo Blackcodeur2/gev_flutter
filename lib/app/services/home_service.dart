@@ -9,8 +9,9 @@ class HomeService {
 
   Future<List<Agence>> getAgencesPartenaires() async {
     try {
-      final response = await dio.get('/client/agences');
+      final response = await dio.get('/agences');
       final List<dynamic> list = response.data["data"];
+
       return list.map((json) => Agence.fromJson(json)).toList();
     } catch (e) {
       print("Erreur getAgencesPartenaires : \$e");
@@ -20,7 +21,7 @@ class HomeService {
 
   Future<List<Destination>> getDestinationsPopulaires() async {
     try {
-      final response = await dio.get('/client/trajets-populaires');
+      final response = await dio.get('/trajets-populaires');
       final List<dynamic> list = response.data["data"];
       return list.map((json) => Destination.fromJson(json)).toList();
     } catch (e) {
@@ -31,7 +32,7 @@ class HomeService {
 
   Future<List<PromoTrip>> getPromoTrips() async {
     try {
-      final response = await dio.get('/client/promo-trips');
+      final response = await dio.get('/promo-trips');
       final List<dynamic> list = response.data["data"];
       return list.map((json) => PromoTrip.fromJson(json)).toList();
     } catch (e) {
@@ -39,4 +40,5 @@ class HomeService {
       return [];
     }
   }
+
 }

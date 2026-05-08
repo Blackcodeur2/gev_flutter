@@ -144,8 +144,6 @@ class _HomePageState extends ConsumerState<HomePage>
                 SliverToBoxAdapter(
                   child: SectionTitle(title: '🎟️ Réservation en cours', action: 'Détails'),
                 ),
-                const SliverToBoxAdapter(child: VoyageCard()),
-  
                 const SliverToBoxAdapter(child: SizedBox(height: 120)), 
               ],
             ),

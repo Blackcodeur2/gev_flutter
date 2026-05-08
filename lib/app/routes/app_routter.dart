@@ -14,6 +14,8 @@ import 'package:camer_trip/app/screens/books/booking_page.dart';
 import 'package:camer_trip/app/screens/books/payment_page.dart';
 import 'package:camer_trip/app/screens/colis/my_colis_page.dart';
 import 'package:camer_trip/app/models/voyage_model.dart';
+import 'package:camer_trip/app/screens/settings/edit_profile_page.dart';
+import 'package:camer_trip/app/models/user_model.dart';
 import 'package:camer_trip/app/utils/main_page.dart';
 import 'package:go_router/go_router.dart';
 
@@ -33,6 +35,8 @@ class AppRouter {
   static const String booking = 'booking';
   static const String payment = 'payment';
   static const String myColis = 'myColis';
+  static const String editProfile = 'editProfile';
+
 
   // ── Chemins de routes ─────────────────────────────────────────────────────
   static const String splashPath = '/';
@@ -49,6 +53,8 @@ class AppRouter {
   static const String bookingPath = '/booking';
   static const String paymentPath = '/payment';
   static const String myColisPath = '/my-colis';
+  static const String editProfilePath = '/edit-profile';
+
 
   // ── Simulation AuthService ──────────────────────────────────
   static bool _isLoggedIn = false;
@@ -101,6 +107,12 @@ class AppRouter {
         },
       ),
       GoRoute(path: myColisPath, name: myColis, builder: (context, state) => const MyColisPage()),
+      GoRoute(
+        path: editProfilePath,
+        name: editProfile,
+        builder: (context, state) => EditProfilePage(user: state.extra as UserModel),
+      ),
+
     ],
   );
 }

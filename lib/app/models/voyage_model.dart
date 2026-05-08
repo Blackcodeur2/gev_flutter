@@ -67,6 +67,29 @@ class VoyageModel {
   // Combiner date et heure pour le parsing DateTime si nécessaire
   DateTime get fullDepartureDate => DateTime.parse("$dateDepart $heureDepart");
 
+  String get dateStr {
+    try {
+      DateTime dt = DateTime.parse(dateDepart);
+      final months = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"];
+      return "${dt.day} ${months[dt.month - 1]} ${dt.year}";
+    } catch (e) {
+      return dateDepart;
+    }
+  }
+
+  String get timeStr {
+    try {
+      // Si l'heure est au format HH:mm:ss, on prend HH:mm
+      if (heureDepart.length >= 5) {
+        return heureDepart.substring(0, 5);
+      }
+      return heureDepart;
+    } catch (e) {
+      return heureDepart;
+    }
+  }
+
+
   Map<String, dynamic> toJson() {
     return {
       'id': id,

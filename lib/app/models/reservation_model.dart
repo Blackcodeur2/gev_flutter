@@ -45,8 +45,20 @@ class ReservationModel {
       timeStr = "${dt.hour.toString().padLeft(2, '0')}:${dt.minute.toString().padLeft(2, '0')}";
     }
 
-    String villeDep = voyage?['trajet']?['depart']?['ville'] ?? voyage?['trajet']?['depart']?['nom'] ?? '...';
-    String villeArr = voyage?['trajet']?['arrivee']?['ville'] ?? voyage?['trajet']?['arrivee']?['nom'] ?? '...';
+    final trajet = voyage?['trajet'];
+    String villeDep = voyage?['ville_depart']?.toString() ?? '...';
+    if (villeDep == '...') {
+      final dep = trajet?['depart'];
+      villeDep = (dep is Map) ? (dep['ville'] ?? dep['nom'] ?? '...') : dep?.toString() ?? '...';
+    }
+
+    String villeArr = voyage?['ville_arrivee']?.toString() ?? '...';
+    if (villeArr == '...') {
+      final arr = trajet?['arrivee'];
+      villeArr = (arr is Map) ? (arr['ville'] ?? arr['nom'] ?? '...') : arr?.toString() ?? '...';
+    }
+
+
 
     return ReservationModel(
       id: json['id'],

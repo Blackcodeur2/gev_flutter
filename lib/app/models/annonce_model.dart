@@ -28,9 +28,8 @@ final List<AnnonceModel> dummyAnnonces = [
   AnnonceModel(
     id: '1',
     agence: const Agence(
+      id: 1,
       name: 'Touristique Express',
-      route: 'Yaoundé - Douala',
-      rating: '4.8',
       color: Colors.green,
       icon: Icons.bus_alert,
     ),
@@ -43,9 +42,8 @@ final List<AnnonceModel> dummyAnnonces = [
   AnnonceModel(
     id: '2',
     agence: const Agence(
+      id: 2,
       name: 'Finexs Voyages',
-      route: 'Douala - Yaoundé',
-      rating: '4.5',
       color: Colors.blue,
       icon: Icons.directions_bus,
     ),
@@ -56,12 +54,12 @@ final List<AnnonceModel> dummyAnnonces = [
   AnnonceModel(
     id: '3',
     agence: const Agence(
+      id: 3,
       name: 'Buca Voyages',
-      route: 'Douala - Kribi',
-      rating: '4.2',
       color: Colors.red,
       icon: Icons.beach_access,
     ),
+
     content: '🌴 Nouveau Trajet : Nous desservons désormais la ville de Kribi ! Profitez de nos bus climatisés pour vos week-ends au bord de mer.',
     imageUrl: 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=800', // Image de plage
     date: DateTime.now().subtract(const Duration(days: 1)),
