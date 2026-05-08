@@ -39,7 +39,7 @@ class _PaymentPageState extends ConsumerState<PaymentPage> {
       final service = ref.read(reservationServiceProvider);
       final response = await service.createReservation(
         voyageId: widget.voyage.id!,
-        gareId: widget.voyage.gareId,
+        gareId: widget.voyage.stationId,
         place: widget.seat,
         prix: widget.voyage.prix,
         telephonePaiement: _phoneController.text,

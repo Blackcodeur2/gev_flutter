@@ -26,8 +26,8 @@ class AuthService {
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        final token = response.data["token"];
-        final userData = response.data["user"];
+        final token = response.data["data"]["token"];
+        final userData = response.data["data"]["user"];
 
         await storage.write(key: AppConstants.tokenKey, value: token);
         await storage.write(
@@ -45,6 +45,8 @@ class AuthService {
         message = "Données invalides";
       } else if (e.response?.statusCode == 401) {
         message = "Email ou mot de passe incorrect";
+      } else if (e.response?.statusCode == 403) {
+        message = e.response?.data['message'] ?? "Veuillez vérifier votre email avant de vous connecter.";
       }
       return AuthResponse(success: false, message: message);
     } catch (e) {
@@ -55,13 +57,12 @@ class AuthService {
   Future<AuthResponse> register({
     required String nom,
     required String prenom,
-    required String numCni,
     required String email,
     required String telephone,
     required String dateNaissance,
+    required String sexe,
     required String password,
-    int? gareId,
-    String? roleUser,
+    required String passwordConfirmation,
   }) async {
     try {
       final response = await dio.post(
@@ -69,27 +70,26 @@ class AuthService {
         data: {
           "nom": nom,
           "prenom": prenom,
-          "num_cni": numCni,
           "email": email,
           "telephone": telephone,
           "date_naissance": dateNaissance,
+          "sexe": sexe,
           "password": password,
-          "role_user": roleUser ?? "CLIENT",
-          "gare_id": gareId,
+          "password_confirmation": passwordConfirmation,
+          "role_user": "CLIENT",
         },
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        final token = response.data["token"];
-        final userData = response.data["user"];
+        // Le backend ne renvoie plus de token à l'inscription pour forcer la vérification d'email
+        final userData = response.data["data"]["user"];
 
-        await storage.write(key: AppConstants.tokenKey, value: token);
-        await storage.write(
-          key: AppConstants.userDataKey,
-          value: jsonEncode(userData),
+        return AuthResponse(
+          success: true,
+          message: response.data["message"] ??
+              "Inscription réussie. Veuillez vérifier votre email.",
+          user: UserModel.fromJson(userData),
         );
-
-        return AuthResponse(success: true, user: UserModel.fromJson(userData));
       }
 
       return AuthResponse(success: false, message: "Échec de l'inscription");
@@ -115,6 +115,7 @@ class AuthService {
       );
     }
   }
+
 
   Future<void> logout() async {
     try {
@@ -150,7 +151,7 @@ class AuthService {
       print("Syncing user data from /user...");
       final response = await dio.get("/user");
       if (response.statusCode == 200) {
-        final userData = response.data;
+        final userData = response.data["data"];
         print("Sync Success! New Statut: ${userData['statut']}");
         await storage.write(
           key: AppConstants.userDataKey,

@@ -3,6 +3,7 @@ import 'package:camer_trip/app/models/voyage_model.dart';
 import 'package:camer_trip/app/routes/app_routter.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 
 class AgenceDetailsPage extends StatefulWidget {
   final Agence agence;
@@ -245,15 +246,17 @@ class _AgenceDetailsPageState extends State<AgenceDetailsPage> with SingleTicker
                           numVoyage: voy['route'],
                           trajetId: 0,
                           busId: 0,
-                          dateDepart: DateTime.now().add(const Duration(hours: 2)),
+                          dateDepart: DateFormat('yyyy-MM-dd').format(DateTime.now()),
+                          heureDepart: voy['time'],
                           prix: double.parse(voy['price'].replaceAll(' FCFA', '').replaceAll(' ', '')),
                           chauffeurId: 0,
                           statut: 'PROGRAMMÉ',
-                          gareId: 0,
+                          stationId: 0,
                           nomAgence: widget.agence.name,
                           villeSource: voy['route'].split(' → ')[0],
                           villeDestination: voy['route'].split(' → ')[1],
                         ));
+
                       },
                       child: const Text('Réserver', style: TextStyle(fontWeight: FontWeight.bold)),
                     )

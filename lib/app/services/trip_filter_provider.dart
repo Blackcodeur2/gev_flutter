@@ -47,10 +47,11 @@ final filteredTripsProvider = Provider<AsyncValue<List<VoyageModel>>>((ref) {
         case FilterCategory.destination:
           return trip.villeDestination?.toLowerCase() == filter.value.toLowerCase();
         case FilterCategory.heure:
-          final hour = trip.dateDepart.hour;
+          final hour = trip.fullDepartureDate.hour;
           if (filter.value == 'Matin') return hour >= 5 && hour < 12;
           if (filter.value == 'Après-midi') return hour >= 12 && hour < 18;
           if (filter.value == 'Soir') return hour >= 18 || hour < 5;
+
           return true;
         default:
           return true;

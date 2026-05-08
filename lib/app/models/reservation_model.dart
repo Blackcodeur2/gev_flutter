@@ -31,8 +31,9 @@ class ReservationModel {
 
   factory ReservationModel.fromJson(Map<String, dynamic> json) {
     final voyage = json['voyage'];
-    final gare = json['gare'];
-    final agence = gare?['agence'] ?? voyage?['nom_agence'];
+    final station = json['station'];
+    final agence = station?['agence'] ?? voyage?['station']?['agence'];
+
     
     // Formatage de la date (ex: 2026-04-08 14:30:00)
     String dateStr = '...';

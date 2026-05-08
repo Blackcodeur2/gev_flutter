@@ -13,12 +13,18 @@ class Destination {
   });
 
   factory Destination.fromJson(Map<String, dynamic> json) {
+    String getName(dynamic val) {
+      if (val is Map) return val['ville'] ?? val['nom'] ?? 'Inconnu';
+      return val?.toString() ?? 'Inconnu';
+    }
+
     return Destination(
-      name: json['arrivee']?['ville'] ?? json['arrivee']?['nom'] ?? 'Inconnu',
-      from: json['depart']?['ville'] ?? json['depart']?['nom'] ?? 'Inconnu',
+      name: getName(json['arrivee']),
+      from: getName(json['depart']),
       price: json['prix']?.toString() ?? '...',
       duration: 'Intercités',
       emoji: '📍',
     );
   }
+
 }

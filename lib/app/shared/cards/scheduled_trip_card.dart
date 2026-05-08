@@ -100,13 +100,14 @@ class ScheduledTripCard extends ConsumerWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          timeFormat.format(voyage.dateDepart),
+                          timeFormat.format(voyage.fullDepartureDate),
                           style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 18),
                         ),
                         Text(
-                          dateFormat.format(voyage.dateDepart),
+                          dateFormat.format(voyage.fullDepartureDate),
                           style: TextStyle(color: cs.onSurface.withOpacity(0.5), fontSize: 12),
                         ),
+
                       ],
                     ),
                     const SizedBox(width: 16),

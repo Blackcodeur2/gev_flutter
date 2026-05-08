@@ -1,32 +1,43 @@
 class AgenceModel {
   final int? id;
-  final String nomAgence;
-  final String emailAgence;
+  final String nom;
+  final String email;
   final String telephone;
-  final String bp;
-  final int? prorietaire;
+  final String ville;
+  final String adresse;
+  final String? logoUrl;
 
-  AgenceModel({required this.id, required this.nomAgence, required this.emailAgence, required this.telephone, required this.bp, required this.prorietaire});
+  AgenceModel({
+    required this.id,
+    required this.nom,
+    required this.email,
+    required this.telephone,
+    required this.ville,
+    required this.adresse,
+    this.logoUrl,
+  });
 
   factory AgenceModel.fromJson(Map<String, dynamic> json) {
     return AgenceModel(
-      id: int.parse(json['id'].toString()),
-      nomAgence: json['nom_agence'], 
-      emailAgence: json['email_agence'], 
-      telephone: json['telephone'], 
-      bp: json['BP'], 
-      prorietaire: int.parse(json['proprietaire'].toString())
+      id: json['id'] != null ? int.parse(json['id'].toString()) : null,
+      nom: json['nom'] ?? '',
+      email: json['email'] ?? '',
+      telephone: json['telephone'] ?? '',
+      ville: json['ville'] ?? '',
+      adresse: json['adresse'] ?? '',
+      logoUrl: json['logo_url'],
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'id' : id,
-      'nom_agence' : nomAgence,
-      'email_agence' : emailAgence,
-      'telephone' : telephone,
-      'BP' : bp,
-      'proprietaire' : prorietaire
+      'id': id,
+      'nom': nom,
+      'email': email,
+      'telephone': telephone,
+      'ville': ville,
+      'adresse': adresse,
+      'logo_url': logoUrl,
     };
   }
-}
+}

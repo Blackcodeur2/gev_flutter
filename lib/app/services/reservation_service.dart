@@ -19,12 +19,13 @@ class ReservationService {
         '/client/reservations',
         data: {
           'voyage_id': voyageId,
-          'gare_id': gareId,
+          'station_id': gareId,
           'place': place,
           'prix': prix,
           'payment_phone': telephonePaiement, // Champ utile pour l'API
           'payment_method': methodePaiement,   // Champ utile pour l'API
         },
+
       );
       return response;
     } on DioException catch (e) {

@@ -36,6 +36,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage>
   bool _acceptTerms = false;
   bool _isLoading = false;
   DateTime? _selectedDate;
+  String _selectedSexe = 'M';
 
   // Animation
   late AnimationController _animController;
@@ -121,19 +122,19 @@ class _RegisterPageState extends ConsumerState<RegisterPage>
     final response = await authService.register(
       nom: _nomController.text.trim(),
       prenom: _prenomController.text.trim(),
-      numCni: _cniController.text.trim(),
       email: _emailController.text.trim(),
       telephone: _phoneController.text.trim(),
       dateNaissance: _birthDateController.text,
+      sexe: _selectedSexe,
       password: _passwordController.text,
+      passwordConfirmation: _confirmPasswordController.text,
     );
 
     if (!mounted) return;
     setState(() => _isLoading = false);
 
     if (response.success) {
-      AppRouter.setLoggedIn(true);
-      context.go('/main');
+      _showSuccessDialog(response.message ?? "Inscription réussie. Veuillez vérifier votre email.");
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -146,6 +147,26 @@ class _RegisterPageState extends ConsumerState<RegisterPage>
         ),
       );
     }
+  }
+
+  void _showSuccessDialog(String message) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => AlertDialog(
+        title: const Text('Succès'),
+        content: Text(message),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              context.pop(); // Retour à la page de login
+            },
+            child: const Text('OK'),
+          ),
+        ],
+      ),
+    );
   }
 
   // ─── Build ────────────────────────────────────────────────────────────────
@@ -244,12 +265,31 @@ class _RegisterPageState extends ConsumerState<RegisterPage>
                           
                           const SizedBox(height: 16),
                           
-                          _AppTextField(
-                            controller: _cniController,
-                            hintText: 'Numéro de CNI',
-                            prefixIcon: Icons.badge_rounded,
-                            keyboardType: TextInputType.number,
-                            validator: (v) => v!.isEmpty ? 'Numéro CNI requis' : null,
+                          _buildSectionTitle(context, 'Sexe'),
+                          const SizedBox(height: 8),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: RadioListTile<String>(
+                                  title: const Text('Masculin'),
+                                  value: 'M',
+                                  groupValue: _selectedSexe,
+                                  onChanged: (v) => setState(() => _selectedSexe = v!),
+                                  activeColor: cs.primary,
+                                  contentPadding: EdgeInsets.zero,
+                                ),
+                              ),
+                              Expanded(
+                                child: RadioListTile<String>(
+                                  title: const Text('Féminin'),
+                                  value: 'F',
+                                  groupValue: _selectedSexe,
+                                  onChanged: (v) => setState(() => _selectedSexe = v!),
+                                  activeColor: cs.primary,
+                                  contentPadding: EdgeInsets.zero,
+                                ),
+                              ),
+                            ],
                           ),
 
                           const SizedBox(height: 16),

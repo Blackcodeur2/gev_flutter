@@ -93,7 +93,7 @@ class _BookingPageState extends ConsumerState<BookingPage> {
                   maxLines: 2,
                 ),
                 Text(
-                  'Départ: ${widget.voyage.dateDepart.hour}:${widget.voyage.dateDepart.minute.toString().padLeft(2, '0')}',
+                  'Départ: ${widget.voyage.fullDepartureDate.hour}:${widget.voyage.fullDepartureDate.minute.toString().padLeft(2, '0')}',
                   style: TextStyle(color: cs.onSurface.withOpacity(0.6), fontSize: 13),
                 ),
               ],
@@ -140,7 +140,8 @@ class _BookingPageState extends ConsumerState<BookingPage> {
               crossAxisSpacing: 12,
               childAspectRatio: 1,
             ),
-            itemCount: widget.voyage.nbPlaces,
+            itemCount: widget.voyage.nbPlaces ?? 44,
+
             itemBuilder: (context, index) {
               String seatNum = (index + 1).toString();
               bool isOccupied = occupiedSeats.contains(seatNum);
