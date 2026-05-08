@@ -5,34 +5,44 @@ class BusModel {
   final int? nbPlaces;
   final String typeBus;
   final String classBus;
-  final int gareId;
+  final int stationId;
   final String statut;
 
-  BusModel({required this.id,required this.immatriculation,required this.codeBus, required this.nbPlaces, required this.typeBus, required this.classBus, required this.gareId, required this.statut});
+  BusModel({
+    required this.id,
+    required this.immatriculation,
+    required this.codeBus,
+    required this.nbPlaces,
+    required this.typeBus,
+    required this.classBus,
+    required this.stationId,
+    required this.statut,
+  });
 
   factory BusModel.fromJson(Map<String, dynamic> json) {
     return BusModel(
-      id: int.parse(json['id']), 
-      immatriculation: json['immatriculation'], 
-      codeBus: json['code_bus'], 
-      nbPlaces: int.parse(json['nb_places']), 
-      typeBus: json['type_bus'], 
-      classBus: json['classe_bus'], 
-      gareId: int.parse(json['gare_id']), 
-      statut: json['statut']
+      id: int.parse(json['id'].toString()),
+      immatriculation: json['immatriculation'],
+      codeBus: json['code_bus'],
+      nbPlaces: int.parse(json['nb_places'].toString()),
+      typeBus: json['type_bus'],
+      classBus: json['classe_bus'],
+      stationId: int.parse(json['station_id'].toString()),
+      statut: json['statut'],
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'id' : id,
-      'immatriculation' : immatriculation,
-      'code_bus' : codeBus,
-      'nb_places' : nbPlaces,
-      'type_bus' : typeBus,
-      'classe_bus' : classBus,
-      'gare_id' : gareId,
-      'statut' : statut
+      'id': id,
+      'immatriculation': immatriculation,
+      'code_bus': codeBus,
+      'nb_places': nbPlaces,
+      'type_bus': typeBus,
+      'classe_bus': classBus,
+      'station_id': stationId,
+      'statut': statut,
     };
   }
 }
+

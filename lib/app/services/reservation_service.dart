@@ -8,7 +8,7 @@ class ReservationService {
   // Créer une nouvelle réservation (Aligné sur le modèle Laravel)
   Future<Response?> createReservation({
     required int voyageId,
-    required int gareId,
+    required int stationId,
     required String place,
     required double prix,
     required String telephonePaiement,
@@ -19,7 +19,8 @@ class ReservationService {
         '/client/reservations',
         data: {
           'voyage_id': voyageId,
-          'station_id': gareId,
+          'station_id': stationId,
+
           'place': place,
           'prix': prix,
           'payment_phone': telephonePaiement, // Champ utile pour l'API

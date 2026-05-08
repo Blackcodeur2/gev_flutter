@@ -6,6 +6,7 @@ import 'home_service.dart';
 import 'kwc_service.dart';
 import 'voyage_service.dart';
 import 'reservation_service.dart';
+import 'paiement_service.dart';
 
 // Fournit l'instance Singleton de l'ApiClient (Dio)
 final apiClientProvider = Provider<ApiClient>((ref) {
@@ -31,9 +32,15 @@ final reservationServiceProvider = Provider<ReservationService>((ref) {
   return ReservationService();
 });
 
+
 final homeServiceProvider = Provider<HomeService>((ref) {
   return HomeService();
 });
+
+final paiementServiceProvider = Provider<PaiementService>((ref) {
+  return PaiementService();
+});
+
 
 final agencesProvider = FutureProvider((ref) async {
   return ref.watch(homeServiceProvider).getAgencesPartenaires();

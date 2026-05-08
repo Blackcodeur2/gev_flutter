@@ -3,14 +3,14 @@ class PaiementModel {
   final String? reference;
   final int reservationId;
   final double montant;
-  final int station_id;
+  final int stationId;
 
   PaiementModel({
     this.id,
     this.reference,
     required this.reservationId,
     required this.montant,
-    required this.station_id,
+    required this.stationId,
   });
 
   factory PaiementModel.fromJson(Map<String, dynamic> json) {
@@ -19,7 +19,7 @@ class PaiementModel {
       reference: json['reference'],
       reservationId: json['reservation_id'] ?? 0,
       montant: double.tryParse(json['montant'].toString()) ?? 0.0,
-      station_id: json['station_id'] ?? 0,
+      stationId: json['station_id'] ?? 0,
     );
   }
 
@@ -29,7 +29,7 @@ class PaiementModel {
       'reference': reference,
       'reservation_id': reservationId,
       'montant': montant,
-      'station_id': station_id,
+      'station_id': stationId,
     };
   }
 }

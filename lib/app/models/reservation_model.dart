@@ -2,7 +2,7 @@ class ReservationModel {
   final int? id;
   final String? numReservation;
   final int userId;
-  final int gareId;
+  final int stationId;
   final int voyageId;
   final String place;
   final double prix;
@@ -18,7 +18,7 @@ class ReservationModel {
     this.id,
     this.numReservation,
     required this.userId,
-    required this.gareId,
+    required this.stationId,
     required this.voyageId,
     required this.place,
     required this.prix,
@@ -52,7 +52,7 @@ class ReservationModel {
       id: json['id'],
       numReservation: json['num_reservation'],
       userId: json['user_id'] ?? 0,
-      gareId: json['gare_id'] ?? 0,
+      stationId: json['station_id'] ?? 0,
       voyageId: json['voyage_id'] ?? 0,
       place: json['place']?.toString() ?? '',
       prix: double.tryParse(json['prix'].toString()) ?? 0.0,
@@ -69,7 +69,7 @@ class ReservationModel {
       'id': id,
       'num_reservation': numReservation,
       'user_id': userId,
-      'gare_id': gareId,
+      'station_id': stationId,
       'voyage_id': voyageId,
       'place': place,
       'prix': prix,

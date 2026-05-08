@@ -2,7 +2,9 @@ import 'package:camer_trip/app/models/voyage_model.dart';
 import 'package:camer_trip/app/services/providers.dart';
 import 'package:camer_trip/app/shared/others/app_bar.dart';
 import 'package:flutter/material.dart';
+import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'package:go_router/go_router.dart';
 
 class PaymentPage extends ConsumerStatefulWidget {
@@ -26,36 +28,63 @@ class _PaymentPageState extends ConsumerState<PaymentPage> {
   }
 
   Future<void> _handlePayment() async {
-    if (_phoneController.text.isEmpty) {
+    String phone = _phoneController.text.trim();
+    if (phone.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Veuillez entrer votre numéro de paiement')),
       );
       return;
     }
 
+    // Formatage du numéro pour CamPay (préfixe 237)
+    if (!phone.startsWith('237')) {
+      if (phone.length == 9) {
+        phone = '237$phone';
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Numéro invalide. Format: 6xx xxx xxx')),
+        );
+        return;
+      }
+    }
+
     setState(() => isLoading = true);
 
     try {
-      final service = ref.read(reservationServiceProvider);
-      final response = await service.createReservation(
+      final reservationService = ref.read(reservationServiceProvider);
+      final paiementService = ref.read(paiementServiceProvider);
+
+      // 1. Créer la réservation (Status: en attente)
+      final resResponse = await reservationService.createReservation(
         voyageId: widget.voyage.id!,
-        gareId: widget.voyage.stationId,
+        stationId: widget.voyage.stationId,
         place: widget.seat,
         prix: widget.voyage.prix,
-        telephonePaiement: _phoneController.text,
+        telephonePaiement: phone,
         methodePaiement: selectedMethod,
       );
 
-      if (!mounted) return;
-      setState(() => isLoading = false);
-
-      if (response != null && (response.statusCode == 200 || response.statusCode == 201)) {
-        _showSuccessDialog();
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Une erreur est survenue lors de la réservation')),
-        );
+      if (resResponse == null || (resResponse.statusCode != 200 && resResponse.statusCode != 201)) {
+        throw Exception('Erreur lors de la création de la réservation');
       }
+
+      final reservationId = resResponse.data['data']['id'];
+
+      // 2. Initier le paiement CamPay
+      final payResponse = await paiementService.initiatePayment(
+        reservationId: reservationId,
+        phone: phone,
+      );
+
+      if (payResponse == null || payResponse['statut'] == false) {
+        throw Exception(payResponse?['message'] ?? 'Erreur d\'initialisation du paiement');
+      }
+
+      final reference = payResponse['reference'];
+
+      // 3. Polling du statut du paiement
+      _startPolling(reference);
+
     } catch (e) {
       if (mounted) {
         setState(() => isLoading = false);
@@ -65,6 +94,46 @@ class _PaymentPageState extends ConsumerState<PaymentPage> {
       }
     }
   }
+
+  void _startPolling(String reference) async {
+    final paiementService = ref.read(paiementServiceProvider);
+    int attempts = 0;
+    const maxAttempts = 30; // 5 minutes (10s intervalle)
+
+    Timer.periodic(const Duration(seconds: 10), (timer) async {
+      attempts++;
+      if (attempts >= maxAttempts) {
+        timer.cancel();
+        if (mounted) {
+          setState(() => isLoading = false);
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Délai de paiement dépassé. Vérifiez vos billets.')),
+          );
+        }
+        return;
+      }
+
+      final status = await paiementService.checkPaymentStatus(reference);
+      
+      if (status == 'SUCCESSFUL') {
+        timer.cancel();
+        if (mounted) {
+          setState(() => isLoading = false);
+          _showSuccessDialog();
+        }
+      } else if (status == 'FAILED' || status == 'ECHOUÉ') {
+        timer.cancel();
+        if (mounted) {
+          setState(() => isLoading = false);
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Le paiement a échoué.')),
+          );
+        }
+      }
+      // PENDING: On continue d'attendre
+    });
+  }
+
 
   void _showSuccessDialog() {
     showDialog(
