@@ -22,7 +22,7 @@ class AuthService {
     try {
       final response = await dio.post(
         "/login",
-        data: {"email": email, "password": password},
+        data: {"login": email, "password": password},
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {

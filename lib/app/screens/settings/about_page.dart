@@ -42,7 +42,7 @@ class AboutPage extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      'Version 1.4.2 Beta',
+                      'Version 1.0.0',
                       style: TextStyle(color: cs.onSurface.withOpacity(0.5)),
                     ),
                     const SizedBox(height: 48),
@@ -67,7 +67,7 @@ class AboutPage extends StatelessWidget {
                     const Divider(),
                     const SizedBox(height: 24),
                     Text(
-                      '© 2024 Blackcodeur IT Solutions\nFait avec ❤️ au Cameroun',
+                      '©2026 CamerTrip - Tous droits réservés\nFait avec ❤️ au Cameroun',
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         color: cs.onSurface.withOpacity(0.4),

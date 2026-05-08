@@ -9,7 +9,9 @@ class AppConstants {
   static const Duration apiTimeOut = Duration(seconds: 30);
   static const String apiBaseUrl = 'http://192.168.1.144:8000/api';
   static const String apiBaseUrl2 = 'http://192.168.1.27:8000/api';
-  static const List<String> apiBaseUrls = [apiBaseUrl, apiBaseUrl2];
+  static const String apiBaseUrl3 = 'http://192.168.137.1:8000/api';
+  static const String apiBaseUrl4 = 'http://192.168.100.39:8000/api';
+  static const List<String> apiBaseUrls = [apiBaseUrl, apiBaseUrl2, apiBaseUrl3, apiBaseUrl4];
 
   // CONFIGURATIONS DIMENSIONS
   static const double defaultPadding = 11.0;
