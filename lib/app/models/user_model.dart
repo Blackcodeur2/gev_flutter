@@ -27,6 +27,20 @@ class UserModel {
     this.profilUrl,
   });
 
+  String? get fullProfilUrl {
+    if (profilUrl == null) return null;
+    if (profilUrl!.startsWith('http')) {
+      // Si l'URL contient localhost, on le remplace par l'IP du serveur actuel
+      if (profilUrl!.contains('localhost')) {
+        // On importe pas ApiClient ici pour éviter les cycles, on fera la logique dans le widget ou on passera le baseUrl
+        return profilUrl; 
+      }
+      return profilUrl;
+    }
+    return profilUrl; // On laisse le widget gérer la concaténation si c'est relatif
+  }
+
+
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
       id: int.tryParse(json['id'].toString()) ?? 0,

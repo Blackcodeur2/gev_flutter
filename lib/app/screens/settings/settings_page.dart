@@ -163,6 +163,21 @@ class _SettingPageState extends ConsumerState<SettingPage> {
     String email = user?.email ?? "Session expirée";
     String role = user?.role ?? "VISITEUR";
 
+    String getAvatarUrl(String? url) {
+      if (url == null || url.isEmpty) return "";
+      if (url.startsWith('http')) {
+        // Si l'URL vient du serveur avec 'localhost', on remplace par l'IP actuelle du baseUrl
+        if (url.contains('localhost')) {
+          final serverIp = Uri.parse(ApiClient().baseUrl).host;
+          return url.replaceAll('localhost', serverIp);
+        }
+        return url;
+      }
+      // Chemin relatif
+      final base = ApiClient().baseUrl.replaceAll('/api', '');
+      return "$base/storage/$url";
+    }
+
     return Container(
       margin: const EdgeInsets.fromLTRB(20, 10, 20, 10),
       padding: const EdgeInsets.all(20),
@@ -194,16 +209,16 @@ class _SettingPageState extends ConsumerState<SettingPage> {
               border: Border.all(color: Colors.white24, width: 2),
               image: user?.profilUrl != null
                   ? DecorationImage(
-                      image: NetworkImage("${ApiClient().baseUrl.replaceAll('/api', '')}/storage/${user!.profilUrl}"),
+                      image: NetworkImage(getAvatarUrl(user!.profilUrl)),
                       fit: BoxFit.cover,
                     )
                   : null,
-
             ),
             child: user?.profilUrl == null
                 ? const Icon(Icons.person_rounded, color: Colors.white, size: 35)
                 : null,
           ),
+
           const SizedBox(width: 15),
           Expanded(
             child: Column(

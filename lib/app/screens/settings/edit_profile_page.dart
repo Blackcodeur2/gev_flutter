@@ -104,6 +104,19 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
     final cs = theme.colorScheme;
     final isDark = theme.brightness == Brightness.dark;
 
+    String getAvatarUrl(String? url) {
+      if (url == null || url.isEmpty) return "";
+      if (url.startsWith('http')) {
+        if (url.contains('localhost')) {
+          final serverIp = Uri.parse(ApiClient().baseUrl).host;
+          return url.replaceAll('localhost', serverIp);
+        }
+        return url;
+      }
+      final base = ApiClient().baseUrl.replaceAll('/api', '');
+      return "$base/storage/$url";
+    }
+
     return Scaffold(
       backgroundColor: cs.surface,
       body: SafeArea(
@@ -139,12 +152,12 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                                 ? DecorationImage(image: FileImage(_imageFile!), fit: BoxFit.cover)
                                 : (widget.user.profilUrl != null 
                                     ? DecorationImage(
-                                        image: NetworkImage("${ApiClient().baseUrl.replaceAll('/api', '')}/storage/${widget.user.profilUrl}"), 
+                                        image: NetworkImage(getAvatarUrl(widget.user.profilUrl)), 
                                         fit: BoxFit.cover
                                       )
                                     : null),
-
                             ),
+
                             child: (_imageFile == null && widget.user.profilUrl == null)
                                 ? Icon(Icons.person_rounded, size: 60, color: cs.primary.withOpacity(0.5))
                                 : null,
