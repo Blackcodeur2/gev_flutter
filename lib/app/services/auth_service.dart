@@ -262,5 +262,78 @@ class AuthService {
       return AuthResponse(success: false, message: e.toString());
     }
   }
+
+  Future<AuthResponse> forgotPassword(String email) async {
+    try {
+      final response = await dio.post("/forgot-password", data: {"email": email});
+      return AuthResponse(
+        success: response.data["success"] ?? true,
+        message: response.data["message"] ?? "Un lien et un code ont été envoyés.",
+      );
+    } on DioException catch (e) {
+      return AuthResponse(
+        success: false,
+        message: e.response?.data["message"] ?? "Erreur lors de l'envoi de l'email",
+      );
+    }
+  }
+
+  Future<AuthResponse> resetPasswordOtp({
+    required String email,
+    required String code,
+    required String password,
+    required String passwordConfirmation,
+  }) async {
+    try {
+      final response = await dio.post("/reset-password-otp", data: {
+        "email": email,
+        "code": code,
+        "password": password,
+        "password_confirmation": passwordConfirmation,
+      });
+      return AuthResponse(
+        success: response.data["success"] ?? true,
+        message: response.data["message"] ?? "Mot de passe réinitialisé.",
+      );
+    } on DioException catch (e) {
+      return AuthResponse(
+        success: false,
+        message: e.response?.data["message"] ?? "Erreur lors de la réinitialisation",
+      );
+    }
+  }
+
+  Future<AuthResponse> verifyEmailOtp(String email, String code) async {
+    try {
+      final response = await dio.post("/email/verify-otp", data: {
+        "email": email,
+        "code": code,
+      });
+      return AuthResponse(
+        success: response.data["success"] ?? true,
+        message: response.data["message"] ?? "Email vérifié avec succès.",
+      );
+    } on DioException catch (e) {
+      return AuthResponse(
+        success: false,
+        message: e.response?.data["message"] ?? "Code invalide ou expiré.",
+      );
+    }
+  }
+
+  Future<AuthResponse> resendVerificationEmail() async {
+    try {
+      final response = await dio.post("/email/resend");
+      return AuthResponse(
+        success: response.data["success"] ?? true,
+        message: response.data["message"] ?? "Email de vérification renvoyé.",
+      );
+    } on DioException catch (e) {
+      return AuthResponse(
+        success: false,
+        message: e.response?.data["message"] ?? "Erreur lors de l'envoi.",
+      );
+    }
+  }
 }
 
