@@ -246,47 +246,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage>
                                       letterSpacing: -1.0,
                                     ),
                                   ),
-                                  const SizedBox(height: 24),
-
-                          // ── Divider Social ────────────────────────────
-                          Row(
-                            children: [
-                              Expanded(child: Divider(color: cs.onSurface.withOpacity(0.1), thickness: 1.5)),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 16),
-                                child: Text(
-                                  'OU S\'INSCRIRE AVEC',
-                                  style: TextStyle(
-                                    color: cs.onSurface.withOpacity(0.4),
-                                    fontSize: 11,
-                                    fontWeight: FontWeight.w800,
-                                    letterSpacing: 1.5,
-                                  ),
-                                ),
-                              ),
-                              Expanded(child: Divider(color: cs.onSurface.withOpacity(0.1), thickness: 1.5)),
-                            ],
-                          ),
-
-                          const SizedBox(height: 24),
-
-                          SizedBox(
-                            width: double.infinity,
-                            child: OutlinedButton.icon(
-                              onPressed: _handleGoogleLogin,
-                              icon: const Icon(Icons.g_mobiledata_rounded, size: 28),
-                              label: const Text('CONTINUER AVEC GOOGLE'),
-                              style: OutlinedButton.styleFrom(
-                                padding: const EdgeInsets.symmetric(vertical: 16),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(16),
-                                ),
-                                side: BorderSide(color: cs.primary.withOpacity(0.2)),
-                              ),
-                            ),
-                          ),
-
-                          const SizedBox(height: 40),
+                                  const SizedBox(height: 4),
                                   Text(
                                     'Complétez vos informations 🚀',
                                     style: theme.textTheme.bodyMedium?.copyWith(
@@ -302,7 +262,57 @@ class _RegisterPageState extends ConsumerState<RegisterPage>
                             ],
                           ),
 
-                          const SizedBox(height: 28),
+                          const SizedBox(height: 32),
+
+                          // ── Divider Social ────────────────────────────
+                          Row(
+                            children: [
+                              Expanded(
+                                  child: Divider(
+                                      color: cs.onSurface.withOpacity(0.1),
+                                      thickness: 1.5)),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 16),
+                                child: Text(
+                                  'OU S\'INSCRIRE AVEC',
+                                  style: TextStyle(
+                                    color: cs.onSurface.withOpacity(0.4),
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.w800,
+                                    letterSpacing: 1.5,
+                                  ),
+                                ),
+                              ),
+                              Expanded(
+                                  child: Divider(
+                                      color: cs.onSurface.withOpacity(0.1),
+                                      thickness: 1.5)),
+                            ],
+                          ),
+
+                          const SizedBox(height: 24),
+
+                          SizedBox(
+                            width: double.infinity,
+                            child: OutlinedButton.icon(
+                              onPressed: _handleGoogleLogin,
+                              icon: const Icon(Icons.g_mobiledata_rounded,
+                                  size: 28),
+                              label: const Text('CONTINUER AVEC GOOGLE'),
+                              style: OutlinedButton.styleFrom(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 16),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(16),
+                                ),
+                                side: BorderSide(
+                                    color: cs.primary.withOpacity(0.2)),
+                              ),
+                            ),
+                          ),
+
+                          const SizedBox(height: 32),
 
                           // ── Identité ─────────────────────────────────
                           _buildSectionTitle(context, 'Identité'),

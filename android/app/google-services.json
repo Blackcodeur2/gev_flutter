@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "893580875542",
+    "project_id": "camertrip-237",
+    "storage_bucket": "camertrip-237.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:893580875542:android:20601e0c6a1fa07c832237",
+        "android_client_info": {
+          "package_name": "com.blackcodeur.camertrip"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "893580875542-udln7j2fl2ljj7asr83tuiifvn9sluo3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.blackcodeur.camertrip",
+            "certificate_hash": "c0e7d356ee634af33f23fa45f99b2c8efa324099"
+          }
+        },
+        {
+          "client_id": "893580875542-p5icibpqvsgt5868h1rgt3l5s1i0hb2b.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDhM7CX1Kin3SwsdRiojuYbGb8tewQZnH0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "893580875542-p5icibpqvsgt5868h1rgt3l5s1i0hb2b.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,4 +1,4 @@
-package com.example.gev_flutter
+package com.blackcodeur.camertrip
 
 import io.flutter.embedding.android.FlutterActivity
 
