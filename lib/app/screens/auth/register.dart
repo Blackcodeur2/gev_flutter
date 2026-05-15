@@ -3,6 +3,7 @@ import 'package:camer_trip/app/config/const_config.dart';
 import 'package:camer_trip/app/config/theme_provider.dart';
 import 'package:camer_trip/app/routes/app_routter.dart';
 import 'package:camer_trip/app/services/providers.dart';
+import 'package:camer_trip/app/services/google_auth_service.dart';
 import 'package:camer_trip/app/shared/buttons/theme_toogle.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -149,6 +150,32 @@ class _RegisterPageState extends ConsumerState<RegisterPage>
     }
   }
 
+  Future<void> _handleGoogleLogin() async {
+    setState(() => _isLoading = true);
+    final googleAuthService = GoogleAuthService();
+    final response = await googleAuthService.signIn();
+
+    if (!mounted) return;
+    setState(() => _isLoading = false);
+
+    if (response.success == true) {
+      AppRouter.setLoggedIn(true);
+      context.go('/main');
+    } else {
+      final String msg = response.message ?? "Erreur Google";
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Erreur : $msg"),
+          backgroundColor: AppColors.error,
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(AppConstants.defaultBorderRadius),
+          ),
+        ),
+      );
+    }
+  }
+
   void _showSuccessDialog(String message) {
     showDialog(
       context: context,
@@ -219,7 +246,47 @@ class _RegisterPageState extends ConsumerState<RegisterPage>
                                       letterSpacing: -1.0,
                                     ),
                                   ),
-                                  const SizedBox(height: 4),
+                                  const SizedBox(height: 24),
+
+                          // ── Divider Social ────────────────────────────
+                          Row(
+                            children: [
+                              Expanded(child: Divider(color: cs.onSurface.withOpacity(0.1), thickness: 1.5)),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 16),
+                                child: Text(
+                                  'OU S\'INSCRIRE AVEC',
+                                  style: TextStyle(
+                                    color: cs.onSurface.withOpacity(0.4),
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.w800,
+                                    letterSpacing: 1.5,
+                                  ),
+                                ),
+                              ),
+                              Expanded(child: Divider(color: cs.onSurface.withOpacity(0.1), thickness: 1.5)),
+                            ],
+                          ),
+
+                          const SizedBox(height: 24),
+
+                          SizedBox(
+                            width: double.infinity,
+                            child: OutlinedButton.icon(
+                              onPressed: _handleGoogleLogin,
+                              icon: const Icon(Icons.g_mobiledata_rounded, size: 28),
+                              label: const Text('CONTINUER AVEC GOOGLE'),
+                              style: OutlinedButton.styleFrom(
+                                padding: const EdgeInsets.symmetric(vertical: 16),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(16),
+                                ),
+                                side: BorderSide(color: cs.primary.withOpacity(0.2)),
+                              ),
+                            ),
+                          ),
+
+                          const SizedBox(height: 40),
                                   Text(
                                     'Complétez vos informations 🚀',
                                     style: theme.textTheme.bodyMedium?.copyWith(

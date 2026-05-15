@@ -35,7 +35,7 @@
                 
                 <data android:scheme="http" />
                 <data android:scheme="https" />
-                <data android:host="192.168.100.2" />
+                <data android:host="192.168.1.144" />
                 <data android:port="8000" />
             </intent-filter>
         </activity>

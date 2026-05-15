@@ -54,6 +54,35 @@ class AuthService {
     }
   }
 
+  Future<AuthResponse> loginWithGoogle(String idToken) async {
+    try {
+      final response = await dio.post(
+        "/google-login",
+        data: {"idToken": idToken},
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final token = response.data["data"]["token"];
+        final userData = response.data["data"]["user"];
+
+        await storage.write(key: AppConstants.tokenKey, value: token);
+        await storage.write(
+          key: AppConstants.userDataKey,
+          value: jsonEncode(userData),
+        );
+
+        return AuthResponse(success: true, user: UserModel.fromJson(userData));
+      }
+
+      return AuthResponse(success: false, message: "Échec de la connexion Google");
+    } on DioException catch (e) {
+      String message = e.response?.data['message'] ?? "Erreur lors de la connexion Google";
+      return AuthResponse(success: false, message: message);
+    } catch (e) {
+      return AuthResponse(success: false, message: e.toString());
+    }
+  }
+
   Future<AuthResponse> register({
     required String nom,
     required String prenom,

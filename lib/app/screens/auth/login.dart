@@ -3,6 +3,7 @@ import 'package:camer_trip/app/config/const_config.dart';
 import 'package:camer_trip/app/config/theme_provider.dart';
 import 'package:camer_trip/app/routes/app_routter.dart';
 import 'package:camer_trip/app/services/providers.dart';
+import 'package:camer_trip/app/services/google_auth_service.dart';
 import 'package:camer_trip/app/shared/buttons/theme_toogle.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -76,6 +77,32 @@ class _LoginPageState extends ConsumerState<LoginPage>
       context.go('/main');
     } else {
       final String msg = response.message ?? "Erreur inconnue";
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Erreur : $msg"),
+          backgroundColor: AppColors.error,
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(AppConstants.defaultBorderRadius),
+          ),
+        ),
+      );
+    }
+  }
+
+  Future<void> _handleGoogleLogin() async {
+    setState(() => _isLoading = true);
+    final googleAuthService = GoogleAuthService();
+    final response = await googleAuthService.signIn();
+
+    if (!mounted) return;
+    setState(() => _isLoading = false);
+
+    if (response.success == true) {
+      AppRouter.setLoggedIn(true);
+      context.go('/main');
+    } else {
+      final String msg = response.message ?? "Erreur Google";
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text("Erreur : $msg"),
@@ -193,7 +220,7 @@ class _LoginPageState extends ConsumerState<LoginPage>
                                   tapTargetSize:
                                       MaterialTapTargetSize.shrinkWrap,
                                 ),
-                                onPressed: () {},
+                                onPressed: () => context.push(AppRouter.resetPasswordPath),
                                 child: Text(
                                   'Mot de passe oublié ?',
                                   style: TextStyle(
@@ -285,7 +312,7 @@ class _LoginPageState extends ConsumerState<LoginPage>
                                 child: _SocialButton(
                                   label: 'Google',
                                   icon: Icons.g_mobiledata_rounded,
-                                  onPressed: () {},
+                                  onPressed: _handleGoogleLogin,
                                 ),
                               ),
                               const SizedBox(width: 16),
