@@ -321,6 +321,21 @@ class AuthService {
     }
   }
 
+  Future<AuthResponse> verifyEmailLink(String id, String hash) async {
+    try {
+      final response = await dio.get("/email/verify/$id/$hash");
+      return AuthResponse(
+        success: response.data["success"] ?? true,
+        message: response.data["message"] ?? "Email vérifié avec succès.",
+      );
+    } on DioException catch (e) {
+      return AuthResponse(
+        success: false,
+        message: e.response?.data["message"] ?? "Lien invalide ou expiré.",
+      );
+    }
+  }
+
   Future<AuthResponse> resendVerificationEmail() async {
     try {
       final response = await dio.post("/email/resend");

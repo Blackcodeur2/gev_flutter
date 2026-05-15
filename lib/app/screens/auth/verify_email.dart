@@ -3,7 +3,9 @@ import '../../services/auth_service.dart';
 
 class VerifyEmailScreen extends StatefulWidget {
   final String email;
-  const VerifyEmailScreen({super.key, required this.email});
+  final String? id;
+  final String? hash;
+  const VerifyEmailScreen({super.key, required this.email, this.id, this.hash});
 
   @override
   State<VerifyEmailScreen> createState() => _VerifyEmailScreenState();
@@ -13,6 +15,33 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
   final _codeController = TextEditingController();
   bool _isLoading = false;
   final _authService = AuthService();
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.id != null && widget.hash != null) {
+      _verifyLink();
+    }
+  }
+
+  Future<void> _verifyLink() async {
+    setState(() => _isLoading = true);
+    final response = await _authService.verifyEmailLink(widget.id!, widget.hash!);
+    setState(() => _isLoading = false);
+
+    if (mounted) {
+      if (response.success) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Email vérifié avec succès via le lien !")),
+        );
+        Navigator.pop(context);
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(response.message ?? "Lien invalide")),
+        );
+      }
+    }
+  }
 
   Future<void> _verifyCode() async {
     if (_codeController.text.length != 6) return;

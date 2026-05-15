@@ -2,6 +2,8 @@ import 'package:camer_trip/app/screens/agences/agence_details_page.dart';
 import 'package:camer_trip/app/models/ag_model.dart';
 import 'package:camer_trip/app/screens/auth/login.dart';
 import 'package:camer_trip/app/screens/auth/register.dart';
+import 'package:camer_trip/app/screens/auth/verify_email.dart';
+import 'package:camer_trip/app/screens/auth/forgot_password.dart';
 import 'package:camer_trip/app/screens/history/reservation_details_page.dart';
 import 'package:camer_trip/app/screens/notifications/notification_page.dart';
 import 'package:camer_trip/app/screens/onboarding/onboarding.dart';
@@ -36,6 +38,8 @@ class AppRouter {
   static const String payment = 'payment';
   static const String myColis = 'myColis';
   static const String editProfile = 'editProfile';
+  static const String verifyEmail = 'verifyEmail';
+  static const String resetPassword = 'resetPassword';
 
 
   // ── Chemins de routes ─────────────────────────────────────────────────────
@@ -54,6 +58,8 @@ class AppRouter {
   static const String paymentPath = '/payment';
   static const String myColisPath = '/my-colis';
   static const String editProfilePath = '/edit-profile';
+  static const String verifyEmailPath = '/verify-email';
+  static const String resetPasswordPath = '/reset-password';
 
 
   // ── Simulation AuthService ──────────────────────────────────
@@ -66,7 +72,7 @@ class AppRouter {
     debugLogDiagnostics: true,
     redirect: (context, state) async {
       final loc = state.matchedLocation;
-      final publicRoutes = [splashPath, onboardingPath, loginPath, registerPath];
+      final publicRoutes = [splashPath, onboardingPath, loginPath, registerPath, verifyEmailPath, resetPasswordPath];
       final isPublic = publicRoutes.contains(loc);
 
       if (!_isLoggedIn && !isPublic) return loginPath;
@@ -112,7 +118,26 @@ class AppRouter {
         name: editProfile,
         builder: (context, state) => EditProfilePage(user: state.extra as UserModel),
       ),
-
+      GoRoute(
+        path: verifyEmailPath,
+        name: verifyEmail,
+        builder: (context, state) {
+          final email = state.uri.queryParameters['email'] ?? '';
+          final id = state.uri.queryParameters['id'];
+          final hash = state.uri.queryParameters['hash'];
+          return VerifyEmailScreen(email: email, id: id, hash: hash);
+        },
+      ),
+      GoRoute(
+        path: resetPasswordPath,
+        name: resetPassword,
+        builder: (context, state) {
+          final email = state.uri.queryParameters['email'] ?? '';
+          final token = state.uri.queryParameters['token'] ?? '';
+          // On peut passer ces infos à ForgotPasswordScreen ou créer un écran dédié
+          return ForgotPasswordScreen(email: email, token: token);
+        },
+      ),
     ],
   );
 }
