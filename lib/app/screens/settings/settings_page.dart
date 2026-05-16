@@ -101,6 +101,15 @@ class _SettingPageState extends ConsumerState<SettingPage> {
                       },
                     ),
                     _buildSettingsTile(cs, isDark, Icons.lock_person_rounded, 'Confidentialité', 'Mot de passe et Accès', Colors.cyan),
+                    _buildSettingsTile(
+                      cs, 
+                      isDark, 
+                      Icons.lock_reset_rounded, 
+                      'Mot de passe', 
+                      'Changer mon mot de passe', 
+                      Colors.orange,
+                      onTap: () => context.pushNamed(AppRouter.changePassword),
+                    ),
                   ]),
 
                   // 📦 Mes Services

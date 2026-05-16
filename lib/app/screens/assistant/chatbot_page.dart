@@ -329,7 +329,7 @@ class _ChatBotPageState extends State<ChatBotPage> {
   Widget _buildModernInputArea(ColorScheme cs, ThemeData theme, bool isDark) {
     // Adding extra bottom padding if needed for iOS SafeArea or navigation bar is handled by SafeArea widget above.
     return Container(
-      padding: const EdgeInsets.fromLTRB(16, 8, 16, 100), // Push chat bar up away from main navigation bar
+      padding: const EdgeInsets.fromLTRB(16, 8, 16, 130), // Push chat bar up away from main navigation bar
       decoration: const BoxDecoration(
         color: Colors.transparent, 
       ),

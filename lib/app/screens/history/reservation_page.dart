@@ -107,7 +107,7 @@ class _ReservationsPagesState extends ConsumerState<ReservationsPages>
     return RefreshIndicator(
       onRefresh: () => ref.refresh(myReservationsProvider.future),
       child: ListView.builder(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 130),
         physics: const AlwaysScrollableScrollPhysics(),
         itemCount: filtered.length,
         itemBuilder: (context, index) {

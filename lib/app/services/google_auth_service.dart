@@ -13,6 +13,9 @@ class GoogleAuthService {
 
   Future<AuthResponse> signIn() async {
     try {
+      // Forcer la déconnexion pour afficher la modale de sélection de compte
+      await _googleSignIn.signOut();
+      
       // Déclencher le flux d'authentification Google
       final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
 

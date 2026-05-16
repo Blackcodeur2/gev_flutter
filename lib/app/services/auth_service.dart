@@ -177,8 +177,8 @@ class AuthService {
 
   Future<AuthResponse> syncUser() async {
     try {
-      print("Syncing user data from /profile...");
-      final response = await dio.get("/profile");
+      print("Syncing user data from /user...");
+      final response = await dio.get("/user");
 
       if (response.statusCode == 200) {
         final userData = response.data["data"];
@@ -372,11 +372,37 @@ class AuthService {
         success: response.data["success"] ?? true,
         message: response.data["message"] ?? "Email de vérification renvoyé.",
       );
+    } catch (e) {
+      return AuthResponse(
+        success: false,
+        message: "Erreur lors de l'envoi.",
+      );
+    }
+  }
+
+  Future<AuthResponse> changePassword({
+    required String currentPassword,
+    required String newPassword,
+    required String newPasswordConfirmation,
+  }) async {
+    try {
+      final response = await dio.post("/user/change-password", data: {
+        "current_password": currentPassword,
+        "new_password": newPassword,
+        "new_password_confirmation": newPasswordConfirmation,
+      });
+
+      return AuthResponse(
+        success: response.data["success"] ?? true,
+        message: response.data["message"] ?? "Mot de passe modifié avec succès.",
+      );
     } on DioException catch (e) {
       return AuthResponse(
         success: false,
-        message: e.response?.data["message"] ?? "Erreur lors de l'envoi.",
+        message: e.response?.data["message"] ?? "Erreur lors du changement de mot de passe",
       );
+    } catch (e) {
+      return AuthResponse(success: false, message: e.toString());
     }
   }
 }

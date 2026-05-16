@@ -24,6 +24,8 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
   late TextEditingController _prenomController;
   late TextEditingController _emailController;
   late TextEditingController _phoneController;
+  late TextEditingController _dobController;
+  String _selectedGender = 'M';
   
   File? _imageFile;
   bool _isLoading = false;
@@ -35,6 +37,8 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
     _prenomController = TextEditingController(text: widget.user.prenom);
     _emailController = TextEditingController(text: widget.user.email);
     _phoneController = TextEditingController(text: widget.user.telephone);
+    _dobController = TextEditingController(text: widget.user.dateNaissance);
+    _selectedGender = widget.user.sexe;
   }
 
   @override
@@ -43,6 +47,7 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
     _prenomController.dispose();
     _emailController.dispose();
     _phoneController.dispose();
+    _dobController.dispose();
     super.dispose();
   }
 
@@ -69,6 +74,8 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
         prenom: _prenomController.text,
         email: _emailController.text,
         telephone: _phoneController.text,
+        dateNaissance: _dobController.text,
+        sexe: _selectedGender,
         avatar: _imageFile,
       );
 
@@ -190,6 +197,14 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                       _buildTextField(cs, 'Email', _emailController, Icons.email_outlined, keyboardType: TextInputType.emailAddress),
                       const SizedBox(height: 16),
                       _buildTextField(cs, 'Téléphone', _phoneController, Icons.phone_outlined, keyboardType: TextInputType.phone),
+                      const SizedBox(height: 16),
+                      
+                      // Date de naissance
+                      _buildDateField(context, cs),
+                      const SizedBox(height: 16),
+
+                      // Sexe
+                      _buildGenderField(cs),
                       
                       const SizedBox(height: 40),
                       
@@ -206,6 +221,73 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildDateField(BuildContext context, ColorScheme cs) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text("Date de naissance", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+        const SizedBox(height: 8),
+        TextFormField(
+          controller: _dobController,
+          readOnly: true,
+          decoration: InputDecoration(
+            prefixIcon: const Icon(Icons.calendar_today_outlined, size: 20),
+            filled: true,
+            fillColor: cs.surfaceContainerHigh,
+            hintText: "AAAA-MM-JJ",
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: BorderSide.none),
+          ),
+          onTap: () async {
+            DateTime? pickedDate = await showDatePicker(
+              context: context,
+              initialDate: DateTime.now().subtract(const Duration(days: 6570)), // ~18 ans
+              firstDate: DateTime(1900),
+              lastDate: DateTime.now(),
+            );
+            if (pickedDate != null) {
+              setState(() {
+                _dobController.text = pickedDate.toString().split(' ')[0];
+              });
+            }
+          },
+        ),
+      ],
+    );
+  }
+
+  Widget _buildGenderField(ColorScheme cs) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text("Sexe", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+        const SizedBox(height: 8),
+        Row(
+          children: [
+            Expanded(
+              child: ChoiceChip(
+                label: const Center(child: Text("Masculin")),
+                selected: _selectedGender == 'M',
+                onSelected: (selected) {
+                  if (selected) setState(() => _selectedGender = 'M');
+                },
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: ChoiceChip(
+                label: const Center(child: Text("Féminin")),
+                selected: _selectedGender == 'F',
+                onSelected: (selected) {
+                  if (selected) setState(() => _selectedGender = 'F');
+                },
+              ),
+            ),
+          ],
+        ),
+      ],
     );
   }
 

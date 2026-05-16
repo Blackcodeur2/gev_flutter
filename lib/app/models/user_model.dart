@@ -11,6 +11,7 @@ class UserModel {
   final String role;
   final String statut;
   final String? profilUrl;
+  final bool hasPassword;
 
   UserModel({
     required this.id,
@@ -25,6 +26,7 @@ class UserModel {
     required this.role,
     this.statut = "actif",
     this.profilUrl,
+    this.hasPassword = true,
   });
 
   String? get fullProfilUrl {
@@ -55,6 +57,7 @@ class UserModel {
       role: json['role_user'] ?? 'CLIENT',
       statut: json['statut'] ?? 'actif',
       profilUrl: json['profil_url'],
+      hasPassword: json['has_password'] ?? true, // Par défaut vrai par sécurité
     );
   }
 
@@ -72,6 +75,7 @@ class UserModel {
       'role_user': role,
       'statut': statut,
       'profil_url': profilUrl,
+      'has_password': hasPassword,
     };
   }
 }

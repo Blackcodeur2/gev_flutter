@@ -16,6 +16,7 @@ class ForgotPasswordScreen extends StatefulWidget {
 }
 
 class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> with SingleTickerProviderStateMixin {
+  final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _codeController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -39,10 +40,10 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> with Single
     _fadeAnim = CurvedAnimation(parent: _animController, curve: Curves.easeIn);
     _animController.forward();
 
-    if (widget.email != null) {
+    if (widget.email != null && widget.email!.isNotEmpty) {
       _emailController.text = widget.email!;
     }
-    if (widget.token != null) {
+    if (widget.token != null && widget.token!.isNotEmpty) {
       _codeController.text = widget.token!;
       _codeSent = true;
     }
@@ -76,6 +77,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> with Single
   }
 
   Future<void> _resetPassword() async {
+    if (!_formKey.currentState!.validate()) return;
     if (_codeController.text.isEmpty || _passwordController.text.isEmpty) return;
 
     setState(() => _isLoading = true);
@@ -155,8 +157,10 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> with Single
                 opacity: _fadeAnim,
                 child: Padding(
                   padding: const EdgeInsets.all(AppConstants.largePadding),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         _codeSent ? "Réinitialisation" : "Mot de passe oublié",
@@ -202,6 +206,11 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> with Single
                           hintText: "Nouveau mot de passe",
                           prefixIcon: Icons.lock_outline,
                           obscureText: _obscurePassword,
+                          validator: (v) {
+                            if (v == null || v.isEmpty) return 'Requis';
+                            if (v.length < 8) return 'Minimum 8 caractères';
+                            return null;
+                          },
                           suffixIcon: IconButton(
                             icon: Icon(_obscurePassword ? Icons.visibility_off : Icons.visibility),
                             onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
@@ -213,6 +222,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> with Single
                           hintText: "Confirmer le mot de passe",
                           prefixIcon: Icons.lock_clock_outlined,
                           obscureText: _obscurePassword,
+                          validator: (v) => v != _passwordController.text ? 'Non identique' : null,
                         ),
                         const SizedBox(height: 32),
                         _ThemedButton(
@@ -229,17 +239,18 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> with Single
                             ),
                           ),
                         ),
-                      ],
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
+                      ], // Fin de la liste du else ...[
+                    ], // Fin de la liste children: [ de la Column (ligne 162)
+                  ), // Fin de la Column
+                ), // Fin du Form
+              ), // Fin du Padding
+            ), // Fin du FadeTransition
+          ], // Fin de la liste children de la Column principale (ligne 153)
+        ), // Fin de la Column principale
+      ), // Fin du SingleChildScrollView
+    ), // Fin du SafeArea
+  ); // Fin du Scaffold
+}
 }
 
 class _HeroHeader extends StatelessWidget {
@@ -303,6 +314,7 @@ class _AppTextField extends StatelessWidget {
   final bool obscureText;
   final TextInputType? keyboardType;
   final Widget? suffixIcon;
+  final String? Function(String?)? validator;
 
   const _AppTextField({
     required this.controller,
@@ -311,6 +323,7 @@ class _AppTextField extends StatelessWidget {
     this.obscureText = false,
     this.keyboardType,
     this.suffixIcon,
+    this.validator,
   });
 
   @override
@@ -322,6 +335,7 @@ class _AppTextField extends StatelessWidget {
       controller: controller,
       obscureText: obscureText,
       keyboardType: keyboardType,
+      validator: validator,
       style: TextStyle(color: cs.onSurface, fontWeight: FontWeight.w600),
       decoration: InputDecoration(
         hintText: hintText,

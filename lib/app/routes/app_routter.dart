@@ -2,6 +2,7 @@ import 'package:camer_trip/app/screens/agences/agence_details_page.dart';
 import 'package:camer_trip/app/models/ag_model.dart';
 import 'package:camer_trip/app/screens/auth/login.dart';
 import 'package:camer_trip/app/screens/auth/register.dart';
+import 'package:camer_trip/app/screens/auth/change_password.dart';
 import 'package:camer_trip/app/screens/auth/verify_email.dart';
 import 'package:camer_trip/app/screens/auth/forgot_password.dart';
 import 'package:camer_trip/app/screens/history/reservation_details_page.dart';
@@ -40,6 +41,7 @@ class AppRouter {
   static const String editProfile = 'editProfile';
   static const String verifyEmail = 'verifyEmail';
   static const String resetPassword = 'resetPassword';
+  static const String changePassword = 'changePassword';
 
 
   // ── Chemins de routes ─────────────────────────────────────────────────────
@@ -60,6 +62,7 @@ class AppRouter {
   static const String editProfilePath = '/edit-profile';
   static const String verifyEmailPath = '/verify-email';
   static const String resetPasswordPath = '/reset-password';
+  static const String changePasswordPath = '/change-password';
 
 
   // ── Simulation AuthService ──────────────────────────────────
@@ -132,12 +135,12 @@ class AppRouter {
         path: resetPasswordPath,
         name: resetPassword,
         builder: (context, state) {
-          final email = state.uri.queryParameters['email'] ?? '';
-          final token = state.uri.queryParameters['token'] ?? '';
-          // On peut passer ces infos à ForgotPasswordScreen ou créer un écran dédié
+          final email = state.uri.queryParameters['email'];
+          final token = state.uri.queryParameters['token'];
           return ForgotPasswordScreen(email: email, token: token);
         },
       ),
+      GoRoute(path: changePasswordPath, name: changePassword, builder: (context, state) => const ChangePasswordPage()),
     ],
   );
 }

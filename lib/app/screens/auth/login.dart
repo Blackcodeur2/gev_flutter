@@ -73,8 +73,13 @@ class _LoginPageState extends ConsumerState<LoginPage>
     setState(() => _isLoading = false);
 
     if (response.success == true) {
+      ref.invalidate(currentUserProvider);
+      ref.invalidate(isLoggedInProvider);
       AppRouter.setLoggedIn(true);
-      context.go('/main');
+      Future.microtask(() {
+        if (!mounted) return;
+        context.go('/main');
+      });
     } else {
       final String msg = response.message ?? "Erreur inconnue";
       ScaffoldMessenger.of(context).showSnackBar(
@@ -99,8 +104,19 @@ class _LoginPageState extends ConsumerState<LoginPage>
     setState(() => _isLoading = false);
 
     if (response.success == true) {
+      ref.invalidate(currentUserProvider);
+      ref.invalidate(isLoggedInProvider);
       AppRouter.setLoggedIn(true);
-      context.go('/main');
+      
+      final user = response.user;
+      Future.microtask(() {
+        if (!mounted) return;
+        if (user != null && (user.telephone == null || user.telephone.isEmpty)) {
+          context.go(AppRouter.editProfilePath, extra: user);
+        } else {
+          context.go('/main');
+        }
+      });
     } else {
       final String msg = response.message ?? "Erreur Google";
       ScaffoldMessenger.of(context).showSnackBar(
