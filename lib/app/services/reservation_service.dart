@@ -35,19 +35,21 @@ class ReservationService {
     }
   }
 
-  // Récupérer les places occupées pour un voyage
+  // Récupérer les places occupées pour un voyage (Aligné sur le backend Laravel)
   Future<List<String>> getOccupiedSeats(int voyageId) async {
     try {
       final response = await dio.get('/client/voyages/$voyageId/occupations');
-      if (response.statusCode == 200) {
-        // Supposons que l'API renvoie { "occupied": ["1", "5"] }
-        return List<String>.from(response.data['occupied']);
+      if (response.statusCode == 200 && response.data != null) {
+        // Le backend Laravel renvoie {'status': true, 'data': [...]}
+        final occupiedData = response.data['data'] ?? response.data['occupied'];
+        if (occupiedData != null) {
+          return List<String>.from(occupiedData);
+        }
       }
       return [];
     } catch (e) {
       print("Erreur places occupées: $e");
-      // Simulation pour le moment
-      return ["1", "5", "12", "18"];
+      return [];
     }
   }
 

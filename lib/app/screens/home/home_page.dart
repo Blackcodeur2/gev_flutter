@@ -102,20 +102,21 @@ class _HomePageState extends ConsumerState<HomePage>
                   error: (e, s) => const SliverToBoxAdapter(child: SizedBox.shrink()),
                 ),
   
-                // 📅 SECTION VOYAGES ET FILTRES
+                // 📅 SECTION VOYAGES ET FILTRES (Bouton Filtres masqué temporairement)
                 SliverToBoxAdapter(
                   child: SectionTitle(
                     title: '📅 Prochains Voyages',
-                    action: 'Filtres',
+                    action: '', // 'Filtres'
                   ),
                 ),
                 const SliverToBoxAdapter(child: TripFilterBar()),
                 const ScheduledTripsList(),
   
+                // 🏢 SECTION AGENCES (Bouton Voir tout masqué temporairement)
                 SliverToBoxAdapter(
                   child: SectionTitle(
                     title: '🏢 Agences partenaires',
-                    action: 'Voir tout',
+                    action: '', // 'Voir tout'
                   ),
                 ),
                 agencesAsync.when(
@@ -124,6 +125,7 @@ class _HomePageState extends ConsumerState<HomePage>
                   error: (e, s) => const SliverToBoxAdapter(child: SizedBox.shrink()),
                 ),
   
+                /* Section Destinations populaires retirée temporairement
                 SliverToBoxAdapter(
                   child: SectionTitle(
                     title: '📍 Destinations populaires',
@@ -135,14 +137,21 @@ class _HomePageState extends ConsumerState<HomePage>
                   loading: () => const SliverToBoxAdapter(child: Padding(padding: EdgeInsets.all(20), child: Center(child: CircularProgressIndicator()))),
                   error: (e, s) => const SliverToBoxAdapter(child: SizedBox.shrink()),
                 ),
+                */
   
+                /* Section Types de trajet retirée temporairement
                 SliverToBoxAdapter(
                   child: SectionTitle(title: '🚌 Types de trajet', action: ''),
                 ),
                 SliverToBoxAdapter(child: buildCategories(context, cs)),
+                */
   
+                // 🎟️ SECTION RÉSERVATION EN COURS (Bouton Détails masqué temporairement)
                 SliverToBoxAdapter(
-                  child: SectionTitle(title: '🎟️ Réservation en cours', action: 'Détails'),
+                  child: SectionTitle(
+                    title: '🎟️ Réservation en cours', 
+                    action: '', // 'Détails'
+                  ),
                 ),
                 const SliverToBoxAdapter(child: SizedBox(height: 120)), 
               ],

@@ -2,142 +2,95 @@ import 'package:camer_trip/app/services/trip_filter_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class TripFilterBar extends ConsumerWidget {
+class TripFilterBar extends ConsumerStatefulWidget {
   const TripFilterBar({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final cs = Theme.of(context).colorScheme;
-    final currentFilter = ref.watch(tripFilterProvider);
+  ConsumerState<TripFilterBar> createState() => _TripFilterBarState();
+}
 
-    final categories = [
-      {'label': 'Toutes', 'cat': FilterCategory.none},
-      {'label': 'Agences', 'cat': FilterCategory.agence},
-      {'label': 'Départs', 'cat': FilterCategory.depart},
-      {'label': 'Destinations', 'cat': FilterCategory.destination},
-      {'label': 'Horaires', 'cat': FilterCategory.heure},
-    ];
+class _TripFilterBarState extends ConsumerState<TripFilterBar> {
+  late TextEditingController _searchController;
 
-    return Column(
-      children: [
-        SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          child: Row(
-            children: categories.map((item) {
-              final cat = item['cat'] as FilterCategory;
-              final isSelected = currentFilter.category == cat;
-              return Padding(
-                padding: const EdgeInsets.only(right: 8),
-                child: ChoiceChip(
-                  label: Text(item['label'] as String),
-                  selected: isSelected,
-                  onSelected: (val) {
-                    if (cat == FilterCategory.none) {
-                      ref.read(tripFilterProvider.notifier).state = TripFilter();
-                    } else {
-                      _showValuePicker(context, ref, cat);
-                    }
-                  },
-                  backgroundColor: Colors.transparent,
-                  selectedColor: cs.primary,
-                  checkmarkColor: Colors.white,
-                  labelStyle: TextStyle(
-                    color: isSelected ? Colors.white : cs.onSurface.withOpacity(0.6),
-                    fontSize: 13,
-                  ),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                  side: BorderSide(color: isSelected ? cs.primary : cs.primary.withOpacity(0.1)),
-                ),
-              );
-            }).toList(),
-          ),
-        ),
-        
-        // Affichage du filtre actif
-        if (currentFilter.category != FilterCategory.none && currentFilter.value.isNotEmpty)
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
-            child: Row(
-              children: [
-                Text(
-                  'Filtre actif: ',
-                  style: TextStyle(color: cs.onSurface.withOpacity(0.5), fontSize: 12),
-                ),
-                Chip(
-                  label: Text('${currentFilter.value}'),
-                  onDeleted: () => ref.read(tripFilterProvider.notifier).state = TripFilter(),
-                  deleteIconColor: cs.primary,
-                  backgroundColor: cs.primary.withOpacity(0.05),
-                  side: BorderSide.none,
-                  labelStyle: TextStyle(color: cs.primary, fontWeight: FontWeight.bold, fontSize: 12),
-                ),
-              ],
-            ),
-          ),
-      ],
-    );
+  @override
+  void initState() {
+    super.initState();
+    final initialQuery = ref.read(tripFilterProvider);
+    _searchController = TextEditingController(text: initialQuery);
   }
 
-  void _showValuePicker(BuildContext context, WidgetRef ref, FilterCategory cat) {
-    final cs = Theme.of(context).colorScheme;
-    
-    List<String> values = [];
-    String title = "";
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
 
-    switch (cat) {
-      case FilterCategory.agence:
-        values = ["General Express", "Finexs Voyages", "Touristique Express"];
-        title = "Choisir une Agence";
-        break;
-      case FilterCategory.depart:
-        values = ["Douala", "Yaoundé", "Bafoussam"];
-        title = "Ville de Départ";
-        break;
-      case FilterCategory.destination:
-        values = ["Douala", "Yaoundé", "Bafoussam", "Limbé", "Garoua"];
-        title = "Ville de Destination";
-        break;
-      case FilterCategory.heure:
-        values = ["Matin", "Après-midi", "Soir"];
-        title = "Tranche Horaire";
-        break;
-      default:
-        return;
-    }
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final cs = theme.colorScheme;
+    final isDark = theme.brightness == Brightness.dark;
 
-    showModalBottomSheet(
-      context: context,
-      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(24))),
-      builder: (context) {
-        return Container(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
-              const SizedBox(height: 16),
-              Wrap(
-                spacing: 8,
-                children: values.map((v) {
-                  return ActionChip(
-                    label: Text(v),
-                    onPressed: () {
-                      ref.read(tripFilterProvider.notifier).state = TripFilter(category: cat, value: v);
-                      Navigator.pop(context);
-                    },
-                    backgroundColor: cs.surfaceContainerHigh,
-                    side: BorderSide.none,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                  );
-                }).toList(),
-              ),
-              const SizedBox(height: 16),
-            ],
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      child: Container(
+        decoration: BoxDecoration(
+          color: isDark ? cs.surfaceContainerHigh : Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.04),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
+            ),
+          ],
+          border: Border.all(
+            color: isDark ? Colors.white10 : cs.primary.withOpacity(0.08),
           ),
-        );
-      },
+        ),
+        child: TextField(
+          controller: _searchController,
+          onChanged: (val) {
+            ref.read(tripFilterProvider.notifier).state = val;
+            setState(() {});
+          },
+          style: TextStyle(
+            color: cs.onSurface,
+            fontSize: 14,
+            fontWeight: FontWeight.w600,
+          ),
+          decoration: InputDecoration(
+            hintText: 'Rechercher une ville, agence, destination...',
+            hintStyle: TextStyle(
+              color: cs.onSurface.withOpacity(0.4),
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+            ),
+            prefixIcon: Icon(
+              Icons.search_rounded,
+              color: cs.primary.withOpacity(0.6),
+            ),
+            suffixIcon: _searchController.text.isNotEmpty
+                ? IconButton(
+                    icon: Icon(
+                      Icons.clear_rounded,
+                      color: cs.onSurface.withOpacity(0.4),
+                    ),
+                    onPressed: () {
+                      _searchController.clear();
+                      ref.read(tripFilterProvider.notifier).state = "";
+                      setState(() {});
+                    },
+                  )
+                : null,
+            border: InputBorder.none,
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 14,
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

@@ -4,7 +4,14 @@ import 'package:flutter/material.dart';
 class SectionTitle extends StatelessWidget {
   final String title;
   final String action;
-  const SectionTitle({super.key, required this.title, required this.action});
+  final VoidCallback? onTap;
+
+  const SectionTitle({
+    super.key,
+    required this.title,
+    required this.action,
+    this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -24,17 +31,26 @@ class SectionTitle extends StatelessWidget {
               context,
             ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),
           ),
-          GestureDetector(
-            onTap: () {},
-            child: Text(
-              action,
-              style: TextStyle(
-                color: Theme.of(context).colorScheme.primary,
-                fontSize: 13,
-                fontWeight: FontWeight.w600,
+          if (action.isNotEmpty)
+            GestureDetector(
+              onTap: onTap ?? () {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('Fonctionnalité "$action" de "$title" bientôt disponible ! 🚀'),
+                    behavior: SnackBarBehavior.floating,
+                    duration: const Duration(seconds: 2),
+                  ),
+                );
+              },
+              child: Text(
+                action,
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.primary,
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ),
-          ),
         ],
       ),
     );
