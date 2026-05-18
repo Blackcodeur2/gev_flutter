@@ -10,6 +10,7 @@ import 'package:camer_trip/app/shared/others/app_bar.dart';
 import 'package:camer_trip/app/services/api_client_service.dart';
 import 'package:camer_trip/app/config/const_config.dart';
 import 'package:go_router/go_router.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 
 class SettingPage extends ConsumerStatefulWidget {
@@ -20,6 +21,30 @@ class SettingPage extends ConsumerStatefulWidget {
 }
 
 class _SettingPageState extends ConsumerState<SettingPage> {
+  String _appVersion = 'Chargement...';
+
+  @override
+  void initState() {
+    super.initState();
+    _loadAppVersion();
+  }
+
+  Future<void> _loadAppVersion() async {
+    try {
+      final packageInfo = await PackageInfo.fromPlatform();
+      if (mounted) {
+        setState(() {
+          _appVersion = 'v${packageInfo.version}+${packageInfo.buildNumber}';
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _appVersion = 'v1.0.0';
+        });
+      }
+    }
+  }
   @override
   Widget build(BuildContext context) {
     final themeProvider = legacy_provider.Provider.of<ThemeProvider>(context);
@@ -67,7 +92,15 @@ class _SettingPageState extends ConsumerState<SettingPage> {
                       Colors.indigo
                     ),
                     _buildSettingsTile(cs, isDark, Icons.language_rounded, 'Langue', 'Français (Cameroun)', Colors.blue),
-                    _buildSettingsTile(cs, isDark, Icons.notifications_active_rounded, 'Notifications', 'Alertes et Push', Colors.orange),
+                    _buildSettingsTile(
+                      cs, 
+                      isDark, 
+                      Icons.notifications_active_rounded, 
+                      'Notifications', 
+                      'Alertes et Push', 
+                      Colors.orange,
+                      onTap: () => context.pushNamed(AppRouter.notifications),
+                    ),
                   ]),
 
                   const SizedBox(height: 24),
@@ -75,31 +108,31 @@ class _SettingPageState extends ConsumerState<SettingPage> {
                   // 🔐 Sécurité & Données
                   _buildSectionTitle(cs, 'Sécurité'),
                   _buildSettingsCard(cs, isDark, [
-                    _buildSettingsTile(
-                      cs, 
-                      isDark, 
-                      userAsync.value?.statut == "approuve" 
-                          ? Icons.check_circle_rounded 
-                          : Icons.verified_user_rounded, 
-                      'Vérification KWC ${userAsync.value?.statut == "approuve" ? " ✅" : ""}', 
-                      userAsync.value?.statut == "approuve" 
-                          ? 'Votre compte est vérifié' 
-                          : 'Soumettre ma CNI', 
-                      userAsync.value?.statut == "approuve" ? Colors.green : Colors.teal,
-                      onTap: () {
-                        if (userAsync.value?.statut == "approuve") {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Votre compte est déjà vérifié ! 🚀'),
-                              backgroundColor: Colors.green,
-                              behavior: SnackBarBehavior.floating,
-                            ),
-                          );
-                        } else {
-                          context.pushNamed(AppRouter.kwc);
-                        }
-                      },
-                    ),
+                    // _buildSettingsTile(
+                    //   cs, 
+                    //   isDark, 
+                    //   userAsync.value?.statut == "approuve" 
+                    //       ? Icons.check_circle_rounded 
+                    //       : Icons.verified_user_rounded, 
+                    //   'Vérification KWC ${userAsync.value?.statut == "approuve" ? " ✅" : ""}', 
+                    //   userAsync.value?.statut == "approuve" 
+                    //       ? 'Votre compte est vérifié' 
+                    //       : 'Soumettre ma CNI', 
+                    //   userAsync.value?.statut == "approuve" ? Colors.green : Colors.teal,
+                    //   onTap: () {
+                    //     if (userAsync.value?.statut == "approuve") {
+                    //       ScaffoldMessenger.of(context).showSnackBar(
+                    //         const SnackBar(
+                    //           content: Text('Votre compte est déjà vérifié ! 🚀'),
+                    //           backgroundColor: Colors.green,
+                    //           behavior: SnackBarBehavior.floating,
+                    //         ),
+                    //       );
+                    //     } else {
+                    //       context.pushNamed(AppRouter.kwc);
+                    //     }
+                    //   },
+                    // ),
                     _buildSettingsTile(cs, isDark, Icons.lock_person_rounded, 'Confidentialité', 'Mot de passe et Accès', Colors.cyan),
                     _buildSettingsTile(
                       cs, 
@@ -146,7 +179,7 @@ class _SettingPageState extends ConsumerState<SettingPage> {
                         isDark, 
                         Icons.info_outline_rounded, 
                         'À propos', 
-                        'v1.4.2 Beta', 
+                        _appVersion, 
                         Colors.grey,
                         onTap: () => context.pushNamed(AppRouter.about),
                       ),

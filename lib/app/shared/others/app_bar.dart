@@ -138,11 +138,17 @@ class MyAppBar extends ConsumerWidget {
                   )
                 : Row(
                     children: [
-                      if (!isHome && Navigator.of(context).canPop())
+                      if (!isHome)
                         IconButton(
                           icon: const Icon(Icons.arrow_back_ios_new_rounded,
                               size: 20),
-                          onPressed: () => context.pop(),
+                          onPressed: () {
+                            if (Navigator.of(context).canPop()) {
+                              context.pop();
+                            } else {
+                              context.go('/main');
+                            }
+                          },
                         ),
                       Expanded(
                         child: Padding(

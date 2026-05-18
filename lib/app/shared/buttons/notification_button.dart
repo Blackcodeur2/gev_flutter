@@ -11,7 +11,7 @@ class NotificationButton extends StatelessWidget {
     final cs = theme.colorScheme;
     return IconButton(
       onPressed: () {
-        context.go('/notifications');
+        context.push('/notifications');
       },
       icon: Stack(
         children: [

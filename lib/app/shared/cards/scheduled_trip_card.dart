@@ -42,15 +42,16 @@ class ScheduledTripCard extends ConsumerWidget {
           borderRadius: BorderRadius.circular(20),
           onTap: () {
             userAsync.whenData((user) {
-              if (user?.statut == "en attente") {
-                KwcRestrictionDialog.show(context);
-              } else {
+              // Restriction KWC désactivée temporairement
+              // if (user?.statut == "en attente") {
+              //   KwcRestrictionDialog.show(context);
+              // } else {
                 if (onTap != null) {
                   onTap!();
                 } else {
                   context.pushNamed(AppRouter.booking, extra: voyage);
                 }
-              }
+              // }
             });
           },
           child: Padding(

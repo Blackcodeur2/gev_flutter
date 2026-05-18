@@ -1,18 +1,20 @@
 import 'dart:convert';
+import 'package:camer_trip/app/services/providers.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:camer_trip/app/shared/others/app_bar.dart';
 import 'package:camer_trip/app/models/chat_message_model.dart';
 import 'package:camer_trip/app/services/chat_service.dart';
 import 'package:flutter/material.dart';
 
-class ChatBotPage extends StatefulWidget {
+class ChatBotPage extends ConsumerStatefulWidget {
   const ChatBotPage({super.key});
 
   @override
-  State<ChatBotPage> createState() => _ChatBotPageState();
+  ConsumerState<ChatBotPage> createState() => _ChatBotPageState();
 }
 
-class _ChatBotPageState extends State<ChatBotPage> {
+class _ChatBotPageState extends ConsumerState<ChatBotPage> {
   final TextEditingController _controller = TextEditingController();
   final ScrollController _scrollController = ScrollController();
   final ChatService _chatService = ChatService();
@@ -34,8 +36,10 @@ class _ChatBotPageState extends State<ChatBotPage> {
 
   Future<void> _loadHistory() async {
     try {
+      final user = ref.read(currentUserProvider).value;
+      final historyKey = user != null ? 'chatbot_history_${user.id}' : 'chatbot_history_guest';
       final prefs = await SharedPreferences.getInstance();
-      final String? historyJson = prefs.getString('chatbot_history');
+      final String? historyJson = prefs.getString(historyKey);
       if (historyJson != null) {
         final List<dynamic> decodedList = jsonDecode(historyJson);
         final List<ChatMessage> loadedMessages = decodedList.map((item) => ChatMessage.fromJson(item)).toList();
@@ -52,10 +56,12 @@ class _ChatBotPageState extends State<ChatBotPage> {
 
   Future<void> _saveHistory() async {
     try {
+      final user = ref.read(currentUserProvider).value;
+      final historyKey = user != null ? 'chatbot_history_${user.id}' : 'chatbot_history_guest';
       final prefs = await SharedPreferences.getInstance();
       final messagesToSave = _messages.take(50).toList();
       final String historyJson = jsonEncode(messagesToSave.map((m) => m.toJson()).toList());
-      await prefs.setString('chatbot_history', historyJson);
+      await prefs.setString(historyKey, historyJson);
     } catch (e) {
       debugPrint("Erreur sauvegarde historique : \$e");
     }

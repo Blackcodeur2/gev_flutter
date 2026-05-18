@@ -85,14 +85,14 @@ class _HomePageState extends ConsumerState<HomePage>
               slivers: [
                 SliverToBoxAdapter(child: MyAppBar(isHome: true)),
                 
-                // 🛡️ Bannière KWC si en attente
-                userAsync.when(
-                  data: (user) => user?.statut == "en attente" 
-                      ? const SliverToBoxAdapter(child: KwcReminderBanner())
-                      : const SliverToBoxAdapter(child: SizedBox.shrink()),
-                  loading: () => const SliverToBoxAdapter(child: SizedBox.shrink()),
-                  error: (e, s) => const SliverToBoxAdapter(child: SizedBox.shrink()),
-                ),
+                // 🛡️ Bannière KWC si en attente (Commentée)
+                // userAsync.when(
+                //   data: (user) => user?.statut == "en attente" 
+                //       ? const SliverToBoxAdapter(child: KwcReminderBanner())
+                //       : const SliverToBoxAdapter(child: SizedBox.shrink()),
+                //   loading: () => const SliverToBoxAdapter(child: SizedBox.shrink()),
+                //   error: (e, s) => const SliverToBoxAdapter(child: SizedBox.shrink()),
+                // ),
   
                 promosAsync.when(
                   data: (promos) => promos.isNotEmpty 

@@ -8,6 +8,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:camer_trip/app/services/api_client_service.dart';
 import 'package:camer_trip/app/shared/others/app_bar.dart';
 import 'package:camer_trip/app/config/const_config.dart';
+import 'package:go_router/go_router.dart';
 
 class EditProfilePage extends ConsumerStatefulWidget {
 
@@ -85,7 +86,11 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Profil mis à jour avec succès')),
           );
-          Navigator.of(context).pop();
+          if (context.canPop()) {
+            context.pop();
+          } else {
+            context.go('/main');
+          }
         }
       } else {
         if (mounted) {
