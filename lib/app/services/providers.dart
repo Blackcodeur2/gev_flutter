@@ -9,6 +9,8 @@ import 'reservation_service.dart';
 import 'paiement_service.dart';
 import 'colis_service.dart';
 import '../models/colis_model.dart';
+import 'notification_service.dart';
+import '../models/notification_model.dart';
 
 
 
@@ -91,4 +93,12 @@ final syncUserProvider = FutureProvider<AuthResponse>((ref) async {
     ref.invalidate(currentUserProvider);
   }
   return response;
+});
+
+final notificationServiceProvider = Provider<NotificationService>((ref) {
+  return NotificationService();
+});
+
+final myNotificationsProvider = FutureProvider<List<NotificationModel>>((ref) async {
+  return ref.watch(notificationServiceProvider).getNotifications();
 });

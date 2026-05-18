@@ -61,7 +61,7 @@ class _ReservationsPagesState extends ConsumerState<ReservationsPages>
                   children: [
                     _buildReservationList(reservations, 'validee'),
                     _buildReservationList(reservations, 'en attente'),
-                    _buildReservationList(reservations, 'annule'),
+                    _buildReservationList(reservations, 'annulee'),
                   ],
                 ),
                 loading: () => const Center(child: CircularProgressIndicator()),
@@ -91,7 +91,7 @@ class _ReservationsPagesState extends ConsumerState<ReservationsPages>
                   Icon(Icons.history_rounded, size: 64, color: Theme.of(context).colorScheme.onSurface.withOpacity(0.1)),
                   const SizedBox(height: 16),
                   Text(
-                    'Aucune réservation ${statusFilter == 'validee' ? 'validée' : statusFilter}',
+                    'Aucune réservation ${statusFilter == 'validee' ? 'validée' : statusFilter == 'annulee' ? 'annulée' : 'en attente'}',
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
                     ),
@@ -130,7 +130,7 @@ class _ReservationsPagesState extends ConsumerState<ReservationsPages>
         statusColor = Colors.green;
         statusLabel = 'Validée';
         break;
-      case 'annule':
+      case 'annulee':
         statusColor = cs.error;
         statusLabel = 'Annulée';
         break;

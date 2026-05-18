@@ -22,6 +22,24 @@ class _PaymentPageState extends ConsumerState<PaymentPage> {
   bool isLoading = false;
 
   @override
+  void initState() {
+    super.initState();
+    // Préremplir le numéro de téléphone de l'utilisateur actuel
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final user = await ref.read(currentUserProvider.future);
+      if (user != null && user.telephone != null) {
+        String phone = user.telephone!;
+        if (phone.startsWith('237')) {
+          phone = phone.substring(3);
+        }
+        if (mounted) {
+          _phoneController.text = phone;
+        }
+      }
+    });
+  }
+
+  @override
   void dispose() {
     _phoneController.dispose();
     super.dispose();
@@ -70,6 +88,9 @@ class _PaymentPageState extends ConsumerState<PaymentPage> {
 
       final reservationId = resResponse.data['data']['id'];
 
+      // Invalider l'historique des réservations pour charger la nouvelle réservation 'en attente'
+      ref.invalidate(myReservationsProvider);
+
       // 2. Initier le paiement CamPay
       final payResponse = await paiementService.initiatePayment(
         reservationId: reservationId,
@@ -101,6 +122,10 @@ class _PaymentPageState extends ConsumerState<PaymentPage> {
     const maxAttempts = 30; // 5 minutes (10s intervalle)
 
     Timer.periodic(const Duration(seconds: 10), (timer) async {
+      if (!mounted || !isLoading) {
+        timer.cancel();
+        return;
+      }
       attempts++;
       if (attempts >= maxAttempts) {
         timer.cancel();
@@ -113,24 +138,27 @@ class _PaymentPageState extends ConsumerState<PaymentPage> {
         return;
       }
 
-      final status = await paiementService.checkPaymentStatus(reference);
-      
-      if (status == 'SUCCESSFUL') {
-        timer.cancel();
-        if (mounted) {
-          setState(() => isLoading = false);
-          _showSuccessDialog();
+      try {
+        final status = await paiementService.checkPaymentStatus(reference);
+        
+        if (status == 'SUCCESSFUL') {
+          timer.cancel();
+          if (mounted) {
+            setState(() => isLoading = false);
+            _showSuccessDialog();
+          }
+        } else if (status == 'FAILED' || status == 'ECHOUÉ') {
+          timer.cancel();
+          if (mounted) {
+            setState(() => isLoading = false);
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Le paiement a échoué.')),
+            );
+          }
         }
-      } else if (status == 'FAILED' || status == 'ECHOUÉ') {
-        timer.cancel();
-        if (mounted) {
-          setState(() => isLoading = false);
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Le paiement a échoué.')),
-          );
-        }
+      } catch (e) {
+        // Ignorer les erreurs réseau temporaires pendant le polling
       }
-      // PENDING: On continue d'attendre
     });
   }
 
@@ -167,6 +195,7 @@ class _PaymentPageState extends ConsumerState<PaymentPage> {
               height: 50,
               child: ElevatedButton(
                 onPressed: () {
+                  ref.invalidate(myReservationsProvider);
                   context.goNamed('main');
                 },
                 style: ElevatedButton.styleFrom(
@@ -193,41 +222,114 @@ class _PaymentPageState extends ConsumerState<PaymentPage> {
     return Scaffold(
       backgroundColor: cs.surface,
       body: SafeArea(
-        child: Column(
+        child: Stack(
           children: [
-            MyAppBar(title: 'Paiement'),
-            Expanded(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.all(24),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _buildSummaryCard(cs, isDark),
-                    const SizedBox(height: 32),
-                    const Text('Choisir le mode de paiement', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                    const SizedBox(height: 16),
-                    _buildPaymentMethod(cs, isDark, 'Orange Money', 'assets/icons/orange_money.png', Colors.orange),
-                    const SizedBox(height: 12),
-                    _buildPaymentMethod(cs, isDark, 'MTN Mobile Money', 'assets/icons/mtn_money.png', Colors.yellow[700]!),
-                    const SizedBox(height: 32),
-                    const Text('Numéro de paiement', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                    const SizedBox(height: 8),
-                    TextField(
-                      controller: _phoneController,
-                      keyboardType: TextInputType.phone,
-                      decoration: InputDecoration(
-                        hintText: '6xx xxx xxx',
-                        prefixIcon: const Icon(Icons.phone_android),
-                        filled: true,
-                        fillColor: isDark ? cs.surfaceContainerHigh : Colors.grey[100],
-                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: BorderSide.none),
+            Column(
+              children: [
+                MyAppBar(title: 'Paiement'),
+                Expanded(
+                  child: SingleChildScrollView(
+                    padding: const EdgeInsets.all(24),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildSummaryCard(cs, isDark),
+
+                        const SizedBox(height: 32),
+                        const Text('Numéro de paiement', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                        const SizedBox(height: 8),
+                        TextField(
+                          controller: _phoneController,
+                          keyboardType: TextInputType.phone,
+                          decoration: InputDecoration(
+                            hintText: '6xx xxx xxx',
+                            prefixIcon: const Icon(Icons.phone_android),
+                            filled: true,
+                            fillColor: isDark ? cs.surfaceContainerHigh : Colors.grey[100],
+                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: BorderSide.none),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                _buildFooter(cs),
+              ],
+            ),
+            if (isLoading)
+              Container(
+                color: Colors.black.withOpacity(0.6),
+                child: Center(
+                  child: Card(
+                    margin: const EdgeInsets.symmetric(horizontal: 32),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+                    elevation: 8,
+                    child: Padding(
+                      padding: const EdgeInsets.all(28),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const SizedBox(
+                            width: 50,
+                            height: 50,
+                            child: CircularProgressIndicator(strokeWidth: 4.5),
+                          ),
+                          const SizedBox(height: 24),
+                          const Text(
+                            'Validation du Paiement',
+                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                            textAlign: TextAlign.center,
+                          ),
+                          const SizedBox(height: 12),
+                          Text(
+                            'Un prompt USSD de paiement a été initié vers le numéro :\n${_phoneController.text.trim()}',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(color: Colors.grey[600], fontSize: 14),
+                          ),
+                          const SizedBox(height: 12),
+                          Text(
+                            'Saisissez votre code PIN sur votre téléphone pour autoriser le débit de ${widget.voyage.prix.toInt()} FCFA.',
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
+                          ),
+                          const SizedBox(height: 24),
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                            decoration: BoxDecoration(
+                              color: cs.primary.withOpacity(0.08),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(Icons.sync, color: cs.primary, size: 18),
+                                const SizedBox(width: 8),
+                                Text(
+                                  'Attente du réseau...',
+                                  style: TextStyle(color: cs.primary, fontWeight: FontWeight.bold, fontSize: 13),
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(height: 20),
+                          // Bouton de simulation pour le sandbox
+                          TextButton.icon(
+                            onPressed: () {
+                              setState(() => isLoading = false);
+                              _showSuccessDialog();
+                            },
+                            icon: const Icon(Icons.bug_report, size: 16),
+                            label: const Text('Simuler la réussite (Test Sandbox)', style: TextStyle(fontSize: 12)),
+                            style: TextButton.styleFrom(
+                              foregroundColor: Colors.orange[800],
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                  ],
+                  ),
                 ),
               ),
-            ),
-            _buildFooter(cs),
           ],
         ),
       ),
@@ -276,33 +378,6 @@ class _PaymentPageState extends ConsumerState<PaymentPage> {
     );
   }
 
-  Widget _buildPaymentMethod(ColorScheme cs, bool isDark, String method, String iconPath, Color brandColor) {
-    bool isSelected = selectedMethod == method;
-    return InkWell(
-      onTap: () => setState(() => selectedMethod = method),
-      child: Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: isDark ? cs.surfaceContainerHigh : Colors.white,
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: isSelected ? brandColor : Colors.transparent, width: 2),
-        ),
-        child: Row(
-          children: [
-            Container(
-              width: 40, height: 40,
-              decoration: BoxDecoration(color: brandColor, borderRadius: BorderRadius.circular(8)),
-              child: const Icon(Icons.payment, color: Colors.white),
-            ),
-            const SizedBox(width: 16),
-            Text(method, style: const TextStyle(fontWeight: FontWeight.bold)),
-            const Spacer(),
-            if (isSelected) Icon(Icons.check_circle, color: brandColor),
-          ],
-        ),
-      ),
-    );
-  }
 
   Widget _buildFooter(ColorScheme cs) {
     return Container(
