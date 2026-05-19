@@ -202,4 +202,102 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get loading => 'Loading...';
+
+  @override
+  String get termsRequired => 'Please accept the terms of use';
+
+  @override
+  String get registerSuccess =>
+      'Registration successful. Please check your email.';
+
+  @override
+  String get errorPrefix => 'Error: ';
+
+  @override
+  String get unknownError => 'Unknown error';
+
+  @override
+  String get googleError => 'Google Error';
+
+  @override
+  String get success => 'Success';
+
+  @override
+  String get ok => 'OK';
+
+  @override
+  String get changePasswordTitle => 'Change password';
+
+  @override
+  String get currentPassword => 'Current password';
+
+  @override
+  String get noPasswordSet =>
+      'You have not set a password yet. Please create one to secure your account.';
+
+  @override
+  String get newPassword => 'New password';
+
+  @override
+  String get confirmNewPassword => 'Confirm new password';
+
+  @override
+  String get passwordsDoNotMatch => 'Passwords do not match';
+
+  @override
+  String get updateBtn => 'UPDATE';
+
+  @override
+  String get passwordSecurityInfo =>
+      'For security reasons, choose a strong password of at least 8 characters.';
+
+  @override
+  String get passwordChangedSuccess => 'Password successfully changed!';
+
+  @override
+  String get passwordChangeError => 'Error while changing password';
+
+  @override
+  String get codeSentSuccess => 'Code sent successfully';
+
+  @override
+  String get sendCodeError => 'Error sending code';
+
+  @override
+  String get resetError => 'Reset error';
+
+  @override
+  String get resetSuccessMessage =>
+      'Your password has been successfully reset. You can now log in.';
+
+  @override
+  String get loginBtn => 'LOG IN';
+
+  @override
+  String get resetTitle => 'Reset';
+
+  @override
+  String get forgotPasswordTitle => 'Forgot password';
+
+  @override
+  String get enterCodeAndNewPassword =>
+      'Enter the code received and your new password.';
+
+  @override
+  String get enterEmailForCode => 'Enter your email to receive the reset code.';
+
+  @override
+  String get yourEmailAddress => 'Your email address';
+
+  @override
+  String get sendCodeBtn => 'SEND CODE';
+
+  @override
+  String get sixDigitCode => '6-digit code';
+
+  @override
+  String get resetBtn => 'RESET';
+
+  @override
+  String get changeEmail => 'Change email';
 }

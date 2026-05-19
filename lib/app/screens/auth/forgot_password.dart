@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../services/auth_service.dart';
 import 'package:go_router/go_router.dart';
+import 'package:camer_trip/l10n/app_localizations.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
   final String? email;
@@ -69,9 +70,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> with Single
     if (mounted) {
       if (response.success) {
         setState(() => _codeSent = true);
-        _showSnackBar(response.message ?? "Code envoyé avec succès", isError: false);
+        _showSnackBar(response.message ?? AppLocalizations.of(context)?.codeSentSuccess ?? "Code envoyé avec succès", isError: false);
       } else {
-        _showSnackBar(response.message ?? "Erreur lors de l'envoi", isError: true);
+        _showSnackBar(response.message ?? AppLocalizations.of(context)?.sendCodeError ?? "Erreur lors de l'envoi", isError: true);
       }
     }
   }
@@ -93,7 +94,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> with Single
       if (response.success) {
         _showSuccessDialog();
       } else {
-        _showSnackBar(response.message ?? "Erreur de réinitialisation", isError: true);
+        _showSnackBar(response.message ?? AppLocalizations.of(context)?.resetError ?? "Erreur de réinitialisation", isError: true);
       }
     }
   }
@@ -116,8 +117,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> with Single
       builder: (context) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         title: const Icon(Icons.check_circle_outline, color: AppColors.primaryGreen, size: 60),
-        content: const Text(
-          "Votre mot de passe a été réinitialisé avec succès. Vous pouvez maintenant vous connecter.",
+        content: Text(
+          AppLocalizations.of(context)?.resetSuccessMessage ?? "Votre mot de passe a été réinitialisé avec succès. Vous pouvez maintenant vous connecter.",
           textAlign: TextAlign.center,
         ),
         actions: [
@@ -131,7 +132,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> with Single
                 backgroundColor: AppColors.primaryGreen,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
               ),
-              child: const Text("SE CONNECTER", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+              child: Text(AppLocalizations.of(context)?.loginBtn ?? "SE CONNECTER", style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
             ),
           ),
         ],
@@ -144,6 +145,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> with Single
     final theme = Theme.of(context);
     final cs = theme.colorScheme;
     final isDark = theme.brightness == Brightness.dark;
+    final localizations = AppLocalizations.of(context);
 
     return Scaffold(
       backgroundColor: cs.surface,
@@ -163,7 +165,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> with Single
                       crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        _codeSent ? "Réinitialisation" : "Mot de passe oublié",
+                        _codeSent ? (localizations?.resetTitle ?? "Réinitialisation") : (localizations?.forgotPasswordTitle ?? "Mot de passe oublié"),
                         style: theme.textTheme.headlineSmall?.copyWith(
                           fontWeight: FontWeight.w900,
                           color: cs.onSurface,
@@ -172,8 +174,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> with Single
                       const SizedBox(height: 8),
                       Text(
                         _codeSent 
-                          ? "Entrez le code reçu et votre nouveau mot de passe."
-                          : "Entrez votre email pour recevoir le code de réinitialisation.",
+                          ? (localizations?.enterCodeAndNewPassword ?? "Entrez le code reçu et votre nouveau mot de passe.")
+                          : (localizations?.enterEmailForCode ?? "Entrez votre email pour recevoir le code de réinitialisation."),
                         style: theme.textTheme.bodyMedium?.copyWith(
                           color: cs.onSurface.withOpacity(0.6),
                         ),
@@ -183,32 +185,32 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> with Single
                       if (!_codeSent) ...[
                         _AppTextField(
                           controller: _emailController,
-                          hintText: "Votre adresse email",
+                          hintText: localizations?.yourEmailAddress ?? "Votre adresse email",
                           prefixIcon: Icons.email_outlined,
                           keyboardType: TextInputType.emailAddress,
                         ),
                         const SizedBox(height: 32),
                         _ThemedButton(
-                          text: "ENVOYER LE CODE",
+                          text: localizations?.sendCodeBtn ?? "ENVOYER LE CODE",
                           isLoading: _isLoading,
                           onPressed: _sendResetCode,
                         ),
                       ] else ...[
                         _AppTextField(
                           controller: _codeController,
-                          hintText: "Code à 6 chiffres",
+                          hintText: localizations?.sixDigitCode ?? "Code à 6 chiffres",
                           prefixIcon: Icons.pin_outlined,
                           keyboardType: TextInputType.number,
                         ),
                         const SizedBox(height: 16),
                         _AppTextField(
                           controller: _passwordController,
-                          hintText: "Nouveau mot de passe",
+                          hintText: localizations?.newPassword ?? "Nouveau mot de passe",
                           prefixIcon: Icons.lock_outline,
                           obscureText: _obscurePassword,
                           validator: (v) {
-                            if (v == null || v.isEmpty) return 'Requis';
-                            if (v.length < 8) return 'Minimum 8 caractères';
+                            if (v == null || v.isEmpty) return localizations?.requiredField ?? 'Requis';
+                            if (v.length < 8) return localizations?.min8Chars ?? 'Minimum 8 caractères';
                             return null;
                           },
                           suffixIcon: IconButton(
@@ -219,14 +221,14 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> with Single
                         const SizedBox(height: 16),
                         _AppTextField(
                           controller: _confirmPasswordController,
-                          hintText: "Confirmer le mot de passe",
+                          hintText: localizations?.confirmPassword ?? "Confirmer le mot de passe",
                           prefixIcon: Icons.lock_clock_outlined,
                           obscureText: _obscurePassword,
-                          validator: (v) => v != _passwordController.text ? 'Non identique' : null,
+                          validator: (v) => v != _passwordController.text ? (localizations?.notIdentical ?? 'Non identique') : null,
                         ),
                         const SizedBox(height: 32),
                         _ThemedButton(
-                          text: "RÉINITIALISER",
+                          text: localizations?.resetBtn ?? "RÉINITIALISER",
                           isLoading: _isLoading,
                           onPressed: _resetPassword,
                         ),
@@ -234,7 +236,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> with Single
                           child: TextButton(
                             onPressed: () => setState(() => _codeSent = false),
                             child: Text(
-                              "Changer d'email",
+                              localizations?.changeEmail ?? "Changer d'email",
                               style: TextStyle(color: cs.primary, fontWeight: FontWeight.bold),
                             ),
                           ),

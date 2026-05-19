@@ -70,5 +70,78 @@
   "createAccountHeader": "CRÉER UN COMPTE",
   
   "splashSlogan": "\uD83C\uDF0D Voyage facilement au Cameroun",
-  "loading": "Chargement..."
+  "loading": "Chargement...",
+  "termsRequired": "Veuillez accepter les conditions d'utilisation",
+  "registerSuccess": "Inscription réussie. Veuillez vérifier votre email.",
+  "errorPrefix": "Erreur : ",
+  "unknownError": "Erreur inconnue",
+  "googleError": "Erreur Google",
+  "success": "Succès",
+  "ok": "OK",
+  
+  "changePasswordTitle": "Changer le mot de passe",
+  "currentPassword": "Mot de passe actuel",
+  "noPasswordSet": "Vous n'avez pas encore de mot de passe défini. Veuillez en créer un pour sécuriser votre compte.",
+  "newPassword": "Nouveau mot de passe",
+  "confirmNewPassword": "Confirmer le nouveau mot de passe",
+  "passwordsDoNotMatch": "Les mots de passe ne correspondent pas",
+  "updateBtn": "METTRE À JOUR",
+  "passwordSecurityInfo": "Pour des raisons de sécurité, choisissez un mot de passe robuste d'au moins 8 caractères.",
+  "passwordChangedSuccess": "Mot de passe modifié avec succès !",
+  "passwordChangeError": "Erreur lors du changement de mot de passe",
+  
+  "codeSentSuccess": "Code envoyé avec succès",
+  "sendCodeError": "Erreur lors de l'envoi",
+  "resetError": "Erreur de réinitialisation",
+  "resetSuccessMessage": "Votre mot de passe a été réinitialisé avec succès. Vous pouvez maintenant vous connecter.",
+  "loginBtn": "SE CONNECTER",
+  "resetTitle": "Réinitialisation",
+  "forgotPasswordTitle": "Mot de passe oublié",
+  "enterCodeAndNewPassword": "Entrez le code reçu et votre nouveau mot de passe.",
+  "enterEmailForCode": "Entrez votre email pour recevoir le code de réinitialisation.",
+  "yourEmailAddress": "Votre adresse email",
+  "sendCodeBtn": "ENVOYER LE CODE",
+  "sixDigitCode": "Code à 6 chiffres",
+  "resetBtn": "RÉINITIALISER",
+  "changeEmail": "Changer d'email",
+  
+  "emailVerifiedViaLink": "Email vérifié avec succès via le lien !",
+  "invalidLink": "Lien invalide",
+  "emailVerifiedSuccess": "Email vérifié avec succès !",
+  "invalidCode": "Code invalide",
+  "codeResent": "Code renvoyé",
+  "verificationTitle": "Vérification",
+  "checkYourInbox": "Vérifiez votre boîte mail",
+  "codeSentMessage": "Nous avons envoyé un code de vérification à {email}. Veuillez l'entrer ci-dessous.",
+  "@codeSentMessage": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "verificationCodeLabel": "Code de vérification",
+  "verifyBtn": "Vérifier",
+  "resendCodeInstructions": "Je n'ai pas reçu de code. Renvoyer.",
+  
+  "upcomingTripsTitle": "📅 Prochains Voyages",
+  "partnerAgenciesTitle": "🏢 Agences partenaires",
+  "currentReservationsTitle": "🎟️ Réservation en cours",
+  
+  "filterTypeTripComingSoon": "Filtre par type de trajet \"{label}\" bientôt disponible ! 🚌",
+  "@filterTypeTripComingSoon": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "stationsCountNational": "{count} gares • Réseau National",
+  "@stationsCountNational": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  }
 }

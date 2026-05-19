@@ -12,7 +12,7 @@ import 'package:camer_trip/app/config/const_config.dart';
 import 'package:go_router/go_router.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:camer_trip/app/config/locale_provider.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:camer_trip/l10n/app_localizations.dart';
 
 class SettingPage extends ConsumerStatefulWidget {
   const SettingPage({super.key});

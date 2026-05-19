@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../services/auth_service.dart';
+import 'package:camer_trip/l10n/app_localizations.dart';
 
 class VerifyEmailScreen extends StatefulWidget {
   final String email;
@@ -32,12 +33,12 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
     if (mounted) {
       if (response.success) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Email vérifié avec succès via le lien !")),
+          SnackBar(content: Text(AppLocalizations.of(context)?.emailVerifiedViaLink ?? "Email vérifié avec succès via le lien !")),
         );
         Navigator.pop(context);
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(response.message ?? "Lien invalide")),
+          SnackBar(content: Text(response.message ?? AppLocalizations.of(context)?.invalidLink ?? "Lien invalide")),
         );
       }
     }
@@ -53,13 +54,13 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
     if (mounted) {
       if (response.success) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Email vérifié avec succès !")),
+          SnackBar(content: Text(AppLocalizations.of(context)?.emailVerifiedSuccess ?? "Email vérifié avec succès !")),
         );
         // Ici on pourrait rediriger vers la page d'accueil ou de connexion
         Navigator.pop(context);
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(response.message ?? "Code invalide")),
+          SnackBar(content: Text(response.message ?? AppLocalizations.of(context)?.invalidCode ?? "Code invalide")),
         );
       }
     }
@@ -72,16 +73,17 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
 
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(response.message ?? "Code renvoyé")),
+        SnackBar(content: Text(response.message ?? AppLocalizations.of(context)?.codeResent ?? "Code renvoyé")),
       );
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Vérification"),
+        title: Text(localizations?.verificationTitle ?? "Vérification"),
         backgroundColor: Colors.transparent,
         elevation: 0,
         foregroundColor: Colors.black,
@@ -101,14 +103,14 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
             children: [
               const Icon(Icons.mark_email_read_outlined, size: 80, color: Colors.green),
               const SizedBox(height: 24),
-              const Text(
-                "Vérifiez votre boîte mail",
+              Text(
+                localizations?.checkYourInbox ?? "Vérifiez votre boîte mail",
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 16),
               Text(
-                "Nous avons envoyé un code de vérification à ${widget.email}. Veuillez l'entrer ci-dessous.",
+                localizations?.codeSentMessage(widget.email) ?? "Nous avons envoyé un code de vérification à ${widget.email}. Veuillez l'entrer ci-dessous.",
                 textAlign: TextAlign.center,
                 style: const TextStyle(fontSize: 16, color: Colors.black54),
               ),
@@ -116,7 +118,7 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
               TextField(
                 controller: _codeController,
                 decoration: InputDecoration(
-                  labelText: "Code de vérification",
+                  labelText: localizations?.verificationCodeLabel ?? "Code de vérification",
                   prefixIcon: const Icon(Icons.security),
                   border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
                   hintText: "000000",
@@ -137,12 +139,12 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
                 ),
                 child: _isLoading 
                   ? const CircularProgressIndicator(color: Colors.white)
-                  : const Text("Vérifier"),
+                  : Text(localizations?.verifyBtn ?? "Vérifier"),
               ),
               const SizedBox(height: 16),
               TextButton(
                 onPressed: _isLoading ? null : _resendCode,
-                child: const Text("Je n'ai pas reçu de code. Renvoyer."),
+                child: Text(localizations?.resendCodeInstructions ?? "Je n'ai pas reçu de code. Renvoyer."),
               ),
             ],
           ),

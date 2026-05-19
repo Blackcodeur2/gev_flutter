@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:camer_trip/l10n/app_localizations.dart';
 
 class LoginPage extends ConsumerStatefulWidget {
   const LoginPage({super.key});
@@ -79,13 +79,13 @@ class _LoginPageState extends ConsumerState<LoginPage>
       AppRouter.setLoggedIn(true);
       Future.microtask(() {
         if (!mounted) return;
-        context.go('/main');
+      context.go('/main');
       });
     } else {
-      final String msg = response.message ?? "Erreur inconnue";
+      final String msg = response.message ?? AppLocalizations.of(context)?.unknownError ?? "Erreur inconnue";
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text("Erreur : $msg"),
+          content: Text("${AppLocalizations.of(context)?.errorPrefix ?? 'Erreur : '}$msg"),
           backgroundColor: AppColors.error,
           behavior: SnackBarBehavior.floating,
           shape: RoundedRectangleBorder(
@@ -119,10 +119,10 @@ class _LoginPageState extends ConsumerState<LoginPage>
         }
       });
     } else {
-      final String msg = response.message ?? "Erreur Google";
+      final String msg = response.message ?? AppLocalizations.of(context)?.googleError ?? "Erreur Google";
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text("Erreur : $msg"),
+          content: Text("${AppLocalizations.of(context)?.errorPrefix ?? 'Erreur : '}$msg"),
           backgroundColor: AppColors.error,
           behavior: SnackBarBehavior.floating,
           shape: RoundedRectangleBorder(

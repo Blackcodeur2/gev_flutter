@@ -487,6 +487,192 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Loading...'**
   String get loading;
+
+  /// No description provided for @termsRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Please accept the terms of use'**
+  String get termsRequired;
+
+  /// No description provided for @registerSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Registration successful. Please check your email.'**
+  String get registerSuccess;
+
+  /// No description provided for @errorPrefix.
+  ///
+  /// In en, this message translates to:
+  /// **'Error: '**
+  String get errorPrefix;
+
+  /// No description provided for @unknownError.
+  ///
+  /// In en, this message translates to:
+  /// **'Unknown error'**
+  String get unknownError;
+
+  /// No description provided for @googleError.
+  ///
+  /// In en, this message translates to:
+  /// **'Google Error'**
+  String get googleError;
+
+  /// No description provided for @success.
+  ///
+  /// In en, this message translates to:
+  /// **'Success'**
+  String get success;
+
+  /// No description provided for @ok.
+  ///
+  /// In en, this message translates to:
+  /// **'OK'**
+  String get ok;
+
+  /// No description provided for @changePasswordTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Change password'**
+  String get changePasswordTitle;
+
+  /// No description provided for @currentPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Current password'**
+  String get currentPassword;
+
+  /// No description provided for @noPasswordSet.
+  ///
+  /// In en, this message translates to:
+  /// **'You have not set a password yet. Please create one to secure your account.'**
+  String get noPasswordSet;
+
+  /// No description provided for @newPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'New password'**
+  String get newPassword;
+
+  /// No description provided for @confirmNewPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm new password'**
+  String get confirmNewPassword;
+
+  /// No description provided for @passwordsDoNotMatch.
+  ///
+  /// In en, this message translates to:
+  /// **'Passwords do not match'**
+  String get passwordsDoNotMatch;
+
+  /// No description provided for @updateBtn.
+  ///
+  /// In en, this message translates to:
+  /// **'UPDATE'**
+  String get updateBtn;
+
+  /// No description provided for @passwordSecurityInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'For security reasons, choose a strong password of at least 8 characters.'**
+  String get passwordSecurityInfo;
+
+  /// No description provided for @passwordChangedSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Password successfully changed!'**
+  String get passwordChangedSuccess;
+
+  /// No description provided for @passwordChangeError.
+  ///
+  /// In en, this message translates to:
+  /// **'Error while changing password'**
+  String get passwordChangeError;
+
+  /// No description provided for @codeSentSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Code sent successfully'**
+  String get codeSentSuccess;
+
+  /// No description provided for @sendCodeError.
+  ///
+  /// In en, this message translates to:
+  /// **'Error sending code'**
+  String get sendCodeError;
+
+  /// No description provided for @resetError.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset error'**
+  String get resetError;
+
+  /// No description provided for @resetSuccessMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Your password has been successfully reset. You can now log in.'**
+  String get resetSuccessMessage;
+
+  /// No description provided for @loginBtn.
+  ///
+  /// In en, this message translates to:
+  /// **'LOG IN'**
+  String get loginBtn;
+
+  /// No description provided for @resetTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset'**
+  String get resetTitle;
+
+  /// No description provided for @forgotPasswordTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Forgot password'**
+  String get forgotPasswordTitle;
+
+  /// No description provided for @enterCodeAndNewPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the code received and your new password.'**
+  String get enterCodeAndNewPassword;
+
+  /// No description provided for @enterEmailForCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your email to receive the reset code.'**
+  String get enterEmailForCode;
+
+  /// No description provided for @yourEmailAddress.
+  ///
+  /// In en, this message translates to:
+  /// **'Your email address'**
+  String get yourEmailAddress;
+
+  /// No description provided for @sendCodeBtn.
+  ///
+  /// In en, this message translates to:
+  /// **'SEND CODE'**
+  String get sendCodeBtn;
+
+  /// No description provided for @sixDigitCode.
+  ///
+  /// In en, this message translates to:
+  /// **'6-digit code'**
+  String get sixDigitCode;
+
+  /// No description provided for @resetBtn.
+  ///
+  /// In en, this message translates to:
+  /// **'RESET'**
+  String get resetBtn;
+
+  /// No description provided for @changeEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Change email'**
+  String get changeEmail;
 }
 
 class _AppLocalizationsDelegate

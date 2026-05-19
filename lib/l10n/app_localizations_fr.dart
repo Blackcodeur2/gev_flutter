@@ -203,4 +203,103 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get loading => 'Chargement...';
+
+  @override
+  String get termsRequired => 'Veuillez accepter les conditions d\'utilisation';
+
+  @override
+  String get registerSuccess =>
+      'Inscription réussie. Veuillez vérifier votre email.';
+
+  @override
+  String get errorPrefix => 'Erreur : ';
+
+  @override
+  String get unknownError => 'Erreur inconnue';
+
+  @override
+  String get googleError => 'Erreur Google';
+
+  @override
+  String get success => 'Succès';
+
+  @override
+  String get ok => 'OK';
+
+  @override
+  String get changePasswordTitle => 'Changer le mot de passe';
+
+  @override
+  String get currentPassword => 'Mot de passe actuel';
+
+  @override
+  String get noPasswordSet =>
+      'Vous n\'avez pas encore de mot de passe défini. Veuillez en créer un pour sécuriser votre compte.';
+
+  @override
+  String get newPassword => 'Nouveau mot de passe';
+
+  @override
+  String get confirmNewPassword => 'Confirmer le nouveau mot de passe';
+
+  @override
+  String get passwordsDoNotMatch => 'Les mots de passe ne correspondent pas';
+
+  @override
+  String get updateBtn => 'METTRE À JOUR';
+
+  @override
+  String get passwordSecurityInfo =>
+      'Pour des raisons de sécurité, choisissez un mot de passe robuste d\'au moins 8 caractères.';
+
+  @override
+  String get passwordChangedSuccess => 'Mot de passe modifié avec succès !';
+
+  @override
+  String get passwordChangeError => 'Erreur lors du changement de mot de passe';
+
+  @override
+  String get codeSentSuccess => 'Code envoyé avec succès';
+
+  @override
+  String get sendCodeError => 'Erreur lors de l\'envoi';
+
+  @override
+  String get resetError => 'Erreur de réinitialisation';
+
+  @override
+  String get resetSuccessMessage =>
+      'Votre mot de passe a été réinitialisé avec succès. Vous pouvez maintenant vous connecter.';
+
+  @override
+  String get loginBtn => 'SE CONNECTER';
+
+  @override
+  String get resetTitle => 'Réinitialisation';
+
+  @override
+  String get forgotPasswordTitle => 'Mot de passe oublié';
+
+  @override
+  String get enterCodeAndNewPassword =>
+      'Entrez le code reçu et votre nouveau mot de passe.';
+
+  @override
+  String get enterEmailForCode =>
+      'Entrez votre email pour recevoir le code de réinitialisation.';
+
+  @override
+  String get yourEmailAddress => 'Votre adresse email';
+
+  @override
+  String get sendCodeBtn => 'ENVOYER LE CODE';
+
+  @override
+  String get sixDigitCode => 'Code à 6 chiffres';
+
+  @override
+  String get resetBtn => 'RÉINITIALISER';
+
+  @override
+  String get changeEmail => 'Changer d\'email';
 }

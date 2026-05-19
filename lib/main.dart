@@ -8,7 +8,7 @@ import 'package:provider/provider.dart';
 
 import 'package:camer_trip/app/config/locale_provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:camer_trip/l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

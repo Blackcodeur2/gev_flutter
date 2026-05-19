@@ -67,6 +67,79 @@
   "loginLink": "Log in",
   "createAccountHeader": "CREATE AN ACCOUNT",
   
-  "splashSlogan": "\ud83c\udf0d Travel easily in Cameroon",
-  "loading": "Loading..."
+  "splashSlogan": "🌍 Travel easily in Cameroon",
+  "loading": "Loading...",
+  "termsRequired": "Please accept the terms of use",
+  "registerSuccess": "Registration successful. Please check your email.",
+  "errorPrefix": "Error: ",
+  "unknownError": "Unknown error",
+  "googleError": "Google Error",
+  "success": "Success",
+  "ok": "OK",
+
+  "changePasswordTitle": "Change password",
+  "currentPassword": "Current password",
+  "noPasswordSet": "You have not set a password yet. Please create one to secure your account.",
+  "newPassword": "New password",
+  "confirmNewPassword": "Confirm new password",
+  "passwordsDoNotMatch": "Passwords do not match",
+  "updateBtn": "UPDATE",
+  "passwordSecurityInfo": "For security reasons, choose a strong password of at least 8 characters.",
+  "passwordChangedSuccess": "Password successfully changed!",
+  "passwordChangeError": "Error while changing password",
+
+  "codeSentSuccess": "Code sent successfully",
+  "sendCodeError": "Error sending code",
+  "resetError": "Reset error",
+  "resetSuccessMessage": "Your password has been successfully reset. You can now log in.",
+  "loginBtn": "LOG IN",
+  "resetTitle": "Reset",
+  "forgotPasswordTitle": "Forgot password",
+  "enterCodeAndNewPassword": "Enter the code received and your new password.",
+  "enterEmailForCode": "Enter your email to receive the reset code.",
+  "yourEmailAddress": "Your email address",
+  "sendCodeBtn": "SEND CODE",
+  "sixDigitCode": "6-digit code",
+  "resetBtn": "RESET",
+  "changeEmail": "Change email",
+
+  "emailVerifiedViaLink": "Email successfully verified via link!",
+  "invalidLink": "Invalid link",
+  "emailVerifiedSuccess": "Email successfully verified!",
+  "invalidCode": "Invalid code",
+  "codeResent": "Code resent",
+  "verificationTitle": "Verification",
+  "checkYourInbox": "Check your inbox",
+  "codeSentMessage": "We sent a verification code to {email}. Please enter it below.",
+  "@codeSentMessage": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "verificationCodeLabel": "Verification code",
+  "verifyBtn": "Verify",
+  "resendCodeInstructions": "I didn't receive a code. Resend.",
+  
+  "upcomingTripsTitle": "📅 Upcoming Trips",
+  "partnerAgenciesTitle": "🏢 Partner Agencies",
+  "currentReservationsTitle": "🎟️ Current Reservation",
+  
+  "filterTypeTripComingSoon": "Filter by trip type \"{label}\" coming soon! 🚌",
+  "@filterTypeTripComingSoon": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "stationsCountNational": "{count} stations • National Network",
+  "@stationsCountNational": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  }
 }

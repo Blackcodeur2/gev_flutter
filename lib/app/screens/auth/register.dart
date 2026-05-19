@@ -10,7 +10,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:camer_trip/l10n/app_localizations.dart';
 
 class RegisterPage extends ConsumerStatefulWidget {
   const RegisterPage({super.key});
@@ -107,7 +107,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage>
     if (!_acceptTerms) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(AppLocalizations.of(context)?.acceptTerms ?? 'Veuillez accepter les conditions d\'utilisation'),
+          content: Text(AppLocalizations.of(context)?.termsRequired ?? 'Veuillez accepter les conditions d\'utilisation'),
           backgroundColor: AppColors.error,
           behavior: SnackBarBehavior.floating,
           shape: RoundedRectangleBorder(
@@ -136,11 +136,11 @@ class _RegisterPageState extends ConsumerState<RegisterPage>
     setState(() => _isLoading = false);
 
     if (response.success) {
-      _showSuccessDialog(response.message ?? "Inscription réussie. Veuillez vérifier votre email.");
+      _showSuccessDialog(response.message ?? AppLocalizations.of(context)?.registerSuccess ?? "Inscription réussie. Veuillez vérifier votre email.");
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text("Erreur : ${response.message}"),
+          content: Text("${AppLocalizations.of(context)?.errorPrefix ?? 'Erreur : '}${response.message}"),
           backgroundColor: AppColors.error,
           behavior: SnackBarBehavior.floating,
           shape: RoundedRectangleBorder(
@@ -163,10 +163,10 @@ class _RegisterPageState extends ConsumerState<RegisterPage>
       AppRouter.setLoggedIn(true);
       context.go('/main');
     } else {
-      final String msg = response.message ?? "Erreur Google";
+      final String msg = response.message ?? AppLocalizations.of(context)?.googleError ?? "Erreur Google";
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text("Erreur : $msg"),
+          content: Text("${AppLocalizations.of(context)?.errorPrefix ?? 'Erreur : '}$msg"),
           backgroundColor: AppColors.error,
           behavior: SnackBarBehavior.floating,
           shape: RoundedRectangleBorder(
@@ -182,7 +182,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage>
       context: context,
       barrierDismissible: false,
       builder: (context) => AlertDialog(
-        title: const Text('Succès'),
+        title: Text(AppLocalizations.of(context)?.success ?? 'Succès'),
         content: Text(message),
         actions: [
           TextButton(
@@ -190,7 +190,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage>
               Navigator.of(context).pop();
               context.pop(); // Retour à la page de login
             },
-            child: const Text('OK'),
+            child: Text(AppLocalizations.of(context)?.ok ?? 'OK'),
           ),
         ],
       ),
