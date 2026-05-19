@@ -143,5 +143,273 @@
         "type": "int"
       }
     }
+  },
+  
+  "sectionAppearance": "Apparence & Système",
+  "darkMode": "Mode Sombre",
+  "darkModeEnabled": "Activé",
+  "darkModeDisabled": "Désactivé",
+  "notifications": "Notifications",
+  "notificationsSubtitle": "Alertes et Push",
+  "sectionSecurity": "Sécurité",
+  "password": "Mot de passe",
+  "changePasswordSubtitle": "Changer mon mot de passe",
+  "sectionActivities": "Mes Activités",
+  "myParcels": "Mes Colis",
+  "myParcelsSubtitle": "Suivre mes envois et réceptions",
+  "sectionSupport": "Assistance",
+  "helpCenter": "Centre d'aide",
+  "helpCenterSubtitle": "Questions fréquentes",
+  "about": "À propos",
+  "logout": "Déconnexion",
+  "notConnected": "Non connecté",
+  "sessionExpired": "Session expirée",
+
+  "noInternetTitle": "Pas de connexion",
+  "noInternetMessage": "Vérifiez votre connexion Wi-Fi ou vos données mobiles et réessayez.",
+  "retryBtn": "Réessayer",
+
+  "notificationsTitle": "Notifications",
+  "markAllRead": "Tout lire",
+  "allNotificationsRead": "Toutes les notifications sont marquées comme lues",
+  "notificationDeleted": "Notification supprimée",
+  "noNotifications": "Aucune Notification",
+  "noNotificationsDesc": "Vous êtes à jour ! Vos alertes de voyage, rappels et rapports d'incidents apparaîtront ici.",
+  "loadingError": "Erreur de chargement : {error}",
+  "@loadingError": {
+    "placeholders": {
+      "error": { "type": "String" }
+    }
+  },
+
+  "myReservationsTitle": "Mes Réservations",
+  "tabValidated": "Validées",
+  "tabPending": "En attente",
+  "tabCancelled": "Annulées",
+  "statusValidated": "Validée",
+  "statusCancelled": "Annulée",
+  "statusPending": "En attente",
+  "noReservationValidated": "Aucune réservation validée",
+  "noReservationCancelled": "Aucune réservation annulée",
+  "noReservationPending": "Aucune réservation en attente",
+  "errorPrefix2": "Erreur: ",
+  "seatLabel": "Siège #{place}",
+  "@seatLabel": {
+    "placeholders": {
+      "place": { "type": "String" }
+    }
+  },
+  "referenceLabel": "Référence: {ref}",
+  "@referenceLabel": {
+    "placeholders": {
+      "ref": { "type": "String" }
+    }
+  },
+
+  "newsTitle": "Nouveautés",
+  "newsHeaderTitle": "Le Journal du Voyageur",
+  "newsHeaderSubtitle": "Dernières actus de vos agences favorites",
+
+  "justNow": "\u00c0 l'instant",
+  "minutesAgo": "Il y a {count} min",
+  "@minutesAgo": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "hoursAgo": "Il y a {count} h",
+  "@hoursAgo": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "daysAgo": "Il y a {count} j",
+  "@daysAgo": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+
+  "myColisTitle": "Mes Colis",
+  "tabSent": "Expédiés",
+  "tabToReceive": "\u00c0 recevoir",
+  "pleaseLogin": "Veuillez vous connecter",
+  "noColisSent": "Aucun colis envoyé",
+  "noColisToReceive": "Aucun colis \u00e0 recevoir",
+  "colisRef": "Réf: #C-{id}",
+  "@colisRef": {
+    "placeholders": {
+      "id": { "type": "int" }
+    }
+  },
+  "colisOrigin": "Origine",
+  "colisDestination": "Destination",
+  "colisRecipient": "Destinataire: {name}",
+  "@colisRecipient": {
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
+  "colisSender": "Expéditeur: {name}",
+  "@colisSender": {
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
+  "colisStatusPending": "En attente",
+  "colisStatusDelivered": "Livré",
+  "colisStatusInTransit": "En transit",
+
+  "chatbotTitle": "Assistant IA",
+  "chatbotGreeting": "Bonjour ! Je suis votre assistant CamerTrip conçu avec une IA avancée. Comment puis-je vous aider aujourd'hui ?",
+  "chatbotTyping": "L'IA réfléchit...",
+  "chatbotHint": "Posez votre question...",
+  "chatbotQ1": "Quels sont les voyages de demain ?",
+  "chatbotQ2": "Quelles sont mes réservations ?",
+  "chatbotQ3": "O\u00f9 sont vos agences ?",
+
+  "tabStations": "Gares",
+  "tabUpcoming": "Prochains",
+  "tabRoutes": "Trajets",
+  "noStationFound": "Aucune station trouvée",
+  "noUpcomingTrip": "Aucun voyage en attente",
+  "noRouteAvailable": "Aucun trajet disponible",
+  "seatsAvailable": "{count} places dispo",
+  "@seatsAvailable": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "tripFull": "Voyage Complet",
+  "book": "Réserver",
+  "full": "Complet",
+  "gevNetwork": "Réseau CamerTrip",
+
+  "chooseSeatTitle": "Choix du siège",
+  "departure": "Départ: {time}",
+  "@departure": {
+    "placeholders": {
+      "time": { "type": "String" }
+    }
+  },
+  "door": "Porte",
+  "legendFree": "Libre",
+  "legendSelected": "Choisi",
+  "legendOccupied": "Occupé",
+  "legendStaff": "Personnel",
+  "legendDoor": "Porte",
+  "selectedSeat": "Siège sélectionné:",
+  "noSeat": "Aucun",
+  "selectedSeatValue": "Siège #{seat}",
+  "@selectedSeatValue": {
+    "placeholders": {
+      "seat": { "type": "String" }
+    }
+  },
+  "continueToPayment": "CONTINUER VERS LE PAIEMENT",
+
+  "paymentTitle": "Paiement",
+  "paymentPhoneLabel": "Numéro de paiement",
+  "paymentPhoneHint": "6xx xxx xxx",
+  "paymentEnterPhone": "Veuillez entrer votre numéro de paiement",
+  "paymentInvalidPhone": "Numéro invalide. Format: 6xx xxx xxx",
+  "paymentValidationTitle": "Validation du Paiement",
+  "paymentUssdMessage": "Un code USSD de paiement a été initié vers le numéro :\n{phone}",
+  "@paymentUssdMessage": {
+    "placeholders": {
+      "phone": { "type": "String" }
+    }
+  },
+  "paymentUssdCode": "Code USSD : {code}",
+  "@paymentUssdCode": {
+    "placeholders": {
+      "code": { "type": "String" }
+    }
+  },
+  "paymentUssdTip": "Composez ce code si le prompt de validation ne s'affiche pas automatiquement.",
+  "paymentPinPrompt": "Saisissez votre code PIN sur votre téléphone pour autoriser le débit de {amount} FCFA.",
+  "@paymentPinPrompt": {
+    "placeholders": {
+      "amount": { "type": "int" }
+    }
+  },
+  "paymentCheckingStatus": "Vérification du statut du paiement...",
+  "paymentCloseRetry": "Fermer / Recommencer",
+  "paymentTimeout": "Délai de paiement dépassé. Vérifiez vos billets.",
+  "paymentError": "Erreur: {message}",
+  "@paymentError": {
+    "placeholders": {
+      "message": { "type": "String" }
+    }
+  },
+  "paymentFailedGeneric": "Le paiement a échoué.",
+  "paymentFailedInsufficientBalance": "Échec : Solde insuffisant sur votre compte.",
+  "paymentFailedLimitExceeded": "Échec : Limite de transaction dépassée.",
+  "paymentFailedRefused": "Échec : Transaction refusée par l'utilisateur.",
+  "paymentFailedReason": "Échec : {reason}",
+  "@paymentFailedReason": {
+    "placeholders": {
+      "reason": { "type": "String" }
+    }
+  },
+  "summaryRoute": "Trajet",
+  "summarySeat": "Siège choisi",
+  "summaryTotal": "Montant Total",
+  "bookingSuccess": "Réservation Réussie !",
+  "bookingSuccessMessage": "Votre ticket pour le siège #{seat} est en attente de paiement final. Consultez vos billets pour plus de détails.",
+  "@bookingSuccessMessage": {
+    "placeholders": {
+      "seat": { "type": "String" }
+    }
+  },
+  "backToHome": "RETOUR \u00c0 L'ACCUEIL",
+  "confirmPayment": "CONFIRMER LE PAIEMENT",
+
+  "virtualTicketTitle": "Billet Virtuel",
+  "finalizePaymentTitle": "Finaliser le Paiement",
+  "finalizePaymentSubtitle": "Complétez votre paiement pour sécuriser définitivement votre place.",
+  "paymentPhoneNumber": "Numéro de téléphone",
+  "confirmAndPay": "CONFIRMER \u0026 PAYER",
+  "ticketSeat": "Siège #{seat}",
+  "@ticketSeat": {
+    "placeholders": {
+      "seat": { "type": "String" }
+    }
+  },
+  "ticketDate": "Date",
+  "ticketTime": "Heure",
+  "ticketSeatLabel": "Siège",
+  "ticketPassenger": "Passager",
+  "ticketPassengerValue": "Client (Moi)",
+  "ticketPricePaid": "Prix payé",
+  "ticketReference": "Référence: {id}",
+  "@ticketReference": {
+    "placeholders": {
+      "id": { "type": "int" }
+    }
+  },
+  "payThisTicket": "PAYER CE BILLET",
+  "downloadPdf": "Télécharger le Ticket PDF",
+  "downloading": "Téléchargement...",
+  "rebookTrip": "Réserver ce trajet \u00e0 nouveau",
+  "ticketPdfReady": "Ticket PDF prêt ! \ud83d\udcc4",
+  "downloadError": "Erreur lors du téléchargement : {error}",
+  "@downloadError": {
+    "placeholders": {
+      "error": { "type": "String" }
+    }
+  },
+  "paymentDone": "Paiement Effectué !",
+  "paymentDoneMessage": "Votre place est désormais validée. Le QR code a été activé sur votre billet.",
+  "paymentRequired": "Paiement requis pour générer le QR Code.",
+  "reservationExpired": "Réservation expirée car le voyage a débuté, s'est terminé ou a été annulé.",
+  "voyageCancelled": "Le voyage a été annulé. Ce billet ne peut plus être payé.",
+  "voyageStarted": "Le voyage a déj\u00e0 débuté ou est terminé. Ce billet ne peut plus être payé.",
+  "paymentTimeout2": "Délai de paiement dépassé.",
+  "ussdPromptMessage": "Un prompt USSD de paiement a été initié vers le numéro :\n{phone}",
+  "@ussdPromptMessage": {
+    "placeholders": {
+      "phone": { "type": "String" }
+    }
   }
 }

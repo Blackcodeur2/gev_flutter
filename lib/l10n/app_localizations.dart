@@ -769,6 +769,720 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{count} stations • National Network'**
   String stationsCountNational(int count);
+
+  /// No description provided for @sectionAppearance.
+  ///
+  /// In en, this message translates to:
+  /// **'Appearance & System'**
+  String get sectionAppearance;
+
+  /// No description provided for @darkMode.
+  ///
+  /// In en, this message translates to:
+  /// **'Dark Mode'**
+  String get darkMode;
+
+  /// No description provided for @darkModeEnabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Enabled'**
+  String get darkModeEnabled;
+
+  /// No description provided for @darkModeDisabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Disabled'**
+  String get darkModeDisabled;
+
+  /// No description provided for @notifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications'**
+  String get notifications;
+
+  /// No description provided for @notificationsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Alerts and Push'**
+  String get notificationsSubtitle;
+
+  /// No description provided for @sectionSecurity.
+  ///
+  /// In en, this message translates to:
+  /// **'Security'**
+  String get sectionSecurity;
+
+  /// No description provided for @password.
+  ///
+  /// In en, this message translates to:
+  /// **'Password'**
+  String get password;
+
+  /// No description provided for @changePasswordSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Change my password'**
+  String get changePasswordSubtitle;
+
+  /// No description provided for @sectionActivities.
+  ///
+  /// In en, this message translates to:
+  /// **'My Activities'**
+  String get sectionActivities;
+
+  /// No description provided for @myParcels.
+  ///
+  /// In en, this message translates to:
+  /// **'My Parcels'**
+  String get myParcels;
+
+  /// No description provided for @myParcelsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Track my shipments and receipts'**
+  String get myParcelsSubtitle;
+
+  /// No description provided for @sectionSupport.
+  ///
+  /// In en, this message translates to:
+  /// **'Support'**
+  String get sectionSupport;
+
+  /// No description provided for @helpCenter.
+  ///
+  /// In en, this message translates to:
+  /// **'Help Center'**
+  String get helpCenter;
+
+  /// No description provided for @helpCenterSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Frequently asked questions'**
+  String get helpCenterSubtitle;
+
+  /// No description provided for @about.
+  ///
+  /// In en, this message translates to:
+  /// **'About'**
+  String get about;
+
+  /// No description provided for @logout.
+  ///
+  /// In en, this message translates to:
+  /// **'Log out'**
+  String get logout;
+
+  /// No description provided for @notConnected.
+  ///
+  /// In en, this message translates to:
+  /// **'Not connected'**
+  String get notConnected;
+
+  /// No description provided for @sessionExpired.
+  ///
+  /// In en, this message translates to:
+  /// **'Session expired'**
+  String get sessionExpired;
+
+  /// No description provided for @noInternetTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No connection'**
+  String get noInternetTitle;
+
+  /// No description provided for @noInternetMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Check your Wi-Fi or mobile data connection and try again.'**
+  String get noInternetMessage;
+
+  /// No description provided for @retryBtn.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get retryBtn;
+
+  /// No description provided for @notificationsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications'**
+  String get notificationsTitle;
+
+  /// No description provided for @markAllRead.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark all read'**
+  String get markAllRead;
+
+  /// No description provided for @allNotificationsRead.
+  ///
+  /// In en, this message translates to:
+  /// **'All notifications marked as read'**
+  String get allNotificationsRead;
+
+  /// No description provided for @notificationDeleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Notification deleted'**
+  String get notificationDeleted;
+
+  /// No description provided for @noNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'No Notifications'**
+  String get noNotifications;
+
+  /// No description provided for @noNotificationsDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re all caught up! Your trip alerts, reminders and incident reports will appear here.'**
+  String get noNotificationsDesc;
+
+  /// No description provided for @loadingError.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading error: {error}'**
+  String loadingError(String error);
+
+  /// No description provided for @myReservationsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'My Reservations'**
+  String get myReservationsTitle;
+
+  /// No description provided for @tabValidated.
+  ///
+  /// In en, this message translates to:
+  /// **'Validated'**
+  String get tabValidated;
+
+  /// No description provided for @tabPending.
+  ///
+  /// In en, this message translates to:
+  /// **'Pending'**
+  String get tabPending;
+
+  /// No description provided for @tabCancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancelled'**
+  String get tabCancelled;
+
+  /// No description provided for @statusValidated.
+  ///
+  /// In en, this message translates to:
+  /// **'Validated'**
+  String get statusValidated;
+
+  /// No description provided for @statusCancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancelled'**
+  String get statusCancelled;
+
+  /// No description provided for @statusPending.
+  ///
+  /// In en, this message translates to:
+  /// **'Pending'**
+  String get statusPending;
+
+  /// No description provided for @noReservationValidated.
+  ///
+  /// In en, this message translates to:
+  /// **'No validated reservation'**
+  String get noReservationValidated;
+
+  /// No description provided for @noReservationCancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'No cancelled reservation'**
+  String get noReservationCancelled;
+
+  /// No description provided for @noReservationPending.
+  ///
+  /// In en, this message translates to:
+  /// **'No pending reservation'**
+  String get noReservationPending;
+
+  /// No description provided for @errorPrefix2.
+  ///
+  /// In en, this message translates to:
+  /// **'Error: '**
+  String get errorPrefix2;
+
+  /// No description provided for @seatLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Seat #{place}'**
+  String seatLabel(String place);
+
+  /// No description provided for @referenceLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Reference: {ref}'**
+  String referenceLabel(String ref);
+
+  /// No description provided for @newsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'News'**
+  String get newsTitle;
+
+  /// No description provided for @newsHeaderTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'The Traveller\'s Journal'**
+  String get newsHeaderTitle;
+
+  /// No description provided for @newsHeaderSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Latest updates from your favourite agencies'**
+  String get newsHeaderSubtitle;
+
+  /// No description provided for @justNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Just now'**
+  String get justNow;
+
+  /// No description provided for @minutesAgo.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} min ago'**
+  String minutesAgo(int count);
+
+  /// No description provided for @hoursAgo.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} h ago'**
+  String hoursAgo(int count);
+
+  /// No description provided for @daysAgo.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} d ago'**
+  String daysAgo(int count);
+
+  /// No description provided for @myColisTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'My Parcels'**
+  String get myColisTitle;
+
+  /// No description provided for @tabSent.
+  ///
+  /// In en, this message translates to:
+  /// **'Sent'**
+  String get tabSent;
+
+  /// No description provided for @tabToReceive.
+  ///
+  /// In en, this message translates to:
+  /// **'To receive'**
+  String get tabToReceive;
+
+  /// No description provided for @pleaseLogin.
+  ///
+  /// In en, this message translates to:
+  /// **'Please log in'**
+  String get pleaseLogin;
+
+  /// No description provided for @noColisSent.
+  ///
+  /// In en, this message translates to:
+  /// **'No parcel sent'**
+  String get noColisSent;
+
+  /// No description provided for @noColisToReceive.
+  ///
+  /// In en, this message translates to:
+  /// **'No parcel to receive'**
+  String get noColisToReceive;
+
+  /// No description provided for @colisRef.
+  ///
+  /// In en, this message translates to:
+  /// **'Ref: #C-{id}'**
+  String colisRef(int id);
+
+  /// No description provided for @colisOrigin.
+  ///
+  /// In en, this message translates to:
+  /// **'Origin'**
+  String get colisOrigin;
+
+  /// No description provided for @colisDestination.
+  ///
+  /// In en, this message translates to:
+  /// **'Destination'**
+  String get colisDestination;
+
+  /// No description provided for @colisRecipient.
+  ///
+  /// In en, this message translates to:
+  /// **'Recipient: {name}'**
+  String colisRecipient(String name);
+
+  /// No description provided for @colisSender.
+  ///
+  /// In en, this message translates to:
+  /// **'Sender: {name}'**
+  String colisSender(String name);
+
+  /// No description provided for @colisStatusPending.
+  ///
+  /// In en, this message translates to:
+  /// **'Pending'**
+  String get colisStatusPending;
+
+  /// No description provided for @colisStatusDelivered.
+  ///
+  /// In en, this message translates to:
+  /// **'Delivered'**
+  String get colisStatusDelivered;
+
+  /// No description provided for @colisStatusInTransit.
+  ///
+  /// In en, this message translates to:
+  /// **'In transit'**
+  String get colisStatusInTransit;
+
+  /// No description provided for @chatbotTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'AI Assistant'**
+  String get chatbotTitle;
+
+  /// No description provided for @chatbotGreeting.
+  ///
+  /// In en, this message translates to:
+  /// **'Hello! I am your CamerTrip assistant powered by advanced AI. How can I help you today?'**
+  String get chatbotGreeting;
+
+  /// No description provided for @chatbotTyping.
+  ///
+  /// In en, this message translates to:
+  /// **'AI is thinking...'**
+  String get chatbotTyping;
+
+  /// No description provided for @chatbotHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Ask your question...'**
+  String get chatbotHint;
+
+  /// No description provided for @chatbotQ1.
+  ///
+  /// In en, this message translates to:
+  /// **'What trips are available tomorrow?'**
+  String get chatbotQ1;
+
+  /// No description provided for @chatbotQ2.
+  ///
+  /// In en, this message translates to:
+  /// **'What are my reservations?'**
+  String get chatbotQ2;
+
+  /// No description provided for @chatbotQ3.
+  ///
+  /// In en, this message translates to:
+  /// **'Where are your agencies?'**
+  String get chatbotQ3;
+
+  /// No description provided for @tabStations.
+  ///
+  /// In en, this message translates to:
+  /// **'Stations'**
+  String get tabStations;
+
+  /// No description provided for @tabUpcoming.
+  ///
+  /// In en, this message translates to:
+  /// **'Upcoming'**
+  String get tabUpcoming;
+
+  /// No description provided for @tabRoutes.
+  ///
+  /// In en, this message translates to:
+  /// **'Routes'**
+  String get tabRoutes;
+
+  /// No description provided for @noStationFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No station found'**
+  String get noStationFound;
+
+  /// No description provided for @noUpcomingTrip.
+  ///
+  /// In en, this message translates to:
+  /// **'No upcoming trip'**
+  String get noUpcomingTrip;
+
+  /// No description provided for @noRouteAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'No route available'**
+  String get noRouteAvailable;
+
+  /// No description provided for @seatsAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} seats available'**
+  String seatsAvailable(int count);
+
+  /// No description provided for @tripFull.
+  ///
+  /// In en, this message translates to:
+  /// **'Trip Full'**
+  String get tripFull;
+
+  /// No description provided for @book.
+  ///
+  /// In en, this message translates to:
+  /// **'Book'**
+  String get book;
+
+  /// No description provided for @full.
+  ///
+  /// In en, this message translates to:
+  /// **'Full'**
+  String get full;
+
+  /// No description provided for @gevNetwork.
+  ///
+  /// In en, this message translates to:
+  /// **'CamerTrip Network'**
+  String get gevNetwork;
+
+  /// No description provided for @chooseSeatTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Seat selection'**
+  String get chooseSeatTitle;
+
+  /// No description provided for @departure.
+  ///
+  /// In en, this message translates to:
+  /// **'Departure: {time}'**
+  String departure(String time);
+
+  /// No description provided for @door.
+  ///
+  /// In en, this message translates to:
+  /// **'Door'**
+  String get door;
+
+  /// No description provided for @legendFree.
+  ///
+  /// In en, this message translates to:
+  /// **'Free'**
+  String get legendFree;
+
+  /// No description provided for @legendSelected.
+  ///
+  /// In en, this message translates to:
+  /// **'Selected'**
+  String get legendSelected;
+
+  /// No description provided for @legendOccupied.
+  ///
+  /// In en, this message translates to:
+  /// **'Occupied'**
+  String get legendOccupied;
+
+  /// No description provided for @legendStaff.
+  ///
+  /// In en, this message translates to:
+  /// **'Staff'**
+  String get legendStaff;
+
+  /// No description provided for @legendDoor.
+  ///
+  /// In en, this message translates to:
+  /// **'Door'**
+  String get legendDoor;
+
+  /// No description provided for @selectedSeat.
+  ///
+  /// In en, this message translates to:
+  /// **'Selected seat:'**
+  String get selectedSeat;
+
+  /// No description provided for @noSeat.
+  ///
+  /// In en, this message translates to:
+  /// **'None'**
+  String get noSeat;
+
+  /// No description provided for @selectedSeatValue.
+  ///
+  /// In en, this message translates to:
+  /// **'Seat #{seat}'**
+  String selectedSeatValue(String seat);
+
+  /// No description provided for @continueToPayment.
+  ///
+  /// In en, this message translates to:
+  /// **'CONTINUE TO PAYMENT'**
+  String get continueToPayment;
+
+  /// No description provided for @paymentTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment'**
+  String get paymentTitle;
+
+  /// No description provided for @paymentPhoneLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment phone number'**
+  String get paymentPhoneLabel;
+
+  /// No description provided for @paymentPhoneHint.
+  ///
+  /// In en, this message translates to:
+  /// **'6xx xxx xxx'**
+  String get paymentPhoneHint;
+
+  /// No description provided for @paymentEnterPhone.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter your payment number'**
+  String get paymentEnterPhone;
+
+  /// No description provided for @paymentInvalidPhone.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid number. Format: 6xx xxx xxx'**
+  String get paymentInvalidPhone;
+
+  /// No description provided for @paymentValidationTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment Validation'**
+  String get paymentValidationTitle;
+
+  /// No description provided for @paymentUssdMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'A USSD payment prompt has been sent to:\n{phone}'**
+  String paymentUssdMessage(String phone);
+
+  /// No description provided for @paymentUssdCode.
+  ///
+  /// In en, this message translates to:
+  /// **'USSD Code: {code}'**
+  String paymentUssdCode(String code);
+
+  /// No description provided for @paymentUssdTip.
+  ///
+  /// In en, this message translates to:
+  /// **'Dial this code if the payment prompt does not appear automatically.'**
+  String get paymentUssdTip;
+
+  /// No description provided for @paymentPinPrompt.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your PIN on your phone to authorise a debit of {amount} FCFA.'**
+  String paymentPinPrompt(int amount);
+
+  /// No description provided for @paymentCheckingStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Checking payment status...'**
+  String get paymentCheckingStatus;
+
+  /// No description provided for @paymentCloseRetry.
+  ///
+  /// In en, this message translates to:
+  /// **'Close / Retry'**
+  String get paymentCloseRetry;
+
+  /// No description provided for @paymentTimeout.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment timed out. Please check your tickets.'**
+  String get paymentTimeout;
+
+  /// No description provided for @paymentError.
+  ///
+  /// In en, this message translates to:
+  /// **'Error: {message}'**
+  String paymentError(String message);
+
+  /// No description provided for @paymentFailedGeneric.
+  ///
+  /// In en, this message translates to:
+  /// **'The payment failed.'**
+  String get paymentFailedGeneric;
+
+  /// No description provided for @paymentFailedInsufficientBalance.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed: Insufficient balance.'**
+  String get paymentFailedInsufficientBalance;
+
+  /// No description provided for @paymentFailedLimitExceeded.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed: Transaction limit exceeded.'**
+  String get paymentFailedLimitExceeded;
+
+  /// No description provided for @paymentFailedRefused.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed: Transaction refused by user.'**
+  String get paymentFailedRefused;
+
+  /// No description provided for @paymentFailedReason.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed: {reason}'**
+  String paymentFailedReason(String reason);
+
+  /// No description provided for @summaryRoute.
+  ///
+  /// In en, this message translates to:
+  /// **'Route'**
+  String get summaryRoute;
+
+  /// No description provided for @summarySeat.
+  ///
+  /// In en, this message translates to:
+  /// **'Selected seat'**
+  String get summarySeat;
+
+  /// No description provided for @summaryTotal.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Amount'**
+  String get summaryTotal;
+
+  /// No description provided for @bookingSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Booking Successful!'**
+  String get bookingSuccess;
+
+  /// No description provided for @bookingSuccessMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Your ticket for seat #{seat} is awaiting final payment. Check your tickets for more details.'**
+  String bookingSuccessMessage(String seat);
+
+  /// No description provided for @backToHome.
+  ///
+  /// In en, this message translates to:
+  /// **'BACK TO HOME'**
+  String get backToHome;
+
+  /// No description provided for @confirmPayment.
+  ///
+  /// In en, this message translates to:
+  /// **'CONFIRM PAYMENT'**
+  String get confirmPayment;
 }
 
 class _AppLocalizationsDelegate

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'dart:math';
+import 'package:camer_trip/l10n/app_localizations.dart';
 
 class AgenceDetailsPage extends StatefulWidget {
   final Agence agence;
@@ -176,10 +177,10 @@ class _AgenceDetailsPageState extends State<AgenceDetailsPage> with SingleTicker
                   indicatorColor: widget.agence.color,
                   indicatorWeight: 3,
                   labelStyle: const TextStyle(fontWeight: FontWeight.bold),
-                  tabs: const [
-                    Tab(text: "Gares"),
-                    Tab(text: "Prochains"),
-                    Tab(text: "Trajets"),
+                  tabs: [
+                    Tab(text: AppLocalizations.of(context)?.tabStations ?? "Gares"),
+                    Tab(text: AppLocalizations.of(context)?.tabUpcoming ?? "Prochains"),
+                    Tab(text: AppLocalizations.of(context)?.tabRoutes ?? "Trajets"),
                   ],
                 ),
                 cs.surface,
@@ -202,7 +203,7 @@ class _AgenceDetailsPageState extends State<AgenceDetailsPage> with SingleTicker
   Widget _buildGaresList(ColorScheme cs) {
     final stations = widget.agence.stations;
     if (stations.isEmpty) {
-      return _buildEmptyState(cs, 'Aucune station trouvée', Icons.location_off);
+      return _buildEmptyState(cs, AppLocalizations.of(context)?.noStationFound ?? 'Aucune station trouvée', Icons.location_off);
     }
     final isDark = Theme.of(context).brightness == Brightness.dark;
     
@@ -276,7 +277,7 @@ class _AgenceDetailsPageState extends State<AgenceDetailsPage> with SingleTicker
   Widget _buildVoyagesList(ColorScheme cs) {
     final voyages = upcomingVoyages;
     if (voyages.isEmpty) {
-      return _buildEmptyState(cs, 'Aucun voyage en attente', Icons.event_busy);
+      return _buildEmptyState(cs, AppLocalizations.of(context)?.noUpcomingTrip ?? 'Aucun voyage en attente', Icons.event_busy);
     }
     final isDark = Theme.of(context).brightness == Brightness.dark;
     
@@ -391,8 +392,8 @@ class _AgenceDetailsPageState extends State<AgenceDetailsPage> with SingleTicker
                           const SizedBox(width: 6),
                           Text(
                             available > 0
-                                ? '$available places dispo'
-                                : 'Voyage Complet', 
+                                ? (AppLocalizations.of(context)?.seatsAvailable(available) ?? '$available places dispo')
+                                : (AppLocalizations.of(context)?.tripFull ?? 'Voyage Complet'), 
                             style: TextStyle(
                               color: available > 0 
                                   ? (isDark ? Colors.green[300] : Colors.green[800])
@@ -418,7 +419,9 @@ class _AgenceDetailsPageState extends State<AgenceDetailsPage> with SingleTicker
                           ? () => context.pushNamed(AppRouter.booking, extra: voy)
                           : null, 
                       child: Text(
-                        available > 0 ? 'Réserver' : 'Complet', 
+                        available > 0
+                          ? (AppLocalizations.of(context)?.book ?? 'Réserver')
+                          : (AppLocalizations.of(context)?.full ?? 'Complet'),
                         style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
                       ),
                     ),
@@ -435,7 +438,7 @@ class _AgenceDetailsPageState extends State<AgenceDetailsPage> with SingleTicker
   Widget _buildTrajetsList(ColorScheme cs) {
     final trajets = uniqueTrajets;
     if (trajets.isEmpty) {
-      return _buildEmptyState(cs, 'Aucun trajet disponible', Icons.alt_route);
+      return _buildEmptyState(cs, AppLocalizations.of(context)?.noRouteAvailable ?? 'Aucun trajet disponible', Icons.alt_route);
     }
     final isDark = Theme.of(context).brightness == Brightness.dark;
     
@@ -483,7 +486,7 @@ class _AgenceDetailsPageState extends State<AgenceDetailsPage> with SingleTicker
               subtitle: Padding(
                 padding: const EdgeInsets.only(top: 4.0),
                 child: Text(
-                  'Réseau GEV',
+                  AppLocalizations.of(context)?.gevNetwork ?? 'Réseau Camertrip',
                   style: TextStyle(
                     color: cs.onSurface.withOpacity(0.5),
                     fontSize: 13,

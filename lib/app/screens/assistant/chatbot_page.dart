@@ -6,6 +6,7 @@ import 'package:camer_trip/app/shared/others/app_bar.dart';
 import 'package:camer_trip/app/models/chat_message_model.dart';
 import 'package:camer_trip/app/services/chat_service.dart';
 import 'package:flutter/material.dart';
+import 'package:camer_trip/l10n/app_localizations.dart';
 
 class ChatBotPage extends ConsumerStatefulWidget {
   const ChatBotPage({super.key});
@@ -20,13 +21,7 @@ class _ChatBotPageState extends ConsumerState<ChatBotPage> {
   final ChatService _chatService = ChatService();
   
   bool _isTyping = false;
-  List<ChatMessage> _messages = [
-    ChatMessage(
-      text: "Bonjour ! Je suis votre assistant CamerTrip conçu avec une IA avancée. Comment puis-je vous aider aujourd'hui ?",
-      isUser: false,
-      time: DateTime.now(),
-    ),
-  ];
+  List<ChatMessage> _messages = [];
 
   @override
   void initState() {
@@ -44,10 +39,31 @@ class _ChatBotPageState extends ConsumerState<ChatBotPage> {
         final List<dynamic> decodedList = jsonDecode(historyJson);
         final List<ChatMessage> loadedMessages = decodedList.map((item) => ChatMessage.fromJson(item)).toList();
         if (loadedMessages.isNotEmpty && mounted) {
+          setState(() { _messages = loadedMessages; });
+        } else if (mounted && _messages.isEmpty) {
+          // Initialise avec le message de bienvenue localisé
+          final localizations = AppLocalizations.of(context);
           setState(() {
-            _messages = loadedMessages;
+            _messages = [
+              ChatMessage(
+                text: localizations?.chatbotGreeting ?? "Bonjour ! Je suis votre assistant CamerTrip conçu avec une IA avancée. Comment puis-je vous aider aujourd'hui ?",
+                isUser: false,
+                time: DateTime.now(),
+              ),
+            ];
           });
         }
+      } else if (mounted) {
+        final localizations = AppLocalizations.of(context);
+        setState(() {
+          _messages = [
+            ChatMessage(
+              text: localizations?.chatbotGreeting ?? "Bonjour ! Je suis votre assistant CamerTrip conçu avec une IA avancée. Comment puis-je vous aider aujourd'hui ?",
+              isUser: false,
+              time: DateTime.now(),
+            ),
+          ];
+        });
       }
     } catch (e) {
       debugPrint("Erreur chargement historique : \$e");
@@ -150,6 +166,7 @@ class _ChatBotPageState extends ConsumerState<ChatBotPage> {
     final theme = Theme.of(context);
     final cs = theme.colorScheme;
     final isDark = theme.brightness == Brightness.dark;
+    final localizations = AppLocalizations.of(context);
 
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -167,7 +184,7 @@ class _ChatBotPageState extends ConsumerState<ChatBotPage> {
           bottom: false,
           child: Column(
             children: [
-              const MyAppBar(title: "Assistant IA"),
+              MyAppBar(title: localizations?.chatbotTitle ?? "Assistant IA"),
               
               // Messages
               Expanded(
@@ -220,7 +237,7 @@ class _ChatBotPageState extends ConsumerState<ChatBotPage> {
                 ),
                 const SizedBox(width: 8),
                 Text(
-                  "L'IA réfléchit...",
+                  AppLocalizations.of(context)?.chatbotTyping ?? "L'IA réfléchit...",
                   style: TextStyle(fontSize: 12, color: cs.onSurface.withOpacity(0.6), fontStyle: FontStyle.italic),
                 ),
               ],
@@ -310,7 +327,12 @@ class _ChatBotPageState extends ConsumerState<ChatBotPage> {
   }
 
   Widget _buildQuickActions(ColorScheme cs) {
-    final actions = ["Quels sont les voyages de demain ?", "Quelles sont mes réservations ?", "Où sont vos agences ?"];
+    final localizations = AppLocalizations.of(context);
+    final actions = [
+      localizations?.chatbotQ1 ?? "Quels sont les voyages de demain ?",
+      localizations?.chatbotQ2 ?? "Quelles sont mes réservations ?",
+      localizations?.chatbotQ3 ?? "Où sont vos agences ?",
+    ];
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -366,7 +388,7 @@ class _ChatBotPageState extends ConsumerState<ChatBotPage> {
                       maxLines: 4,
                       textInputAction: TextInputAction.send,
                       decoration: InputDecoration(
-                        hintText: "Posez votre question...",
+                        hintText: AppLocalizations.of(context)?.chatbotHint ?? "Posez votre question...",
                         hintStyle: TextStyle(color: cs.onSurface.withOpacity(0.3), fontSize: 14),
                         border: InputBorder.none,
                         contentPadding: const EdgeInsets.symmetric(vertical: 14),

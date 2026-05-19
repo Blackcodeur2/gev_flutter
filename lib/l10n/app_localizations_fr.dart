@@ -356,4 +356,406 @@ class AppLocalizationsFr extends AppLocalizations {
   String stationsCountNational(int count) {
     return '$count gares • Réseau National';
   }
+
+  @override
+  String get sectionAppearance => 'Apparence & Système';
+
+  @override
+  String get darkMode => 'Mode Sombre';
+
+  @override
+  String get darkModeEnabled => 'Activé';
+
+  @override
+  String get darkModeDisabled => 'Désactivé';
+
+  @override
+  String get notifications => 'Notifications';
+
+  @override
+  String get notificationsSubtitle => 'Alertes et Push';
+
+  @override
+  String get sectionSecurity => 'Sécurité';
+
+  @override
+  String get password => 'Mot de passe';
+
+  @override
+  String get changePasswordSubtitle => 'Changer mon mot de passe';
+
+  @override
+  String get sectionActivities => 'Mes Activités';
+
+  @override
+  String get myParcels => 'Mes Colis';
+
+  @override
+  String get myParcelsSubtitle => 'Suivre mes envois et réceptions';
+
+  @override
+  String get sectionSupport => 'Assistance';
+
+  @override
+  String get helpCenter => 'Centre d\'aide';
+
+  @override
+  String get helpCenterSubtitle => 'Questions fréquentes';
+
+  @override
+  String get about => 'À propos';
+
+  @override
+  String get logout => 'Déconnexion';
+
+  @override
+  String get notConnected => 'Non connecté';
+
+  @override
+  String get sessionExpired => 'Session expirée';
+
+  @override
+  String get noInternetTitle => 'Pas de connexion';
+
+  @override
+  String get noInternetMessage =>
+      'Vérifiez votre connexion Wi-Fi ou vos données mobiles et réessayez.';
+
+  @override
+  String get retryBtn => 'Réessayer';
+
+  @override
+  String get notificationsTitle => 'Notifications';
+
+  @override
+  String get markAllRead => 'Tout lire';
+
+  @override
+  String get allNotificationsRead =>
+      'Toutes les notifications sont marquées comme lues';
+
+  @override
+  String get notificationDeleted => 'Notification supprimée';
+
+  @override
+  String get noNotifications => 'Aucune Notification';
+
+  @override
+  String get noNotificationsDesc =>
+      'Vous êtes à jour ! Vos alertes de voyage, rappels et rapports d\'incidents apparaîtront ici.';
+
+  @override
+  String loadingError(String error) {
+    return 'Erreur de chargement : $error';
+  }
+
+  @override
+  String get myReservationsTitle => 'Mes Réservations';
+
+  @override
+  String get tabValidated => 'Validées';
+
+  @override
+  String get tabPending => 'En attente';
+
+  @override
+  String get tabCancelled => 'Annulées';
+
+  @override
+  String get statusValidated => 'Validée';
+
+  @override
+  String get statusCancelled => 'Annulée';
+
+  @override
+  String get statusPending => 'En attente';
+
+  @override
+  String get noReservationValidated => 'Aucune réservation validée';
+
+  @override
+  String get noReservationCancelled => 'Aucune réservation annulée';
+
+  @override
+  String get noReservationPending => 'Aucune réservation en attente';
+
+  @override
+  String get errorPrefix2 => 'Erreur: ';
+
+  @override
+  String seatLabel(String place) {
+    return 'Siège #$place';
+  }
+
+  @override
+  String referenceLabel(String ref) {
+    return 'Référence: $ref';
+  }
+
+  @override
+  String get newsTitle => 'Nouveautés';
+
+  @override
+  String get newsHeaderTitle => 'Le Journal du Voyageur';
+
+  @override
+  String get newsHeaderSubtitle => 'Dernières actus de vos agences favorites';
+
+  @override
+  String get justNow => 'À l\'instant';
+
+  @override
+  String minutesAgo(int count) {
+    return 'Il y a $count min';
+  }
+
+  @override
+  String hoursAgo(int count) {
+    return 'Il y a $count h';
+  }
+
+  @override
+  String daysAgo(int count) {
+    return 'Il y a $count j';
+  }
+
+  @override
+  String get myColisTitle => 'Mes Colis';
+
+  @override
+  String get tabSent => 'Expédiés';
+
+  @override
+  String get tabToReceive => 'À recevoir';
+
+  @override
+  String get pleaseLogin => 'Veuillez vous connecter';
+
+  @override
+  String get noColisSent => 'Aucun colis envoyé';
+
+  @override
+  String get noColisToReceive => 'Aucun colis à recevoir';
+
+  @override
+  String colisRef(int id) {
+    return 'Réf: #C-$id';
+  }
+
+  @override
+  String get colisOrigin => 'Origine';
+
+  @override
+  String get colisDestination => 'Destination';
+
+  @override
+  String colisRecipient(String name) {
+    return 'Destinataire: $name';
+  }
+
+  @override
+  String colisSender(String name) {
+    return 'Expéditeur: $name';
+  }
+
+  @override
+  String get colisStatusPending => 'En attente';
+
+  @override
+  String get colisStatusDelivered => 'Livré';
+
+  @override
+  String get colisStatusInTransit => 'En transit';
+
+  @override
+  String get chatbotTitle => 'Assistant IA';
+
+  @override
+  String get chatbotGreeting =>
+      'Bonjour ! Je suis votre assistant CamerTrip conçu avec une IA avancée. Comment puis-je vous aider aujourd\'hui ?';
+
+  @override
+  String get chatbotTyping => 'L\'IA réfléchit...';
+
+  @override
+  String get chatbotHint => 'Posez votre question...';
+
+  @override
+  String get chatbotQ1 => 'Quels sont les voyages de demain ?';
+
+  @override
+  String get chatbotQ2 => 'Quelles sont mes réservations ?';
+
+  @override
+  String get chatbotQ3 => 'Où sont vos agences ?';
+
+  @override
+  String get tabStations => 'Gares';
+
+  @override
+  String get tabUpcoming => 'Prochains';
+
+  @override
+  String get tabRoutes => 'Trajets';
+
+  @override
+  String get noStationFound => 'Aucune station trouvée';
+
+  @override
+  String get noUpcomingTrip => 'Aucun voyage en attente';
+
+  @override
+  String get noRouteAvailable => 'Aucun trajet disponible';
+
+  @override
+  String seatsAvailable(int count) {
+    return '$count places dispo';
+  }
+
+  @override
+  String get tripFull => 'Voyage Complet';
+
+  @override
+  String get book => 'Réserver';
+
+  @override
+  String get full => 'Complet';
+
+  @override
+  String get gevNetwork => 'Réseau CamerTrip';
+
+  @override
+  String get chooseSeatTitle => 'Choix du siège';
+
+  @override
+  String departure(String time) {
+    return 'Départ: $time';
+  }
+
+  @override
+  String get door => 'Porte';
+
+  @override
+  String get legendFree => 'Libre';
+
+  @override
+  String get legendSelected => 'Choisi';
+
+  @override
+  String get legendOccupied => 'Occupé';
+
+  @override
+  String get legendStaff => 'Personnel';
+
+  @override
+  String get legendDoor => 'Porte';
+
+  @override
+  String get selectedSeat => 'Siège sélectionné:';
+
+  @override
+  String get noSeat => 'Aucun';
+
+  @override
+  String selectedSeatValue(String seat) {
+    return 'Siège #$seat';
+  }
+
+  @override
+  String get continueToPayment => 'CONTINUER VERS LE PAIEMENT';
+
+  @override
+  String get paymentTitle => 'Paiement';
+
+  @override
+  String get paymentPhoneLabel => 'Numéro de paiement';
+
+  @override
+  String get paymentPhoneHint => '6xx xxx xxx';
+
+  @override
+  String get paymentEnterPhone => 'Veuillez entrer votre numéro de paiement';
+
+  @override
+  String get paymentInvalidPhone => 'Numéro invalide. Format: 6xx xxx xxx';
+
+  @override
+  String get paymentValidationTitle => 'Validation du Paiement';
+
+  @override
+  String paymentUssdMessage(String phone) {
+    return 'Un code USSD de paiement a été initié vers le numéro :\n$phone';
+  }
+
+  @override
+  String paymentUssdCode(String code) {
+    return 'Code USSD : $code';
+  }
+
+  @override
+  String get paymentUssdTip =>
+      'Composez ce code si le prompt de validation ne s\'affiche pas automatiquement.';
+
+  @override
+  String paymentPinPrompt(int amount) {
+    return 'Saisissez votre code PIN sur votre téléphone pour autoriser le débit de $amount FCFA.';
+  }
+
+  @override
+  String get paymentCheckingStatus => 'Vérification du statut du paiement...';
+
+  @override
+  String get paymentCloseRetry => 'Fermer / Recommencer';
+
+  @override
+  String get paymentTimeout =>
+      'Délai de paiement dépassé. Vérifiez vos billets.';
+
+  @override
+  String paymentError(String message) {
+    return 'Erreur: $message';
+  }
+
+  @override
+  String get paymentFailedGeneric => 'Le paiement a échoué.';
+
+  @override
+  String get paymentFailedInsufficientBalance =>
+      'Échec : Solde insuffisant sur votre compte.';
+
+  @override
+  String get paymentFailedLimitExceeded =>
+      'Échec : Limite de transaction dépassée.';
+
+  @override
+  String get paymentFailedRefused =>
+      'Échec : Transaction refusée par l\'utilisateur.';
+
+  @override
+  String paymentFailedReason(String reason) {
+    return 'Échec : $reason';
+  }
+
+  @override
+  String get summaryRoute => 'Trajet';
+
+  @override
+  String get summarySeat => 'Siège choisi';
+
+  @override
+  String get summaryTotal => 'Montant Total';
+
+  @override
+  String get bookingSuccess => 'Réservation Réussie !';
+
+  @override
+  String bookingSuccessMessage(String seat) {
+    return 'Votre ticket pour le siège #$seat est en attente de paiement final. Consultez vos billets pour plus de détails.';
+  }
+
+  @override
+  String get backToHome => 'RETOUR À L\'ACCUEIL';
+
+  @override
+  String get confirmPayment => 'CONFIRMER LE PAIEMENT';
 }

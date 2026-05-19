@@ -141,5 +141,273 @@
         "type": "int"
       }
     }
+  },
+  
+  "sectionAppearance": "Appearance & System",
+  "darkMode": "Dark Mode",
+  "darkModeEnabled": "Enabled",
+  "darkModeDisabled": "Disabled",
+  "notifications": "Notifications",
+  "notificationsSubtitle": "Alerts and Push",
+  "sectionSecurity": "Security",
+  "password": "Password",
+  "changePasswordSubtitle": "Change my password",
+  "sectionActivities": "My Activities",
+  "myParcels": "My Parcels",
+  "myParcelsSubtitle": "Track my shipments and receipts",
+  "sectionSupport": "Support",
+  "helpCenter": "Help Center",
+  "helpCenterSubtitle": "Frequently asked questions",
+  "about": "About",
+  "logout": "Log out",
+  "notConnected": "Not connected",
+  "sessionExpired": "Session expired",
+
+  "noInternetTitle": "No connection",
+  "noInternetMessage": "Check your Wi-Fi or mobile data connection and try again.",
+  "retryBtn": "Retry",
+
+  "notificationsTitle": "Notifications",
+  "markAllRead": "Mark all read",
+  "allNotificationsRead": "All notifications marked as read",
+  "notificationDeleted": "Notification deleted",
+  "noNotifications": "No Notifications",
+  "noNotificationsDesc": "You're all caught up! Your trip alerts, reminders and incident reports will appear here.",
+  "loadingError": "Loading error: {error}",
+  "@loadingError": {
+    "placeholders": {
+      "error": { "type": "String" }
+    }
+  },
+
+  "myReservationsTitle": "My Reservations",
+  "tabValidated": "Validated",
+  "tabPending": "Pending",
+  "tabCancelled": "Cancelled",
+  "statusValidated": "Validated",
+  "statusCancelled": "Cancelled",
+  "statusPending": "Pending",
+  "noReservationValidated": "No validated reservation",
+  "noReservationCancelled": "No cancelled reservation",
+  "noReservationPending": "No pending reservation",
+  "errorPrefix2": "Error: ",
+  "seatLabel": "Seat #{place}",
+  "@seatLabel": {
+    "placeholders": {
+      "place": { "type": "String" }
+    }
+  },
+  "referenceLabel": "Reference: {ref}",
+  "@referenceLabel": {
+    "placeholders": {
+      "ref": { "type": "String" }
+    }
+  },
+
+  "newsTitle": "News",
+  "newsHeaderTitle": "The Traveller's Journal",
+  "newsHeaderSubtitle": "Latest updates from your favourite agencies",
+
+  "justNow": "Just now",
+  "minutesAgo": "{count} min ago",
+  "@minutesAgo": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "hoursAgo": "{count} h ago",
+  "@hoursAgo": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "daysAgo": "{count} d ago",
+  "@daysAgo": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+
+  "myColisTitle": "My Parcels",
+  "tabSent": "Sent",
+  "tabToReceive": "To receive",
+  "pleaseLogin": "Please log in",
+  "noColisSent": "No parcel sent",
+  "noColisToReceive": "No parcel to receive",
+  "colisRef": "Ref: #C-{id}",
+  "@colisRef": {
+    "placeholders": {
+      "id": { "type": "int" }
+    }
+  },
+  "colisOrigin": "Origin",
+  "colisDestination": "Destination",
+  "colisRecipient": "Recipient: {name}",
+  "@colisRecipient": {
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
+  "colisSender": "Sender: {name}",
+  "@colisSender": {
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
+  "colisStatusPending": "Pending",
+  "colisStatusDelivered": "Delivered",
+  "colisStatusInTransit": "In transit",
+
+  "chatbotTitle": "AI Assistant",
+  "chatbotGreeting": "Hello! I am your CamerTrip assistant powered by advanced AI. How can I help you today?",
+  "chatbotTyping": "AI is thinking...",
+  "chatbotHint": "Ask your question...",
+  "chatbotQ1": "What trips are available tomorrow?",
+  "chatbotQ2": "What are my reservations?",
+  "chatbotQ3": "Where are your agencies?",
+
+  "tabStations": "Stations",
+  "tabUpcoming": "Upcoming",
+  "tabRoutes": "Routes",
+  "noStationFound": "No station found",
+  "noUpcomingTrip": "No upcoming trip",
+  "noRouteAvailable": "No route available",
+  "seatsAvailable": "{count} seats available",
+  "@seatsAvailable": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "tripFull": "Trip Full",
+  "book": "Book",
+  "full": "Full",
+  "gevNetwork": "CamerTrip Network",
+
+  "chooseSeatTitle": "Seat selection",
+  "departure": "Departure: {time}",
+  "@departure": {
+    "placeholders": {
+      "time": { "type": "String" }
+    }
+  },
+  "door": "Door",
+  "legendFree": "Free",
+  "legendSelected": "Selected",
+  "legendOccupied": "Occupied",
+  "legendStaff": "Staff",
+  "legendDoor": "Door",
+  "selectedSeat": "Selected seat:",
+  "noSeat": "None",
+  "selectedSeatValue": "Seat #{seat}",
+  "@selectedSeatValue": {
+    "placeholders": {
+      "seat": { "type": "String" }
+    }
+  },
+  "continueToPayment": "CONTINUE TO PAYMENT",
+
+  "paymentTitle": "Payment",
+  "paymentPhoneLabel": "Payment phone number",
+  "paymentPhoneHint": "6xx xxx xxx",
+  "paymentEnterPhone": "Please enter your payment number",
+  "paymentInvalidPhone": "Invalid number. Format: 6xx xxx xxx",
+  "paymentValidationTitle": "Payment Validation",
+  "paymentUssdMessage": "A USSD payment prompt has been sent to:\n{phone}",
+  "@paymentUssdMessage": {
+    "placeholders": {
+      "phone": { "type": "String" }
+    }
+  },
+  "paymentUssdCode": "USSD Code: {code}",
+  "@paymentUssdCode": {
+    "placeholders": {
+      "code": { "type": "String" }
+    }
+  },
+  "paymentUssdTip": "Dial this code if the payment prompt does not appear automatically.",
+  "paymentPinPrompt": "Enter your PIN on your phone to authorise a debit of {amount} FCFA.",
+  "@paymentPinPrompt": {
+    "placeholders": {
+      "amount": { "type": "int" }
+    }
+  },
+  "paymentCheckingStatus": "Checking payment status...",
+  "paymentCloseRetry": "Close / Retry",
+  "paymentTimeout": "Payment timed out. Please check your tickets.",
+  "paymentError": "Error: {message}",
+  "@paymentError": {
+    "placeholders": {
+      "message": { "type": "String" }
+    }
+  },
+  "paymentFailedGeneric": "The payment failed.",
+  "paymentFailedInsufficientBalance": "Failed: Insufficient balance.",
+  "paymentFailedLimitExceeded": "Failed: Transaction limit exceeded.",
+  "paymentFailedRefused": "Failed: Transaction refused by user.",
+  "paymentFailedReason": "Failed: {reason}",
+  "@paymentFailedReason": {
+    "placeholders": {
+      "reason": { "type": "String" }
+    }
+  },
+  "summaryRoute": "Route",
+  "summarySeat": "Selected seat",
+  "summaryTotal": "Total Amount",
+  "bookingSuccess": "Booking Successful!",
+  "bookingSuccessMessage": "Your ticket for seat #{seat} is awaiting final payment. Check your tickets for more details.",
+  "@bookingSuccessMessage": {
+    "placeholders": {
+      "seat": { "type": "String" }
+    }
+  },
+  "backToHome": "BACK TO HOME",
+  "confirmPayment": "CONFIRM PAYMENT",
+
+  "virtualTicketTitle": "Virtual Ticket",
+  "finalizePaymentTitle": "Finalize Payment",
+  "finalizePaymentSubtitle": "Complete your payment to permanently secure your seat.",
+  "paymentPhoneNumber": "Phone number",
+  "confirmAndPay": "CONFIRM & PAY",
+  "ticketSeat": "Seat #{seat}",
+  "@ticketSeat": {
+    "placeholders": {
+      "seat": { "type": "String" }
+    }
+  },
+  "ticketDate": "Date",
+  "ticketTime": "Time",
+  "ticketSeatLabel": "Seat",
+  "ticketPassenger": "Passenger",
+  "ticketPassengerValue": "Client (Me)",
+  "ticketPricePaid": "Price paid",
+  "ticketReference": "Reference: {id}",
+  "@ticketReference": {
+    "placeholders": {
+      "id": { "type": "int" }
+    }
+  },
+  "payThisTicket": "PAY THIS TICKET",
+  "downloadPdf": "Download PDF Ticket",
+  "downloading": "Downloading...",
+  "rebookTrip": "Book this trip again",
+  "ticketPdfReady": "PDF ticket ready! \ud83d\udcc4",
+  "downloadError": "Download error: {error}",
+  "@downloadError": {
+    "placeholders": {
+      "error": { "type": "String" }
+    }
+  },
+  "paymentDone": "Payment Complete!",
+  "paymentDoneMessage": "Your seat is now validated. The QR code has been activated on your ticket.",
+  "paymentRequired": "Payment required to generate the QR Code.",
+  "reservationExpired": "Reservation expired because the trip has started, ended or was cancelled.",
+  "voyageCancelled": "The trip has been cancelled. This ticket can no longer be paid.",
+  "voyageStarted": "The trip has already started or ended. This ticket can no longer be paid.",
+  "paymentTimeout2": "Payment timed out.",
+  "ussdPromptMessage": "A USSD payment prompt has been sent to:\n{phone}",
+  "@ussdPromptMessage": {
+    "placeholders": {
+      "phone": { "type": "String" }
+    }
   }
 }

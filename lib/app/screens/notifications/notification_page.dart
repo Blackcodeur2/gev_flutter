@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:camer_trip/app/services/providers.dart';
 import 'package:camer_trip/app/models/notification_model.dart';
+import 'package:camer_trip/l10n/app_localizations.dart';
 
 class NotificationPage extends ConsumerStatefulWidget {
   const NotificationPage({super.key});
@@ -38,15 +39,16 @@ class _NotificationPageState extends ConsumerState<NotificationPage>
   String _formatRelativeTime(DateTime dateTime) {
     final now = DateTime.now();
     final difference = now.difference(dateTime);
+    final localizations = AppLocalizations.of(context);
 
     if (difference.inMinutes < 1) {
-      return "À l'instant";
+      return localizations?.justNow ?? "\u00c0 l'instant";
     } else if (difference.inMinutes < 60) {
-      return "Il y a ${difference.inMinutes} min";
+      return localizations?.minutesAgo(difference.inMinutes) ?? "Il y a ${difference.inMinutes} min";
     } else if (difference.inHours < 24) {
-      return "Il y a ${difference.inHours} h";
+      return localizations?.hoursAgo(difference.inHours) ?? "Il y a ${difference.inHours} h";
     } else if (difference.inDays < 7) {
-      return "Il y a ${difference.inDays} j";
+      return localizations?.daysAgo(difference.inDays) ?? "Il y a ${difference.inDays} j";
     } else {
       return "${dateTime.day.toString().padLeft(2, '0')}/${dateTime.month.toString().padLeft(2, '0')}/${dateTime.year}";
     }
@@ -59,7 +61,7 @@ class _NotificationPageState extends ConsumerState<NotificationPage>
       ref.invalidate(myNotificationsProvider);
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Toutes les notifications sont marquées comme lues')),
+          SnackBar(content: Text(AppLocalizations.of(context)?.allNotificationsRead ?? 'Toutes les notifications sont marquées comme lues')),
         );
       }
     }
@@ -80,7 +82,7 @@ class _NotificationPageState extends ConsumerState<NotificationPage>
       ref.invalidate(myNotificationsProvider);
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Notification supprimée')),
+          SnackBar(content: Text(AppLocalizations.of(context)?.notificationDeleted ?? 'Notification supprimée')),
         );
       }
     }
@@ -91,7 +93,7 @@ class _NotificationPageState extends ConsumerState<NotificationPage>
     final theme = Theme.of(context);
     final cs = theme.colorScheme;
     final isDark = theme.brightness == Brightness.dark;
-    
+    final localizations = AppLocalizations.of(context);
     final notificationsAsync = ref.watch(myNotificationsProvider);
 
     return Scaffold(
@@ -102,7 +104,7 @@ class _NotificationPageState extends ConsumerState<NotificationPage>
           child: Column(
             children: [
               MyAppBar(
-                title: 'Notifications',
+                title: localizations?.notificationsTitle ?? 'Notifications',
                 trailing: notificationsAsync.maybeWhen(
                   data: (notifications) {
                     final hasUnread = notifications.any((n) => n.readAt == null);
@@ -119,9 +121,9 @@ class _NotificationPageState extends ConsumerState<NotificationPage>
                       : TextButton.icon(
                           onPressed: _markAllRead,
                           icon: const Icon(Icons.done_all, size: 18),
-                          label: const Text(
-                            'Tout lire',
-                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+                          label: Text(
+                            localizations?.markAllRead ?? 'Tout lire',
+                            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
                           ),
                           style: TextButton.styleFrom(
                             foregroundColor: cs.primary,
@@ -159,11 +161,11 @@ class _NotificationPageState extends ConsumerState<NotificationPage>
                         children: [
                           Icon(Icons.error_outline, size: 48, color: cs.error),
                           const SizedBox(height: 16),
-                          Text('Erreur de chargement : $e', textAlign: TextAlign.center),
+                          Text(localizations?.loadingError(e.toString()) ?? 'Erreur de chargement : $e', textAlign: TextAlign.center),
                           const SizedBox(height: 16),
                           ElevatedButton(
                             onPressed: () => ref.invalidate(myNotificationsProvider),
-                            child: const Text('Réessayer'),
+                            child: Text(localizations?.retryBtn ?? 'Réessayer'),
                           ),
                         ],
                       ),
@@ -197,13 +199,13 @@ class _NotificationPageState extends ConsumerState<NotificationPage>
               child: Icon(Icons.notifications_none_rounded, size: 64, color: cs.primary),
             ),
             const SizedBox(height: 24),
-            const Text(
-              'Aucune Notification',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+            Text(
+              localizations?.noNotifications ?? 'Aucune Notification',
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
             ),
             const SizedBox(height: 8),
             Text(
-              'Vous êtes à jour ! Vos alertes de voyage, rappels et rapports d\'incidents apparaîtront ici.',
+              localizations?.noNotificationsDesc ?? "Vous \u00eates \u00e0 jour ! Vos alertes de voyage, rappels et rapports d'incidents appara\u00eetront ici.",
               textAlign: TextAlign.center,
               style: TextStyle(color: Colors.grey[600], height: 1.4),
             ),

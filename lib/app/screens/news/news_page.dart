@@ -2,6 +2,7 @@ import 'package:camer_trip/app/models/annonce_model.dart';
 import 'package:camer_trip/app/shared/cards/annonce_card.dart';
 import 'package:camer_trip/app/shared/others/app_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:camer_trip/l10n/app_localizations.dart';
 
 class NewsPage extends StatelessWidget {
   const NewsPage({super.key});
@@ -11,13 +12,14 @@ class NewsPage extends StatelessWidget {
     final theme = Theme.of(context);
     final cs = theme.colorScheme;
     final isDark = theme.brightness == Brightness.dark;
+    final localizations = AppLocalizations.of(context);
 
     return Scaffold(
       backgroundColor: cs.surface,
       body: SafeArea(
         child: Column(
           children: [
-            const MyAppBar(title: 'Nouveautés'),
+            MyAppBar(title: localizations?.newsTitle ?? 'Nouveautés'),
             Expanded(
               child: ListView.builder(
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -38,6 +40,7 @@ class NewsPage extends StatelessWidget {
   }
 
   Widget _buildNewsHeader(ColorScheme cs, bool isDark) {
+    final localizations = AppLocalizations.of(context as BuildContext);
     return Padding(
       padding: const EdgeInsets.only(bottom: 24, top: 8),
       child: Column(
@@ -57,12 +60,12 @@ class NewsPage extends StatelessWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    'Le Journal du Voyageur',
-                    style: TextStyle(fontWeight: FontWeight.w900, fontSize: 18),
+                  Text(
+                    localizations?.newsHeaderTitle ?? 'Le Journal du Voyageur',
+                    style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 18),
                   ),
                   Text(
-                    'Dernières actus de vos agences favorites',
+                    localizations?.newsHeaderSubtitle ?? 'Dernières actus de vos agences favorites',
                     style: TextStyle(fontSize: 12, color: cs.onSurface.withOpacity(0.6)),
                   ),
                 ],

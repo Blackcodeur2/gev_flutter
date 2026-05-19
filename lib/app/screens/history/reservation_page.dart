@@ -4,6 +4,7 @@ import 'package:camer_trip/app/shared/others/app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:camer_trip/l10n/app_localizations.dart';
 
 class ReservationsPages extends ConsumerStatefulWidget {
   const ReservationsPages({super.key});
@@ -33,13 +34,14 @@ class _ReservationsPagesState extends ConsumerState<ReservationsPages>
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final reservationsAsync = ref.watch(myReservationsProvider);
+    final localizations = AppLocalizations.of(context);
 
     return Scaffold(
       backgroundColor: colorScheme.surface,
       body: SafeArea(
         child: Column(
           children: [
-            const MyAppBar(title: 'Mes Réservations'),
+            MyAppBar(title: localizations?.myReservationsTitle ?? 'Mes Réservations'),
             const SizedBox(height: 16),
             TabBar(
               controller: _tabController,
@@ -48,10 +50,10 @@ class _ReservationsPagesState extends ConsumerState<ReservationsPages>
               indicatorColor: colorScheme.primary,
               indicatorWeight: 3,
               labelStyle: const TextStyle(fontWeight: FontWeight.bold),
-              tabs: const [
-                Tab(text: 'Validées'),
-                Tab(text: 'En attente'),
-                Tab(text: 'Annulées'),
+              tabs: [
+                Tab(text: localizations?.tabValidated ?? 'Validées'),
+                Tab(text: localizations?.tabPending ?? 'En attente'),
+                Tab(text: localizations?.tabCancelled ?? 'Annulées'),
               ],
             ),
             Expanded(
@@ -65,7 +67,7 @@ class _ReservationsPagesState extends ConsumerState<ReservationsPages>
                   ],
                 ),
                 loading: () => const Center(child: CircularProgressIndicator()),
-                error: (e, s) => Center(child: Text('Erreur: $e')),
+                error: (e, s) => Center(child: Text('${AppLocalizations.of(context)?.errorPrefix2 ?? 'Erreur: '}$e')),
               ),
             ),
           ],
@@ -91,7 +93,11 @@ class _ReservationsPagesState extends ConsumerState<ReservationsPages>
                   Icon(Icons.history_rounded, size: 64, color: Theme.of(context).colorScheme.onSurface.withOpacity(0.1)),
                   const SizedBox(height: 16),
                   Text(
-                    'Aucune réservation ${statusFilter == 'validee' ? 'validée' : statusFilter == 'annulee' ? 'annulée' : 'en attente'}',
+                    statusFilter == 'validee'
+                      ? (AppLocalizations.of(context)?.noReservationValidated ?? 'Aucune réservation validée')
+                      : statusFilter == 'annulee'
+                        ? (AppLocalizations.of(context)?.noReservationCancelled ?? 'Aucune réservation annulée')
+                        : (AppLocalizations.of(context)?.noReservationPending ?? 'Aucune réservation en attente'),
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
                     ),
@@ -125,19 +131,20 @@ class _ReservationsPagesState extends ConsumerState<ReservationsPages>
 
     Color statusColor;
     String statusLabel;
+    final localizations = AppLocalizations.of(context);
     switch (res.status) {
       case 'validee':
         statusColor = Colors.green;
-        statusLabel = 'Validée';
+        statusLabel = localizations?.statusValidated ?? 'Validée';
         break;
       case 'annulee':
         statusColor = cs.error;
-        statusLabel = 'Annulée';
+        statusLabel = localizations?.statusCancelled ?? 'Annulée';
         break;
       case 'en attente':
       default:
         statusColor = Colors.orange;
-        statusLabel = 'En attente';
+        statusLabel = localizations?.statusPending ?? 'En attente';
         break;
     }
 
@@ -217,7 +224,7 @@ class _ReservationsPagesState extends ConsumerState<ReservationsPages>
                         children: [
                           Text(res.route?.split(' ↔ ').last ?? '...', style: const TextStyle(fontWeight: FontWeight.bold)),
                           const SizedBox(height: 4),
-                          Text('Siège #${res.place}', style: TextStyle(color: cs.primary, fontWeight: FontWeight.bold, fontSize: 12)),
+                          Text(localizations?.seatLabel(res.place.toString()) ?? 'Siège #${res.place}', style: TextStyle(color: cs.primary, fontWeight: FontWeight.bold, fontSize: 12)),
                         ],
                       ),
                     ),

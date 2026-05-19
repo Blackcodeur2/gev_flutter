@@ -8,6 +8,7 @@ import 'dart:typed_data';
 import 'package:printing/printing.dart';
 import 'package:go_router/go_router.dart';
 import 'package:camer_trip/app/config/const_config.dart';
+import 'package:camer_trip/l10n/app_localizations.dart';
 
 class DashedLinePainter extends CustomPainter {
   final Color color;
@@ -114,7 +115,7 @@ class _ReservationDetailsPageState extends ConsumerState<ReservationDetailsPage>
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      'Complétez votre paiement pour sécuriser définitivement votre place.',
+                      AppLocalizations.of(context)?.finalizePaymentSubtitle ?? 'Complétez votre paiement pour sécuriser définitivement votre place.',
                       style: TextStyle(color: Colors.grey[600], fontSize: 14),
                     ),
                     const SizedBox(height: 24),
@@ -149,7 +150,7 @@ class _ReservationDetailsPageState extends ConsumerState<ReservationDetailsPage>
 
                     
                     const SizedBox(height: 24),
-                    const Text('Numéro de téléphone', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+                    Text(AppLocalizations.of(context)?.paymentPhoneNumber ?? 'Numéro de téléphone', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
                     const SizedBox(height: 8),
                     TextField(
                       controller: _phoneController,
@@ -177,7 +178,7 @@ class _ReservationDetailsPageState extends ConsumerState<ReservationDetailsPage>
                           foregroundColor: Colors.white,
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                         ),
-                        child: const Text('CONFIRMER & PAYER', style: TextStyle(fontWeight: FontWeight.bold)),
+                        child: Text(AppLocalizations.of(context)?.confirmAndPay ?? 'CONFIRMER & PAYER', style: const TextStyle(fontWeight: FontWeight.bold)),
                       ),
                     ),
                   ],
@@ -196,7 +197,7 @@ class _ReservationDetailsPageState extends ConsumerState<ReservationDetailsPage>
     String phone = _phoneController.text.trim();
     if (phone.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Veuillez entrer votre numéro de paiement')),
+        SnackBar(content: Text(AppLocalizations.of(context)?.paymentEnterPhone ?? 'Veuillez entrer votre numéro de paiement')),
       );
       return;
     }
@@ -206,7 +207,7 @@ class _ReservationDetailsPageState extends ConsumerState<ReservationDetailsPage>
         phone = '237$phone';
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Numéro invalide. Format: 6xx xxx xxx')),
+          SnackBar(content: Text(AppLocalizations.of(context)?.paymentInvalidPhone ?? 'Numéro invalide. Format: 6xx xxx xxx')),
         );
         return;
       }
@@ -241,7 +242,7 @@ class _ReservationDetailsPageState extends ConsumerState<ReservationDetailsPage>
       if (mounted) {
         setState(() => isLoading = false);
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Erreur: ${e.toString()}')),
+          SnackBar(content: Text(AppLocalizations.of(context)?.paymentError(e.toString()) ?? 'Erreur: ${e.toString()}')),
         );
       }
     }
@@ -263,7 +264,7 @@ class _ReservationDetailsPageState extends ConsumerState<ReservationDetailsPage>
         if (mounted) {
           setState(() => isLoading = false);
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Délai de paiement dépassé.')),
+            SnackBar(content: Text(AppLocalizations.of(context)?.paymentTimeout2 ?? 'Délai de paiement dépassé.')),
           );
         }
         return;
@@ -288,17 +289,17 @@ class _ReservationDetailsPageState extends ConsumerState<ReservationDetailsPage>
           timer.cancel();
           if (mounted) {
             setState(() => isLoading = false);
-            String message = 'Le paiement a échoué.';
+            String message = AppLocalizations.of(context)?.paymentFailedGeneric ?? 'Le paiement a échoué.';
             if (reason != null && reason.toString().isNotEmpty) {
               String cleanReason = reason.toString().toLowerCase();
               if (cleanReason.contains('insufficient balance') || cleanReason.contains('solde insuffisant')) {
-                message = 'Échec : Solde insuffisant sur votre compte.';
+                message = AppLocalizations.of(context)?.paymentFailedInsufficientBalance ?? 'Échec : Solde insuffisant sur votre compte.';
               } else if (cleanReason.contains('limit exceeded') || cleanReason.contains('limite dépassée')) {
-                message = 'Échec : Limite de transaction dépassée.';
+                message = AppLocalizations.of(context)?.paymentFailedLimitExceeded ?? 'Échec : Limite de transaction dépassée.';
               } else if (cleanReason.contains('refused') || cleanReason.contains('annulé') || cleanReason.contains('refuse')) {
-                message = 'Échec : Transaction refusée par l\'utilisateur.';
+                message = AppLocalizations.of(context)?.paymentFailedRefused ?? 'Échec : Transaction refusée par l\'utilisateur.';
               } else {
-                message = 'Échec : ${reason.toString()}';
+                message = AppLocalizations.of(context)?.paymentFailedReason(reason.toString()) ?? 'Échec : ${reason.toString()}';
               }
             }
             ScaffoldMessenger.of(context).showSnackBar(
@@ -327,16 +328,16 @@ class _ReservationDetailsPageState extends ConsumerState<ReservationDetailsPage>
           children: [
             const Icon(Icons.check_circle, color: Colors.green, size: 64),
             const SizedBox(height: 16),
-            const Text(
-              'Paiement Effectué !',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+            Text(
+              AppLocalizations.of(context)?.paymentDone ?? 'Paiement Effectué !',
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 8),
-            const Text(
-              'Votre place est désormais validée. Le QR code a été activé sur votre billet.',
+            Text(
+              AppLocalizations.of(context)?.paymentDoneMessage ?? 'Votre place est désormais validée. Le QR code a été activé sur votre billet.',
               textAlign: TextAlign.center,
-              style: TextStyle(color: Colors.grey),
+              style: const TextStyle(color: Colors.grey),
             ),
           ],
         ),
@@ -374,16 +375,16 @@ class _ReservationDetailsPageState extends ConsumerState<ReservationDetailsPage>
     Color statusColor;
     switch (currentStatus) {
       case 'validee':
-        statusLabel = 'Validée';
+        statusLabel = AppLocalizations.of(context)?.statusValidated ?? 'Validée';
         statusColor = Colors.green;
         break;
       case 'annulee':
-        statusLabel = 'Annulée';
+        statusLabel = AppLocalizations.of(context)?.statusCancelled ?? 'Annulée';
         statusColor = cs.error;
         break;
       case 'en attente':
       default:
-        statusLabel = 'En attente';
+        statusLabel = AppLocalizations.of(context)?.statusPending ?? 'En attente';
         statusColor = Colors.orange;
         break;
     }
@@ -392,7 +393,7 @@ class _ReservationDetailsPageState extends ConsumerState<ReservationDetailsPage>
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Billet Virtuel', style: TextStyle(fontWeight: FontWeight.bold)),
+        title: Text(AppLocalizations.of(context)?.virtualTicketTitle ?? 'Billet Virtuel', style: const TextStyle(fontWeight: FontWeight.bold)),
         centerTitle: true,
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -494,17 +495,17 @@ class _ReservationDetailsPageState extends ConsumerState<ReservationDetailsPage>
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Flexible(child: _buildInfoBlock('Date', widget.reservation.date ?? 'N/A', theme)),
-                                    Flexible(child: _buildInfoBlock('Heure', widget.reservation.time ?? 'N/A', theme)),
-                                    Flexible(child: _buildInfoBlock('Siège', widget.reservation.place, theme, highlight: true)),
+                                    Flexible(child: _buildInfoBlock(AppLocalizations.of(context)?.ticketDate ?? 'Date', widget.reservation.date ?? 'N/A', theme)),
+                                    Flexible(child: _buildInfoBlock(AppLocalizations.of(context)?.ticketTime ?? 'Heure', widget.reservation.time ?? 'N/A', theme)),
+                                    Flexible(child: _buildInfoBlock(AppLocalizations.of(context)?.ticketSeatLabel ?? 'Siège', widget.reservation.place, theme, highlight: true)),
                                   ],
                                 ),
                                 const SizedBox(height: 24),
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Flexible(child: _buildInfoBlock('Passager', 'Client (Moi)', theme)),
-                                    Flexible(child: _buildInfoBlock('Prix payé', '${widget.reservation.prix.toInt()} FCFA', theme, highlight: true)),
+                                    Flexible(child: _buildInfoBlock(AppLocalizations.of(context)?.ticketPassenger ?? 'Passager', AppLocalizations.of(context)?.ticketPassengerValue ?? 'Client (Moi)', theme)),
+                                    Flexible(child: _buildInfoBlock(AppLocalizations.of(context)?.ticketPricePaid ?? 'Prix payé', '${widget.reservation.prix.toInt()} FCFA', theme, highlight: true)),
                                   ],
                                 ),
                               ],
@@ -581,7 +582,7 @@ class _ReservationDetailsPageState extends ConsumerState<ReservationDetailsPage>
                                   ),
                                   const SizedBox(height: 16),
                                   Text(
-                                    'Référence: ${widget.reservation.id}',
+                                    AppLocalizations.of(context)?.ticketReference(widget.reservation.id!) ?? 'Référence: ${widget.reservation.id}',
                                     style: theme.textTheme.bodyMedium?.copyWith(
                                       fontWeight: FontWeight.bold,
                                       letterSpacing: 1.5,
@@ -609,8 +610,8 @@ class _ReservationDetailsPageState extends ConsumerState<ReservationDetailsPage>
                                   const SizedBox(height: 12),
                                   Text(
                                     widget.reservation.voyageStatus != 'en attente'
-                                        ? 'Réservation expirée car le voyage a débuté, s\'est terminé ou a été annulé.'
-                                        : 'Paiement requis pour générer le QR Code.',
+                                        ? (AppLocalizations.of(context)?.reservationExpired ?? 'Réservation expirée car le voyage a débuté, s\'est terminé ou a été annulé.')
+                                        : (AppLocalizations.of(context)?.paymentRequired ?? 'Paiement requis pour générer le QR Code.'),
                                     style: TextStyle(
                                       color: widget.reservation.voyageStatus != 'en attente'
                                           ? Colors.red[700]
@@ -647,8 +648,8 @@ class _ReservationDetailsPageState extends ConsumerState<ReservationDetailsPage>
                               Expanded(
                                 child: Text(
                                   widget.reservation.voyageStatus == 'annule'
-                                      ? 'Le voyage a été annulé. Ce billet ne peut plus être payé.'
-                                      : 'Le voyage a déjà débuté ou est terminé. Ce billet ne peut plus être payé.',
+                                      ? (AppLocalizations.of(context)?.voyageCancelled ?? 'Le voyage a été annulé. Ce billet ne peut plus être payé.')
+                                      : (AppLocalizations.of(context)?.voyageStarted ?? 'Le voyage a déj\u00e0 débuté ou est terminé. Ce billet ne peut plus être payé.'),
                                   style: const TextStyle(
                                     color: Colors.red,
                                     fontWeight: FontWeight.w600,
@@ -671,7 +672,7 @@ class _ReservationDetailsPageState extends ConsumerState<ReservationDetailsPage>
                             ),
                             onPressed: () => _showPaymentSheet(cs, isDark),
                             icon: const Icon(Icons.flash_on),
-                            label: const Text('PAYER CE BILLET', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+                            label: Text(AppLocalizations.of(context)?.payThisTicket ?? 'PAYER CE BILLET', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
                           ),
                         ),
                       ],
@@ -815,7 +816,7 @@ class _ReservationDetailsPageState extends ConsumerState<ReservationDetailsPage>
                             setState(() => isLoading = false);
                           },
                           icon: const Icon(Icons.close, size: 16),
-                          label: const Text('Fermer / Recommencer', style: TextStyle(fontSize: 14)),
+                          label: Text(AppLocalizations.of(context)?.paymentCloseRetry ?? 'Fermer / Recommencer', style: const TextStyle(fontSize: 14)),
                           style: TextButton.styleFrom(
                             foregroundColor: Colors.grey[700],
                           ),

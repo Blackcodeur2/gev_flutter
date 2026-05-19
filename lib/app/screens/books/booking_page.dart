@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:camer_trip/l10n/app_localizations.dart';
 
 class BookingPage extends ConsumerStatefulWidget {
   final VoyageModel voyage;
@@ -64,7 +65,7 @@ class _BookingPageState extends ConsumerState<BookingPage> {
       body: SafeArea(
         child: Column(
           children: [
-            MyAppBar(title: 'Choix du siège'),
+            MyAppBar(title: AppLocalizations.of(context)?.chooseSeatTitle ?? 'Choix du siège'),
             _buildTripHeader(cs),
             Expanded(
               child: isLoading
@@ -96,7 +97,7 @@ class _BookingPageState extends ConsumerState<BookingPage> {
                   maxLines: 2,
                 ),
                 Text(
-                  'Départ: ${widget.voyage.fullDepartureDate.hour}:${widget.voyage.fullDepartureDate.minute.toString().padLeft(2, '0')}',
+                  AppLocalizations.of(context)?.departure('${widget.voyage.fullDepartureDate.hour}:${widget.voyage.fullDepartureDate.minute.toString().padLeft(2, '0')}') ?? 'Départ: ${widget.voyage.fullDepartureDate.hour}:${widget.voyage.fullDepartureDate.minute.toString().padLeft(2, '0')}',
                   style: TextStyle(color: cs.onSurface.withOpacity(0.6), fontSize: 13),
                 ),
               ],
@@ -285,18 +286,18 @@ class _BookingPageState extends ConsumerState<BookingPage> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            _buildLegendItem(cs, 'Libre', Colors.white, cs.primary.withOpacity(0.1)),
-            _buildLegendItem(cs, 'Choisi', cs.primary, cs.primary),
-            _buildLegendItem(cs, 'Occupé', Colors.grey.withOpacity(0.3), Colors.transparent),
+            _buildLegendItem(cs, AppLocalizations.of(context)?.legendFree ?? 'Libre', Colors.white, cs.primary.withOpacity(0.1)),
+            _buildLegendItem(cs, AppLocalizations.of(context)?.legendSelected ?? 'Choisi', cs.primary, cs.primary),
+            _buildLegendItem(cs, AppLocalizations.of(context)?.legendOccupied ?? 'Occupé', Colors.grey.withOpacity(0.3), Colors.transparent),
           ],
         ),
         const SizedBox(height: 12),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            _buildLegendItem(cs, 'Personnel', Colors.blueGrey, Colors.transparent),
+            _buildLegendItem(cs, AppLocalizations.of(context)?.legendStaff ?? 'Personnel', Colors.blueGrey, Colors.transparent),
             const SizedBox(width: 24),
-            _buildLegendItem(cs, 'Porte', cs.primary.withOpacity(0.05), cs.primary.withOpacity(0.15)),
+            _buildLegendItem(cs, AppLocalizations.of(context)?.legendDoor ?? 'Porte', cs.primary.withOpacity(0.05), cs.primary.withOpacity(0.15)),
           ],
         ),
       ],
@@ -336,9 +337,11 @@ class _BookingPageState extends ConsumerState<BookingPage> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Siège sélectionné:', style: TextStyle(color: cs.onSurface.withOpacity(0.6))),
+              Text(AppLocalizations.of(context)?.selectedSeat ?? 'Siège sélectionné:', style: TextStyle(color: cs.onSurface.withOpacity(0.6))),
               Text(
-                selectedSeat != null ? 'Siège #$selectedSeat' : 'Aucun',
+                selectedSeat != null
+                  ? (AppLocalizations.of(context)?.selectedSeatValue(selectedSeat!) ?? 'Siège #$selectedSeat')
+                  : (AppLocalizations.of(context)?.noSeat ?? 'Aucun'),
                 style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
               ),
             ],
@@ -359,7 +362,10 @@ class _BookingPageState extends ConsumerState<BookingPage> {
                 foregroundColor: Colors.white,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
               ),
-              child: const Text('CONTINUER VERS LE PAIEMENT', style: TextStyle(fontWeight: FontWeight.bold)),
+              child: Text(
+                AppLocalizations.of(context)?.continueToPayment ?? 'CONTINUER VERS LE PAIEMENT',
+                style: const TextStyle(fontWeight: FontWeight.bold)
+              ),
             ),
           ),
         ],

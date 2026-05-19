@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import '../../services/providers.dart';
 import '../../models/colis_model.dart';
 import '../../shared/others/app_bar.dart';
+import 'package:camer_trip/l10n/app_localizations.dart';
 
 class MyColisPage extends ConsumerStatefulWidget {
   const MyColisPage({super.key});
@@ -33,13 +34,14 @@ class _MyColisPageState extends ConsumerState<MyColisPage> with SingleTickerProv
     final cs = theme.colorScheme;
     final colisAsync = ref.watch(myColisProvider);
     final userAsync = ref.watch(currentUserProvider);
+    final localizations = AppLocalizations.of(context);
 
     return Scaffold(
       backgroundColor: cs.surface,
       body: SafeArea(
         child: Column(
           children: [
-            MyAppBar(title: 'Mes Colis'),
+            MyAppBar(title: localizations?.myColisTitle ?? 'Mes Colis'),
             Container(
               margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               decoration: BoxDecoration(
@@ -56,16 +58,16 @@ class _MyColisPageState extends ConsumerState<MyColisPage> with SingleTickerProv
                 labelColor: Colors.white,
                 unselectedLabelColor: cs.onSurface.withOpacity(0.6),
                 labelStyle: const TextStyle(fontWeight: FontWeight.bold),
-                tabs: const [
-                  Tab(text: 'Expédiés'),
-                  Tab(text: 'À recevoir'),
+                tabs: [
+                  Tab(text: localizations?.tabSent ?? 'Expédiés'),
+                  Tab(text: localizations?.tabToReceive ?? 'À recevoir'),
                 ],
               ),
             ),
             Expanded(
               child: userAsync.when(
                 data: (user) {
-                  if (user == null) return const Center(child: Text('Veuillez vous connecter'));
+                  if (user == null) return Center(child: Text(localizations?.pleaseLogin ?? 'Veuillez vous connecter'));
                   
                   return colisAsync.when(
                     data: (allColis) {
@@ -87,11 +89,11 @@ class _MyColisPageState extends ConsumerState<MyColisPage> with SingleTickerProv
                       );
                     },
                     loading: () => const Center(child: CircularProgressIndicator()),
-                    error: (e, s) => Center(child: Text('Erreur: $e')),
+                    error: (e, s) => Center(child: Text('${AppLocalizations.of(context)?.errorPrefix2 ?? 'Erreur: '}$e')),
                   );
                 },
                 loading: () => const Center(child: CircularProgressIndicator()),
-                error: (e, s) => Center(child: Text('Erreur: $e')),
+                error: (e, s) => Center(child: Text('${AppLocalizations.of(context)?.errorPrefix2 ?? 'Erreur: '}$e')),
               ),
             ),
           ],
@@ -109,7 +111,9 @@ class _MyColisPageState extends ConsumerState<MyColisPage> with SingleTickerProv
             Icon(Icons.inventory_2_outlined, size: 64, color: cs.onSurface.withOpacity(0.2)),
             const SizedBox(height: 16),
             Text(
-              isSent ? 'Aucun colis envoyé' : 'Aucun colis à recevoir',
+              isSent
+                ? (AppLocalizations.of(context)?.noColisSent ?? 'Aucun colis envoyé')
+                : (AppLocalizations.of(context)?.noColisToReceive ?? 'Aucun colis à recevoir'),
               style: TextStyle(color: cs.onSurface.withOpacity(0.5), fontSize: 16),
             ),
           ],
@@ -161,7 +165,7 @@ class _MyColisPageState extends ConsumerState<MyColisPage> with SingleTickerProv
                         style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                       ),
                       Text(
-                        'Réf: #C-${colis.id}',
+                        AppLocalizations.of(context)?.colisRef(colis.id) ?? 'Réf: #C-${colis.id}',
                         style: TextStyle(color: cs.onSurface.withOpacity(0.5), fontSize: 12),
                       ),
                     ],
@@ -177,9 +181,9 @@ class _MyColisPageState extends ConsumerState<MyColisPage> with SingleTickerProv
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                _buildInfoColumn('Origine', colis.villeSource ?? '...', cs),
+                _buildInfoColumn(AppLocalizations.of(context)?.colisOrigin ?? 'Origine', colis.villeSource ?? '...', cs),
                 Icon(Icons.arrow_forward, size: 16, color: cs.primary.withOpacity(0.3)),
-                _buildInfoColumn('Destination', colis.destination, cs),
+                _buildInfoColumn(AppLocalizations.of(context)?.colisDestination ?? 'Destination', colis.destination, cs),
               ],
             ),
           ),
@@ -196,7 +200,9 @@ class _MyColisPageState extends ConsumerState<MyColisPage> with SingleTickerProv
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  isSent ? 'Destinataire: ${colis.nomDestinataire}' : 'Expéditeur: ${colis.nomExpediteur}',
+                  isSent
+                    ? (AppLocalizations.of(context)?.colisRecipient(colis.nomDestinataire) ?? 'Destinataire: ${colis.nomDestinataire}')
+                    : (AppLocalizations.of(context)?.colisSender(colis.nomExpediteur) ?? 'Expéditeur: ${colis.nomExpediteur}'),
                   style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
                 ),
                 Text(
@@ -223,14 +229,14 @@ class _MyColisPageState extends ConsumerState<MyColisPage> with SingleTickerProv
 
   Widget _buildStatusBadge(String status, ColorScheme cs) {
     Color color = Colors.orange;
-    String label = 'En attente';
+    String label = AppLocalizations.of(context)?.colisStatusPending ?? 'En attente';
     
     if (status == 'retire') {
       color = Colors.green;
-      label = 'Livré';
+      label = AppLocalizations.of(context)?.colisStatusDelivered ?? 'Livré';
     } else if (status == 'en cours') {
       color = Colors.blue;
-      label = 'En transit';
+      label = AppLocalizations.of(context)?.colisStatusInTransit ?? 'En transit';
     }
 
     return Container(

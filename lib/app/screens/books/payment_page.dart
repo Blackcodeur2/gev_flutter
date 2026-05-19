@@ -4,8 +4,8 @@ import 'package:camer_trip/app/shared/others/app_bar.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 import 'package:go_router/go_router.dart';
+import 'package:camer_trip/l10n/app_localizations.dart';
 
 class PaymentPage extends ConsumerStatefulWidget {
   final VoyageModel voyage;
@@ -51,7 +51,7 @@ class _PaymentPageState extends ConsumerState<PaymentPage> {
     String phone = _phoneController.text.trim();
     if (phone.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Veuillez entrer votre numéro de paiement')),
+        SnackBar(content: Text(AppLocalizations.of(context)?.paymentEnterPhone ?? 'Veuillez entrer votre numéro de paiement')),
       );
       return;
     }
@@ -62,7 +62,7 @@ class _PaymentPageState extends ConsumerState<PaymentPage> {
         phone = '237$phone';
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Numéro invalide. Format: 6xx xxx xxx')),
+          SnackBar(content: Text(AppLocalizations.of(context)?.paymentInvalidPhone ?? 'Numéro invalide. Format: 6xx xxx xxx')),
         );
         return;
       }
@@ -117,7 +117,7 @@ class _PaymentPageState extends ConsumerState<PaymentPage> {
       if (mounted) {
         setState(() => isLoading = false);
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Erreur: ${e.toString()}')),
+          SnackBar(content: Text(AppLocalizations.of(context)?.paymentError(e.toString()) ?? 'Erreur: ${e.toString()}')),
         );
       }
     }
@@ -139,7 +139,7 @@ class _PaymentPageState extends ConsumerState<PaymentPage> {
         if (mounted) {
           setState(() => isLoading = false);
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Délai de paiement dépassé. Vérifiez vos billets.')),
+            SnackBar(content: Text(AppLocalizations.of(context)?.paymentTimeout ?? 'Délai de paiement dépassé. Vérifiez vos billets.')),
           );
         }
         return;
@@ -160,17 +160,17 @@ class _PaymentPageState extends ConsumerState<PaymentPage> {
           timer.cancel();
           if (mounted) {
             setState(() => isLoading = false);
-            String message = 'Le paiement a échoué.';
+            String message = AppLocalizations.of(context)?.paymentFailedGeneric ?? 'Le paiement a échoué.';
             if (reason != null && reason.toString().isNotEmpty) {
               String cleanReason = reason.toString().toLowerCase();
               if (cleanReason.contains('insufficient balance') || cleanReason.contains('solde insuffisant')) {
-                message = 'Échec : Solde insuffisant sur votre compte.';
+                message = AppLocalizations.of(context)?.paymentFailedInsufficientBalance ?? 'Échec : Solde insuffisant sur votre compte.';
               } else if (cleanReason.contains('limit exceeded') || cleanReason.contains('limite dépassée')) {
-                message = 'Échec : Limite de transaction dépassée.';
+                message = AppLocalizations.of(context)?.paymentFailedLimitExceeded ?? 'Échec : Limite de transaction dépassée.';
               } else if (cleanReason.contains('refused') || cleanReason.contains('annulé') || cleanReason.contains('refuse')) {
-                message = 'Échec : Transaction refusée par l\'utilisateur.';
+                message = AppLocalizations.of(context)?.paymentFailedRefused ?? 'Échec : Transaction refusée par l\'utilisateur.';
               } else {
-                message = 'Échec : ${reason.toString()}';
+                message = AppLocalizations.of(context)?.paymentFailedReason(reason.toString()) ?? 'Échec : ${reason.toString()}';
               }
             }
             ScaffoldMessenger.of(context).showSnackBar(
@@ -200,14 +200,14 @@ class _PaymentPageState extends ConsumerState<PaymentPage> {
           children: [
             const Icon(Icons.check_circle, color: Colors.green, size: 64),
             const SizedBox(height: 16),
-            const Text(
-              'Réservation Réussie !',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+            Text(
+              AppLocalizations.of(context)?.bookingSuccess ?? 'Réservation Réussie !',
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 8),
             Text(
-              'Votre ticket pour le siège #${widget.seat} est en attente de paiement final. Consultez vos billets pour plus de détails.',
+              AppLocalizations.of(context)?.bookingSuccessMessage(widget.seat) ?? 'Votre ticket pour le siège #${widget.seat} est en attente de paiement final. Consultez vos billets pour plus de détails.',
               textAlign: TextAlign.center,
               style: TextStyle(color: Colors.grey[600]),
             ),
@@ -230,7 +230,7 @@ class _PaymentPageState extends ConsumerState<PaymentPage> {
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                   elevation: 0,
                 ),
-                child: const Text('RETOUR À L\'ACCUEIL', style: TextStyle(fontWeight: FontWeight.bold)),
+                child: Text(AppLocalizations.of(context)?.backToHome ?? 'RETOUR À L\'ACCUEIL', style: const TextStyle(fontWeight: FontWeight.bold)),
               ),
             ),
           )
@@ -252,7 +252,7 @@ class _PaymentPageState extends ConsumerState<PaymentPage> {
           children: [
             Column(
               children: [
-                MyAppBar(title: 'Paiement'),
+                MyAppBar(title: AppLocalizations.of(context)?.paymentTitle ?? 'Paiement'),
                 Expanded(
                   child: SingleChildScrollView(
                     padding: const EdgeInsets.all(24),
@@ -262,13 +262,13 @@ class _PaymentPageState extends ConsumerState<PaymentPage> {
                         _buildSummaryCard(cs, isDark),
 
                         const SizedBox(height: 32),
-                        const Text('Numéro de paiement', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                        Text(AppLocalizations.of(context)?.paymentPhoneLabel ?? 'Numéro de paiement', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
                         const SizedBox(height: 8),
                         TextField(
                           controller: _phoneController,
                           keyboardType: TextInputType.phone,
                           decoration: InputDecoration(
-                            hintText: '6xx xxx xxx',
+                            hintText: AppLocalizations.of(context)?.paymentPhoneHint ?? '6xx xxx xxx',
                             prefixIcon: const Icon(Icons.phone_android),
                             filled: true,
                             fillColor: isDark ? cs.surfaceContainerHigh : Colors.grey[100],
@@ -301,9 +301,9 @@ class _PaymentPageState extends ConsumerState<PaymentPage> {
                             child: CircularProgressIndicator(strokeWidth: 4.5),
                           ),
                           const SizedBox(height: 24),
-                          const Text(
-                            'Validation du Paiement',
-                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                          Text(
+                            AppLocalizations.of(context)?.paymentValidationTitle ?? 'Validation du Paiement',
+                            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                             textAlign: TextAlign.center,
                           ),
                           const SizedBox(height: 12),
@@ -324,7 +324,7 @@ class _PaymentPageState extends ConsumerState<PaymentPage> {
                               child: Column(
                                 children: [
                                   Text(
-                                    'Code USSD : $ussdCode',
+                                    AppLocalizations.of(context)?.paymentUssdCode(ussdCode!) ?? 'Code USSD : $ussdCode',
                                     style: const TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 18,
@@ -334,7 +334,7 @@ class _PaymentPageState extends ConsumerState<PaymentPage> {
                                   ),
                                   const SizedBox(height: 6),
                                   Text(
-                                    'Composez ce code si le prompt de validation ne s\'affiche pas automatiquement.',
+                                    AppLocalizations.of(context)?.paymentUssdTip ?? 'Composez ce code si le prompt de validation ne s\'affiche pas automatiquement.',
                                     style: TextStyle(
                                       fontSize: 12,
                                       color: isDark ? Colors.grey[300] : Colors.grey[800],
@@ -347,7 +347,7 @@ class _PaymentPageState extends ConsumerState<PaymentPage> {
                           ],
                           const SizedBox(height: 12),
                           Text(
-                            'Saisissez votre code PIN sur votre téléphone pour autoriser le débit de ${widget.voyage.prix.toInt()} FCFA.',
+                            AppLocalizations.of(context)?.paymentPinPrompt(widget.voyage.prix.toInt()) ?? 'Saisissez votre code PIN sur votre téléphone pour autoriser le débit de ${widget.voyage.prix.toInt()} FCFA.',
                             textAlign: TextAlign.center,
                             style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
                           ),
@@ -365,7 +365,7 @@ class _PaymentPageState extends ConsumerState<PaymentPage> {
                                 const SizedBox(width: 8),
                                 Flexible(
                                   child: Text(
-                                    'Vérification du statut du paiement...',
+                                    AppLocalizations.of(context)?.paymentCheckingStatus ?? 'Vérification du statut du paiement...',
                                     style: TextStyle(color: cs.primary, fontWeight: FontWeight.bold, fontSize: 13),
                                     overflow: TextOverflow.ellipsis,
                                   ),
@@ -379,7 +379,7 @@ class _PaymentPageState extends ConsumerState<PaymentPage> {
                               setState(() => isLoading = false);
                             },
                             icon: const Icon(Icons.close, size: 16),
-                            label: const Text('Fermer / Recommencer', style: TextStyle(fontSize: 14)),
+                            label: Text(AppLocalizations.of(context)?.paymentCloseRetry ?? 'Fermer / Recommencer', style: const TextStyle(fontSize: 14)),
                             style: TextButton.styleFrom(
                               foregroundColor: Colors.grey[700],
                             ),
@@ -406,11 +406,11 @@ class _PaymentPageState extends ConsumerState<PaymentPage> {
       ),
       child: Column(
         children: [
-          _buildRow('Trajet', '${widget.voyage.villeSource} - ${widget.voyage.villeDestination}'),
+          _buildRow(AppLocalizations.of(context)?.summaryRoute ?? 'Trajet', '${widget.voyage.villeSource} - ${widget.voyage.villeDestination}'),
           const Divider(height: 24),
-          _buildRow('Siège choisi', '#${widget.seat}'),
+          _buildRow(AppLocalizations.of(context)?.summarySeat ?? 'Siège choisi', '#${widget.seat}'),
           const Divider(height: 24),
-          _buildRow('Montant Total', '${widget.voyage.prix.toInt()} FCFA', isBold: true, color: cs.primary),
+          _buildRow(AppLocalizations.of(context)?.summaryTotal ?? 'Montant Total', '${widget.voyage.prix.toInt()} FCFA', isBold: true, color: cs.primary),
         ],
       ),
     );
@@ -452,7 +452,10 @@ class _PaymentPageState extends ConsumerState<PaymentPage> {
           ),
           child: isLoading 
             ? const CircularProgressIndicator(color: Colors.white)
-            : const Text('CONFIRMER LE PAIEMENT', style: TextStyle(fontWeight: FontWeight.bold)),
+            : Text(
+                AppLocalizations.of(context)?.confirmPayment ?? 'CONFIRMER LE PAIEMENT',
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              ),
         ),
       ),
     );

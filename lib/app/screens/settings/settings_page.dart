@@ -22,7 +22,7 @@ class SettingPage extends ConsumerStatefulWidget {
 }
 
 class _SettingPageState extends ConsumerState<SettingPage> {
-  String _appVersion = 'Chargement...';
+  String _appVersion = '';
 
   @override
   void initState() {
@@ -82,14 +82,14 @@ class _SettingPageState extends ConsumerState<SettingPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // 🎨 Apparence & Personnalisation
-                  _buildSectionTitle(cs, 'Apparence & Système'),
+                  _buildSectionTitle(cs, localizations?.sectionAppearance ?? 'Apparence & Système'),
                   _buildSettingsCard(cs, isDark, [
                     _buildSwitchTile(
                       cs, 
                       isDark, 
                       Icons.dark_mode_rounded, 
-                      'Mode Sombre', 
-                      themeProvider.isDark ? 'Activé' : 'Désactivé', 
+                      localizations?.darkMode ?? 'Mode Sombre', 
+                      themeProvider.isDark ? (localizations?.darkModeEnabled ?? 'Activé') : (localizations?.darkModeDisabled ?? 'Désactivé'), 
                       themeProvider.isDark, 
                       (v) => themeProvider.toggleTheme(),
                       Colors.indigo
@@ -107,8 +107,8 @@ class _SettingPageState extends ConsumerState<SettingPage> {
                       cs, 
                       isDark, 
                       Icons.notifications_active_rounded, 
-                      'Notifications', 
-                      'Alertes et Push', 
+                      localizations?.notifications ?? 'Notifications', 
+                      localizations?.notificationsSubtitle ?? 'Alertes et Push', 
                       Colors.orange,
                       onTap: () => context.pushNamed(AppRouter.notifications),
                     ),
@@ -117,28 +117,28 @@ class _SettingPageState extends ConsumerState<SettingPage> {
                   const SizedBox(height: 24),
 
                   // 🔐 Sécurité & Données
-                  _buildSectionTitle(cs, 'Sécurité'),
+                  _buildSectionTitle(cs, localizations?.sectionSecurity ?? 'Sécurité'),
                   _buildSettingsCard(cs, isDark, [
                     _buildSettingsTile(
                       cs, 
                       isDark, 
                       Icons.lock_reset_rounded, 
-                      'Mot de passe', 
-                      'Changer mon mot de passe', 
+                      localizations?.password ?? 'Mot de passe', 
+                      localizations?.changePasswordSubtitle ?? 'Changer mon mot de passe', 
                       Colors.orange,
                       onTap: () => context.pushNamed(AppRouter.changePassword),
                     ),
                   ]),
 
                   // 📦 Mes Services
-                  _buildSectionTitle(cs, 'Mes Activités'),
+                  _buildSectionTitle(cs, localizations?.sectionActivities ?? 'Mes Activités'),
                   _buildSettingsCard(cs, isDark, [
                     _buildSettingsTile(
                       cs, 
                       isDark, 
                       Icons.inventory_2_rounded, 
-                      'Mes Colis', 
-                      'Suivre mes envois et réceptions', 
+                      localizations?.myParcels ?? 'Mes Colis', 
+                      localizations?.myParcelsSubtitle ?? 'Suivre mes envois et réceptions', 
                       Colors.blueAccent,
                       onTap: () => context.pushNamed(AppRouter.myColis),
                     ),
@@ -147,15 +147,14 @@ class _SettingPageState extends ConsumerState<SettingPage> {
                   const SizedBox(height: 24),
 
                   // ❓ Support & Aide
-
-                  _buildSectionTitle(cs, 'Assistance'),
+                  _buildSectionTitle(cs, localizations?.sectionSupport ?? 'Assistance'),
                     _buildSettingsCard(cs, isDark, [
                       _buildSettingsTile(
                         cs, 
                         isDark, 
                         Icons.help_center_rounded, 
-                        'Centre d\'aide', 
-                        'Questions fréquentes', 
+                        localizations?.helpCenter ?? 'Centre d\'aide', 
+                        localizations?.helpCenterSubtitle ?? 'Questions fréquentes', 
                         Colors.purple,
                         onTap: () => context.pushNamed(AppRouter.faq),
                       ),
@@ -163,7 +162,7 @@ class _SettingPageState extends ConsumerState<SettingPage> {
                         cs, 
                         isDark, 
                         Icons.info_outline_rounded, 
-                        'À propos', 
+                        localizations?.about ?? 'À propos', 
                         _appVersion, 
                         Colors.grey,
                         onTap: () => context.pushNamed(AppRouter.about),
@@ -186,8 +185,9 @@ class _SettingPageState extends ConsumerState<SettingPage> {
   }
 
   Widget _buildProfileHeader(ColorScheme cs, bool isDark, UserModel? user) {
-    String name = user != null ? "${user.nom} ${user.prenom}" : "Non connecté";
-    String email = user?.email ?? "Session expirée";
+    final localizations = AppLocalizations.of(context);
+    String name = user != null ? "${user.nom} ${user.prenom}" : (localizations?.notConnected ?? "Non connecté");
+    String email = user?.email ?? (localizations?.sessionExpired ?? "Session expirée");
     String role = user?.role ?? "VISITEUR";
 
     String getAvatarUrl(String? url) {
@@ -379,7 +379,7 @@ class _SettingPageState extends ConsumerState<SettingPage> {
             Icon(Icons.logout_rounded, color: cs.error),
             const SizedBox(width: 12),
             Text(
-              'Déconnexion',
+              AppLocalizations.of(context)?.logout ?? 'Déconnexion',
               style: TextStyle(color: cs.error, fontWeight: FontWeight.bold, fontSize: 16),
             ),
           ],
