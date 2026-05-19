@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class LoginPage extends ConsumerStatefulWidget {
   const LoginPage({super.key});
@@ -140,6 +141,7 @@ class _LoginPageState extends ConsumerState<LoginPage>
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
     final cs = theme.colorScheme;
+    final localizations = AppLocalizations.of(context);
 
     return Scaffold(
       backgroundColor: cs.surface,
@@ -150,7 +152,7 @@ class _LoginPageState extends ConsumerState<LoginPage>
           child: Column(
             children: [
               // ── Header / Hero ──────────────────────────────────────────
-              _HeroHeader(isDark: isDark),
+              _HeroHeader(isDark: isDark, localizations: localizations),
 
               // ── Formulaire animé ───────────────────────────────────────
               FadeTransition(
@@ -175,7 +177,7 @@ class _LoginPageState extends ConsumerState<LoginPage>
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    'Connexion',
+                                    localizations?.loginTitle ?? 'Connexion',
                                     style: theme.textTheme.headlineSmall
                                         ?.copyWith(
                                           fontWeight: FontWeight.w900,
@@ -185,7 +187,7 @@ class _LoginPageState extends ConsumerState<LoginPage>
                                   ),
                                   const SizedBox(height: 4),
                                   Text(
-                                    'Bon retour 👋 Heureux de te revoir.',
+                                    localizations?.loginSubtitle ?? 'Bon retour 👋 Heureux de te revoir.',
                                     style: theme.textTheme.bodyMedium?.copyWith(
                                       color: cs.onSurface.withOpacity(0.55),
                                     ),
@@ -202,21 +204,21 @@ class _LoginPageState extends ConsumerState<LoginPage>
                           const SizedBox(height: 32),
 
                           // ── Champ Email ───────────────────────────────
-                          _buildLabel(context, 'Adresse email'),
+                          _buildLabel(context, localizations?.emailLabel ?? 'Adresse email'),
                           const SizedBox(height: 10),
                           _AppTextField(
                             controller: _emailController,
-                            hintText: 'exemple@email.com',
+                            hintText: localizations?.emailHint ?? 'exemple@email.com',
                             prefixIcon: Icons.email_rounded,
                             keyboardType: TextInputType.emailAddress,
                             validator: (v) {
                               if (v == null || v.isEmpty) {
-                                return 'Veuillez entrer votre email';
+                                return localizations?.emailRequired ?? 'Veuillez entrer votre email';
                               }
                               if (!RegExp(
                                 r'^[\w-.]+@([\w-]+\.)+[\w]{2,4}$',
                               ).hasMatch(v)) {
-                                return 'Email invalide';
+                                return localizations?.emailInvalid ?? 'Email invalide';
                               }
                               return null;
                             },
@@ -228,7 +230,7 @@ class _LoginPageState extends ConsumerState<LoginPage>
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              _buildLabel(context, 'Mot de passe'),
+                              _buildLabel(context, localizations?.passwordLabel ?? 'Mot de passe'),
                               TextButton(
                                 style: TextButton.styleFrom(
                                   padding: EdgeInsets.zero,
@@ -238,7 +240,7 @@ class _LoginPageState extends ConsumerState<LoginPage>
                                 ),
                                 onPressed: () => context.push(AppRouter.resetPasswordPath),
                                 child: Text(
-                                  'Mot de passe oublié ?',
+                                  localizations?.forgotPassword ?? 'Mot de passe oublié ?',
                                   style: TextStyle(
                                     color: cs.primary,
                                     fontSize: 12,
@@ -256,10 +258,10 @@ class _LoginPageState extends ConsumerState<LoginPage>
                             obscureText: _obscurePassword,
                             validator: (v) {
                               if (v == null || v.isEmpty) {
-                                return 'Veuillez entrer votre mot de passe';
+                                return localizations?.passwordRequired ?? 'Veuillez entrer votre mot de passe';
                               }
                               if (v.length < 6) {
-                                return 'Minimum 6 caractères';
+                                return localizations?.passwordMinLength ?? 'Minimum 6 caractères';
                               }
                               return null;
                             },
@@ -297,7 +299,7 @@ class _LoginPageState extends ConsumerState<LoginPage>
                               ),
                               const SizedBox(width: 12),
                               Text(
-                                'Se souvenir de moi',
+                                localizations?.rememberMe ?? 'Se souvenir de moi',
                                 style: theme.textTheme.bodyMedium?.copyWith(
                                   color: cs.onSurface.withOpacity(0.7),
                                   fontWeight: FontWeight.w500,
@@ -312,12 +314,13 @@ class _LoginPageState extends ConsumerState<LoginPage>
                           _LoginButton(
                             isLoading: _isLoading,
                             onPressed: _handleLogin,
+                            localizations: localizations,
                           ),
 
                           const SizedBox(height: 32),
 
                           // ── Divider Social ────────────────────────────
-                          _DividerOr(isDark: isDark),
+                          _DividerOr(isDark: isDark, localizations: localizations),
 
                           const SizedBox(height: 24),
 
@@ -348,7 +351,7 @@ class _LoginPageState extends ConsumerState<LoginPage>
                           Center(
                             child: RichText(
                               text: TextSpan(
-                                text: "Pas encore de compte ? ",
+                                text: localizations?.noAccount ?? "Pas encore de compte ? ",
                                 style: theme.textTheme.bodyMedium?.copyWith(
                                   color: cs.onSurface.withOpacity(0.55),
                                 ),
@@ -358,7 +361,7 @@ class _LoginPageState extends ConsumerState<LoginPage>
                                     child: GestureDetector(
                                       onTap: () => context.push('/register'),
                                       child: Text(
-                                        "S'inscrire",
+                                        localizations?.registerLink ?? "S'inscrire",
                                         style: TextStyle(
                                           color: cs.primary,
                                           fontWeight: FontWeight.w800,
@@ -401,9 +404,12 @@ class _LoginPageState extends ConsumerState<LoginPage>
 // ══════════════════════════════════════════════════════════════════════════════
 // Hero Header
 // ══════════════════════════════════════════════════════════════════════════════
+// Hero Header
+// ══════════════════════════════════════════════════════════════════════════════
 class _HeroHeader extends StatelessWidget {
   final bool isDark;
-  const _HeroHeader({required this.isDark});
+  final AppLocalizations? localizations;
+  const _HeroHeader({required this.isDark, this.localizations});
 
   @override
   Widget build(BuildContext context) {
@@ -525,7 +531,7 @@ class _HeroHeader extends StatelessWidget {
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Text(
-                        'Voyagez malin au Cameroun 🌍',
+                        localizations?.heroSubtitle ?? 'Voyagez malin au Cameroun 🌍',
                         style: TextStyle(
                           color: Colors.white.withOpacity(0.9),
                           fontSize: 13,
@@ -674,7 +680,8 @@ class _AppTextField extends StatelessWidget {
 class _LoginButton extends StatelessWidget {
   final bool isLoading;
   final VoidCallback onPressed;
-  const _LoginButton({required this.isLoading, required this.onPressed});
+  final AppLocalizations? localizations;
+  const _LoginButton({required this.isLoading, required this.onPressed, this.localizations});
 
   @override
   Widget build(BuildContext context) {
@@ -720,20 +727,20 @@ class _LoginButton extends StatelessWidget {
                     strokeWidth: 3,
                   ),
                 )
-              : const Row(
+              : Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      'SE CONNECTER',
-                      style: TextStyle(
+                      localizations?.loginButton ?? 'SE CONNECTER',
+                      style: const TextStyle(
                         color: Colors.white,
                         fontSize: 16,
                         fontWeight: FontWeight.w900,
                         letterSpacing: 1.2,
                       ),
                     ),
-                    SizedBox(width: 12),
-                    Icon(
+                    const SizedBox(width: 12),
+                    const Icon(
                       Icons.login_rounded,
                       color: Colors.white,
                       size: 20,
@@ -748,7 +755,8 @@ class _LoginButton extends StatelessWidget {
 
 class _DividerOr extends StatelessWidget {
   final bool isDark;
-  const _DividerOr({required this.isDark});
+  final AppLocalizations? localizations;
+  const _DividerOr({required this.isDark, this.localizations});
 
   @override
   Widget build(BuildContext context) {
@@ -761,7 +769,7 @@ class _DividerOr extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Text(
-            'OU CONTINUER AVEC',
+            localizations?.orContinueWith ?? 'OU CONTINUER AVEC',
             style: TextStyle(
               color: Theme.of(context).colorScheme.onSurface.withOpacity(0.4),
               fontSize: 11,

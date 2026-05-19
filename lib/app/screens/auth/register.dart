@@ -10,6 +10,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class RegisterPage extends ConsumerStatefulWidget {
   const RegisterPage({super.key});
@@ -106,7 +107,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage>
     if (!_acceptTerms) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: const Text('Veuillez accepter les conditions d\'utilisation'),
+          content: Text(AppLocalizations.of(context)?.acceptTerms ?? 'Veuillez accepter les conditions d\'utilisation'),
           backgroundColor: AppColors.error,
           behavior: SnackBarBehavior.floating,
           shape: RoundedRectangleBorder(
@@ -204,6 +205,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage>
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
     final cs = theme.colorScheme;
+    final localizations = AppLocalizations.of(context);
 
     return Scaffold(
       backgroundColor: cs.surface,
@@ -239,7 +241,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage>
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    'Inscription',
+                                    localizations?.registerTitle ?? 'Inscription',
                                     style: theme.textTheme.headlineSmall?.copyWith(
                                       fontWeight: FontWeight.w900,
                                       color: cs.onSurface,
@@ -248,7 +250,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage>
                                   ),
                                   const SizedBox(height: 4),
                                   Text(
-                                    'Complétez vos informations 🚀',
+                                    localizations?.registerSubtitle ?? 'Complétez vos informations 🚀',
                                     style: theme.textTheme.bodyMedium?.copyWith(
                                       color: cs.onSurface.withOpacity(0.55),
                                     ),
@@ -275,7 +277,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage>
                                 padding:
                                     const EdgeInsets.symmetric(horizontal: 16),
                                 child: Text(
-                                  'OU S\'INSCRIRE AVEC',
+                                  localizations?.orRegisterWith ?? 'OU S\'INSCRIRE AVEC',
                                   style: TextStyle(
                                     color: cs.onSurface.withOpacity(0.4),
                                     fontSize: 11,
@@ -299,7 +301,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage>
                               onPressed: _handleGoogleLogin,
                               icon: const Icon(Icons.g_mobiledata_rounded,
                                   size: 28),
-                              label: const Text('CONTINUER AVEC GOOGLE'),
+                              label: Text(localizations?.continueWithGoogle ?? 'CONTINUER AVEC GOOGLE'),
                               style: OutlinedButton.styleFrom(
                                 padding:
                                     const EdgeInsets.symmetric(vertical: 16),
@@ -315,7 +317,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage>
                           const SizedBox(height: 32),
 
                           // ── Identité ─────────────────────────────────
-                          _buildSectionTitle(context, 'Identité'),
+                          _buildSectionTitle(context, localizations?.identitySection ?? 'Identité'),
                           const SizedBox(height: 16),
                           
                           Row(
@@ -323,18 +325,18 @@ class _RegisterPageState extends ConsumerState<RegisterPage>
                               Expanded(
                                 child: _AppTextField(
                                   controller: _nomController,
-                                  hintText: 'Nom',
+                                  hintText: localizations?.lastName ?? 'Nom',
                                   prefixIcon: Icons.person_outline_rounded,
-                                  validator: (v) => v!.isEmpty ? 'Requis' : null,
+                                  validator: (v) => v!.isEmpty ? (localizations?.requiredField ?? 'Requis') : null,
                                 ),
                               ),
                               const SizedBox(width: 12),
                               Expanded(
                                 child: _AppTextField(
                                   controller: _prenomController,
-                                  hintText: 'Prénom',
+                                  hintText: localizations?.firstName ?? 'Prénom',
                                   prefixIcon: Icons.person_outline_rounded,
-                                  validator: (v) => v!.isEmpty ? 'Requis' : null,
+                                  validator: (v) => v!.isEmpty ? (localizations?.requiredField ?? 'Requis') : null,
                                 ),
                               ),
                             ],
@@ -342,13 +344,13 @@ class _RegisterPageState extends ConsumerState<RegisterPage>
                           
                           const SizedBox(height: 16),
                           
-                          _buildSectionTitle(context, 'Sexe'),
+                          _buildSectionTitle(context, localizations?.genderSection ?? 'Sexe'),
                           const SizedBox(height: 8),
                           Row(
                             children: [
                               Expanded(
                                 child: RadioListTile<String>(
-                                  title: const Text('Masculin'),
+                                  title: Text(localizations?.male ?? 'Masculin'),
                                   value: 'M',
                                   groupValue: _selectedSexe,
                                   onChanged: (v) => setState(() => _selectedSexe = v!),
@@ -358,7 +360,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage>
                               ),
                               Expanded(
                                 child: RadioListTile<String>(
-                                  title: const Text('Féminin'),
+                                  title: Text(localizations?.female ?? 'Féminin'),
                                   value: 'F',
                                   groupValue: _selectedSexe,
                                   onChanged: (v) => setState(() => _selectedSexe = v!),
@@ -377,9 +379,9 @@ class _RegisterPageState extends ConsumerState<RegisterPage>
                             child: AbsorbPointer(
                               child: _AppTextField(
                                 controller: _birthDateController,
-                                hintText: 'Date de naissance',
+                                hintText: localizations?.birthDate ?? 'Date de naissance',
                                 prefixIcon: Icons.calendar_today_rounded,
-                                validator: (v) => v!.isEmpty ? 'Date requise' : null,
+                                validator: (v) => v!.isEmpty ? (localizations?.dateRequired ?? 'Date requise') : null,
                               ),
                             ),
                           ),
@@ -387,17 +389,17 @@ class _RegisterPageState extends ConsumerState<RegisterPage>
                           const SizedBox(height: 28),
 
                           // ── Contact ──────────────────────────────────
-                          _buildSectionTitle(context, 'Contact'),
+                          _buildSectionTitle(context, localizations?.contactSection ?? 'Contact'),
                           const SizedBox(height: 16),
                           
                           _AppTextField(
                             controller: _emailController,
-                            hintText: 'Email',
+                            hintText: localizations?.emailPlaceholder ?? 'Email',
                             prefixIcon: Icons.email_rounded,
                             keyboardType: TextInputType.emailAddress,
                             validator: (v) {
-                              if (v == null || v.isEmpty) return 'Email requis';
-                              if (!RegExp(r'^[\w-.]+@([\w-]+\.)+[\w]{2,4}$').hasMatch(v)) return 'Format invalide';
+                              if (v == null || v.isEmpty) return localizations?.emailRequired ?? 'Email requis';
+                              if (!RegExp(r'^[\w-.]+@([\w-]+\.)+[\w]{2,4}$').hasMatch(v)) return localizations?.invalidFormat ?? 'Format invalide';
                               return null;
                             },
                           ),
@@ -406,24 +408,24 @@ class _RegisterPageState extends ConsumerState<RegisterPage>
                           
                           _AppTextField(
                             controller: _phoneController,
-                            hintText: 'Téléphone',
+                            hintText: localizations?.phonePlaceholder ?? 'Téléphone',
                             prefixIcon: Icons.phone_rounded,
                             keyboardType: TextInputType.phone,
-                            validator: (v) => v!.isEmpty ? 'Téléphone requis' : null,
+                            validator: (v) => v!.isEmpty ? (localizations?.phoneRequired ?? 'Téléphone requis') : null,
                           ),
 
                           const SizedBox(height: 28),
 
                           // ── Sécurité ─────────────────────────────────
-                          _buildSectionTitle(context, 'Sécurité'),
+                          _buildSectionTitle(context, localizations?.securitySection ?? 'Sécurité'),
                           const SizedBox(height: 16),
                           
                           _AppTextField(
                             controller: _passwordController,
-                            hintText: 'Mot de passe',
+                            hintText: localizations?.passwordLabel ?? 'Mot de passe',
                             prefixIcon: Icons.lock_rounded,
                             obscureText: _obscurePassword,
-                            validator: (v) => v!.length < 8 ? 'Min. 8 caractères' : null,
+                            validator: (v) => v!.length < 8 ? (localizations?.min8Chars ?? 'Min. 8 caractères') : null,
                             suffixIcon: IconButton(
                               icon: Icon(_obscurePassword ? Icons.visibility_off_rounded : Icons.visibility_rounded, size: 20),
                               onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
@@ -434,10 +436,10 @@ class _RegisterPageState extends ConsumerState<RegisterPage>
                           
                           _AppTextField(
                             controller: _confirmPasswordController,
-                            hintText: 'Confirmer',
+                            hintText: localizations?.confirmPassword ?? 'Confirmer',
                             prefixIcon: Icons.lock_clock_rounded,
                             obscureText: _obscureConfirm,
-                            validator: (v) => v != _passwordController.text ? 'Non identique' : null,
+                            validator: (v) => v != _passwordController.text ? (localizations?.notIdentical ?? 'Non identique') : null,
                             suffixIcon: IconButton(
                               icon: Icon(_obscureConfirm ? Icons.visibility_off_rounded : Icons.visibility_rounded, size: 20),
                               onPressed: () => setState(() => _obscureConfirm = !_obscureConfirm),
@@ -463,7 +465,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage>
                           const SizedBox(height: 40),
 
                           // ── Lien connexion ────────────────────────────
-                          _buildLoginLink(context, cs),
+                          _buildLoginLink(context, cs, localizations),
 
                           const SizedBox(height: 40),
                         ],
@@ -508,7 +510,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage>
         const SizedBox(width: 12),
         Expanded(
           child: Text(
-            "J'accepte les conditions d'utilisation et la politique de confidentialité.",
+            AppLocalizations.of(context)?.acceptTerms ?? "J'accepte les conditions d'utilisation et la politique de confidentialité.",
             style: TextStyle(fontSize: 12, color: cs.onSurface.withOpacity(0.6)),
           ),
         ),
@@ -516,17 +518,17 @@ class _RegisterPageState extends ConsumerState<RegisterPage>
     );
   }
 
-  Widget _buildLoginLink(BuildContext context, ColorScheme cs) {
+  Widget _buildLoginLink(BuildContext context, ColorScheme cs, AppLocalizations? localizations) {
     return Center(
       child: GestureDetector(
         onTap: () => context.pop(),
         child: RichText(
           text: TextSpan(
-            text: 'Déjà un compte ? ',
+            text: localizations?.alreadyHaveAccount ?? 'Déjà un compte ? ',
             style: TextStyle(color: cs.onSurface.withOpacity(0.55)),
             children: [
               TextSpan(
-                text: 'Se connecter',
+                text: localizations?.loginLink ?? 'Se connecter',
                 style: TextStyle(color: cs.primary, fontWeight: FontWeight.w900),
               ),
             ],
@@ -557,9 +559,15 @@ class _PasswordStrengthIndicator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (password.isEmpty) return const SizedBox.shrink();
+    final localizations = AppLocalizations.of(context);
     final strength = _getStrength();
     final colors = [AppColors.error, AppColors.warning, AppColors.primaryBlue, AppColors.primaryGreen];
-    final labels = ['Très faible', 'Faible', 'Moyen', 'Fort'];
+    final labels = [
+      localizations?.veryWeak ?? 'Très faible', 
+      localizations?.weak ?? 'Faible', 
+      localizations?.medium ?? 'Moyen', 
+      localizations?.strong ?? 'Fort'
+    ];
     final i = (strength - 1).clamp(0, 3);
 
     return Column(
@@ -614,7 +622,7 @@ class _HeroHeader extends StatelessWidget {
                 const SizedBox(height: 20),
                 const Icon(Icons.person_add_rounded, color: Colors.white, size: 50),
                 const SizedBox(height: 10),
-                const Text('CRÉER UN COMPTE', style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w900, letterSpacing: 2)),
+                Text(AppLocalizations.of(context)?.createAccountHeader ?? 'CRÉER UN COMPTE', style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w900, letterSpacing: 2)),
               ],
             ),
           ),
@@ -694,7 +702,7 @@ class _RegisterButton extends StatelessWidget {
         ),
         child: isLoading 
           ? const CircularProgressIndicator(color: Colors.white) 
-          : const Text('CRÉER MON COMPTE', style: TextStyle(fontWeight: FontWeight.w900, fontSize: 16)),
+          : Text(AppLocalizations.of(context)?.createAccountBtn ?? 'CRÉER MON COMPTE', style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 16)),
       ),
     );
   }

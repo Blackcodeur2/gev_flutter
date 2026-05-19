@@ -3,6 +3,9 @@ import 'package:camer_trip/app/config/const_config.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:provider/provider.dart';
+import 'package:camer_trip/app/config/locale_provider.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
@@ -15,23 +18,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   final PageController _controller = PageController();
   int currentPage = 0;
 
-  final pages = [
-    {
-      "title": "Bienvenue sur CamerTrip",
-      "desc": "Découvre les meilleurs endroits au Cameroun",
-      "image": "images/ico.png",
-    },
-    {
-      "title": "Voyage facilement",
-      "desc": "Planifie tes déplacements en quelques clics",
-      "image": "images/ico.png",
-    },
-    {
-      "title": "Commence maintenant",
-      "desc": "Une nouvelle aventure t’attend 🚀",
-      "image": "images/ico.png",
-    },
-  ];
+
 
   void finishOnboarding() async {
     final prefs = await SharedPreferences.getInstance();
@@ -41,8 +28,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     context.go('/main');
   }
 
-  void nextPage() {
-    if (currentPage == pages.length - 1) {
+  void nextPage(int totalPages) {
+    if (currentPage == totalPages - 1) {
       finishOnboarding();
     } else {
       _controller.nextPage(
@@ -69,17 +56,61 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context);
+    final localeProvider = context.watch<LocaleProvider>();
+    final isEnglish = localeProvider.locale.languageCode == 'en';
+
+    final pages = [
+      {
+        "title": localizations?.onboardingTitle1 ?? "Bienvenue sur CamerTrip",
+        "desc": localizations?.onboardingDesc1 ?? "Découvre les meilleurs endroits au Cameroun",
+        "image": "images/ico.png",
+      },
+      {
+        "title": localizations?.onboardingTitle2 ?? "Voyage facilement",
+        "desc": localizations?.onboardingDesc2 ?? "Planifie tes déplacements en quelques clics",
+        "image": "images/ico.png",
+      },
+      {
+        "title": localizations?.onboardingTitle3 ?? "Commence maintenant",
+        "desc": localizations?.onboardingDesc3 ?? "Une nouvelle aventure t’attend 🚀",
+        "image": "images/ico.png",
+      },
+    ];
+
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
       body: SafeArea(
         child: Column(
           children: [
-            // 🔹 Skip button
-            Align(
-              alignment: Alignment.topRight,
-              child: TextButton(
-                onPressed: finishOnboarding,
-                child: const Text("Passer"),
+            // 🔹 Header (Language Toggle & Skip button)
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  TextButton.icon(
+                    onPressed: () {
+                      if (isEnglish) {
+                        localeProvider.setLocale(const Locale('fr'));
+                      } else {
+                        localeProvider.setLocale(const Locale('en'));
+                      }
+                    },
+                    icon: const Icon(Icons.language_rounded, size: 20),
+                    label: Text(
+                      isEnglish ? 'EN' : 'FR',
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    style: TextButton.styleFrom(
+                      foregroundColor: Theme.of(context).colorScheme.primary,
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: finishOnboarding,
+                    child: Text(localizations?.skip ?? "Passer"),
+                  ),
+                ],
               ),
             ),
 
@@ -156,7 +187,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 width: double.infinity,
                 height: 55,
                 child: ElevatedButton(
-                  onPressed: nextPage,
+                  onPressed: () => nextPage(pages.length),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.primaryGreen,
                     shape: RoundedRectangleBorder(
@@ -165,8 +196,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   ),
                   child: Text(
                     currentPage == pages.length - 1
-                        ? "Commencer"
-                        : "Suivant",
+                        ? (localizations?.start ?? "Commencer")
+                        : (localizations?.next ?? "Suivant"),
                     style: const TextStyle(fontSize: 16),
                   ),
                 ),

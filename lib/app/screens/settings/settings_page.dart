@@ -11,7 +11,8 @@ import 'package:camer_trip/app/services/api_client_service.dart';
 import 'package:camer_trip/app/config/const_config.dart';
 import 'package:go_router/go_router.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-
+import 'package:camer_trip/app/config/locale_provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class SettingPage extends ConsumerStatefulWidget {
   const SettingPage({super.key});
@@ -48,6 +49,8 @@ class _SettingPageState extends ConsumerState<SettingPage> {
   @override
   Widget build(BuildContext context) {
     final themeProvider = legacy_provider.Provider.of<ThemeProvider>(context);
+    final localeProvider = legacy_provider.Provider.of<LocaleProvider>(context);
+    final localizations = AppLocalizations.of(context);
     final theme = Theme.of(context);
     final cs = theme.colorScheme;
     final isDark = theme.brightness == Brightness.dark;
@@ -61,7 +64,7 @@ class _SettingPageState extends ConsumerState<SettingPage> {
         child: ListView(
           padding: const EdgeInsets.symmetric(vertical: 0.0),
           children: [
-            const MyAppBar(title: 'Réglages'),
+            MyAppBar(title: localizations?.settingsTitle ?? 'Réglages'),
             
             // 👤 Section Profil
             userAsync.when(
@@ -91,7 +94,15 @@ class _SettingPageState extends ConsumerState<SettingPage> {
                       (v) => themeProvider.toggleTheme(),
                       Colors.indigo
                     ),
-                    _buildSettingsTile(cs, isDark, Icons.language_rounded, 'Langue', 'Français (Cameroun)', Colors.blue),
+                    _buildSettingsTile(
+                      cs, 
+                      isDark, 
+                      Icons.language_rounded, 
+                      localizations?.language ?? 'Langue', 
+                      localeProvider.locale?.languageCode == 'en' ? (localizations?.english ?? 'Anglais') : (localizations?.french ?? 'Français'), 
+                      Colors.blue,
+                      onTap: () => _showLanguageDialog(context, localeProvider, localizations),
+                    ),
                     _buildSettingsTile(
                       cs, 
                       isDark, 
@@ -374,6 +385,38 @@ class _SettingPageState extends ConsumerState<SettingPage> {
           ],
         ),
       ),
+    );
+  }
+
+  void _showLanguageDialog(BuildContext context, LocaleProvider localeProvider, AppLocalizations? localizations) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text(localizations?.language ?? 'Langue'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                title: Text(localizations?.french ?? 'Français'),
+                trailing: localeProvider.locale?.languageCode != 'en' ? const Icon(Icons.check, color: Colors.green) : null,
+                onTap: () {
+                  localeProvider.setLocale(const Locale('fr'));
+                  Navigator.pop(context);
+                },
+              ),
+              ListTile(
+                title: Text(localizations?.english ?? 'Anglais'),
+                trailing: localeProvider.locale?.languageCode == 'en' ? const Icon(Icons.check, color: Colors.green) : null,
+                onTap: () {
+                  localeProvider.setLocale(const Locale('en'));
+                  Navigator.pop(context);
+                },
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }

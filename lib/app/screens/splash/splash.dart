@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:camer_trip/app/routes/app_routter.dart';
 import 'package:camer_trip/app/services/auth_service.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
@@ -94,6 +95,7 @@ class _SplashPageState extends State<SplashPage>
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final localizations = AppLocalizations.of(context);
 
     // Gradient adapté au thème
     final gradientColors = isDark
@@ -226,7 +228,7 @@ class _SplashPageState extends State<SplashPage>
                                   borderRadius: BorderRadius.circular(20),
                                 ),
                                 child: Text(
-                                  '🌍  Voyage facilement au Cameroun',
+                                  localizations?.splashSlogan ?? '🌍  Voyage facilement au Cameroun',
                                   style: TextStyle(
                                     color: Colors.white.withOpacity(0.95),
                                     fontSize: 13,
@@ -267,7 +269,7 @@ class _SplashPageState extends State<SplashPage>
                         ),
                         const SizedBox(height: 12),
                         Text(
-                          'Chargement...',
+                          localizations?.loading ?? 'Chargement...',
                           style: TextStyle(
                             color: Colors.white.withOpacity(0.6),
                             fontSize: 12,
