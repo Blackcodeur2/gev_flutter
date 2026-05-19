@@ -101,8 +101,22 @@ final notificationServiceProvider = Provider<NotificationService>((ref) {
   return NotificationService();
 });
 
-final myNotificationsProvider = FutureProvider<List<NotificationModel>>((ref) async {
-  return ref.watch(notificationServiceProvider).getNotifications();
+final myNotificationsProvider = StreamProvider<List<NotificationModel>>((ref) async* {
+  final isLoggedIn = ref.watch(isLoggedInProvider).value ?? false;
+  if (!isLoggedIn) {
+    yield [];
+    return;
+  }
+
+  final notificationService = ref.watch(notificationServiceProvider);
+  
+  // Émettre immédiatement les données actuelles
+  yield await notificationService.getNotifications();
+
+  // Puis rafraîchir toutes les 15 secondes pour le temps réel
+  yield* Stream.periodic(const Duration(seconds: 15)).asyncMap((_) async {
+    return await notificationService.getNotifications();
+  });
 });
 
 final annonceServiceProvider = Provider<AnnonceService>((ref) {

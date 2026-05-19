@@ -355,6 +355,14 @@ class _SettingPageState extends ConsumerState<SettingPage> {
   Future<void> _handleLogout() async {
     final authService = ref.read(authServiceProvider);
     await authService.logout();
+    
+    // Invalider les providers liés à l'utilisateur pour vider le cache
+    ref.invalidate(currentUserProvider);
+    ref.invalidate(myReservationsProvider);
+    ref.invalidate(myColisProvider);
+    ref.invalidate(myNotificationsProvider);
+    ref.invalidate(isLoggedInProvider);
+    
     AppRouter.setLoggedIn(false);
     if (mounted) {
       context.go('/login');

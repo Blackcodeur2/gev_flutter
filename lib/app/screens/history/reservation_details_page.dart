@@ -705,19 +705,6 @@ class _ReservationDetailsPageState extends ConsumerState<ReservationDetailsPage>
                           ),
                         ),
                       ),
-                    ] else ...[
-                      SizedBox(
-                        width: double.infinity,
-                        height: 54,
-                        child: ElevatedButton.icon(
-                          style: ElevatedButton.styleFrom(
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                          ),
-                          onPressed: () {},
-                          icon: const Icon(Icons.replay),
-                          label: Text(AppLocalizations.of(context)?.rebookTrip ?? 'Réserver ce trajet à nouveau'),
-                        ),
-                      ),
                     ]
                   ],
                 ),

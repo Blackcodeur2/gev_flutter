@@ -37,14 +37,19 @@ class ReservationModel {
     final agence = station?['agence'] ?? voyage?['station']?['agence'];
 
     
-    // Formatage de la date (ex: 2026-04-08 14:30:00)
+    // Formatage de la date et de l'heure
     String dateStr = '...';
     String timeStr = '...';
-    if (voyage != null && voyage['date_depart'] != null) {
-      DateTime dt = DateTime.parse(voyage['date_depart']);
-      final months = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"];
-      dateStr = "${dt.day} ${months[dt.month - 1]} ${dt.year}";
-      timeStr = "${dt.hour.toString().padLeft(2, '0')}:${dt.minute.toString().padLeft(2, '0')}";
+    if (voyage != null) {
+      if (voyage['date_depart'] != null) {
+        DateTime dt = DateTime.parse(voyage['date_depart']);
+        final months = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"];
+        dateStr = "${dt.day} ${months[dt.month - 1]} ${dt.year}";
+      }
+      if (voyage['heure_depart'] != null) {
+        final rawTime = voyage['heure_depart'].toString();
+        timeStr = rawTime.length >= 5 ? rawTime.substring(0, 5) : rawTime;
+      }
     }
 
     final trajet = voyage?['trajet'];

@@ -76,6 +76,9 @@ class _LoginPageState extends ConsumerState<LoginPage>
     if (response.success == true) {
       ref.invalidate(currentUserProvider);
       ref.invalidate(isLoggedInProvider);
+      ref.invalidate(myReservationsProvider);
+      ref.invalidate(myColisProvider);
+      ref.invalidate(myNotificationsProvider);
       AppRouter.setLoggedIn(true);
       Future.microtask(() {
         if (!mounted) return;
@@ -107,6 +110,9 @@ class _LoginPageState extends ConsumerState<LoginPage>
     if (response.success == true) {
       ref.invalidate(currentUserProvider);
       ref.invalidate(isLoggedInProvider);
+      ref.invalidate(myReservationsProvider);
+      ref.invalidate(myColisProvider);
+      ref.invalidate(myNotificationsProvider);
       AppRouter.setLoggedIn(true);
       
       final user = response.user;

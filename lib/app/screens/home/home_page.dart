@@ -1,6 +1,7 @@
 import 'package:camer_trip/app/config/colors_config.dart';
 import 'package:camer_trip/app/config/const_config.dart';
 import 'package:camer_trip/app/models/ag_model.dart';
+import 'package:camer_trip/app/models/reservation_model.dart';
 import 'package:camer_trip/app/models/destination_model.dart';
 import 'package:camer_trip/app/models/promo_trip_model.dart';
 import 'package:camer_trip/app/shared/cards/voyage_card.dart';
@@ -55,11 +56,14 @@ class _HomePageState extends ConsumerState<HomePage>
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final cs = theme.colorScheme;
+    final isDark = theme.brightness == Brightness.dark;
     final localizations = AppLocalizations.of(context);
     final userAsync = ref.watch(currentUserProvider);
     final promosAsync = ref.watch(promosProvider);
     final agencesAsync = ref.watch(agencesProvider);
     final destinationsAsync = ref.watch(destinationsProvider);
+    final isLoggedIn = ref.watch(isLoggedInProvider).value ?? false;
+    final reservationsAsync = isLoggedIn ? ref.watch(myReservationsProvider) : null;
 
     return Scaffold(
       backgroundColor: cs.surface,
@@ -72,6 +76,7 @@ class _HomePageState extends ConsumerState<HomePage>
               ref.invalidate(agencesProvider);
               ref.invalidate(destinationsProvider);
               ref.invalidate(allScheduledTripsProvider);
+              ref.invalidate(myReservationsProvider);
               await ref.refresh(syncUserProvider.future);
             },
             displacement: 20,
@@ -118,7 +123,175 @@ class _HomePageState extends ConsumerState<HomePage>
                     action: '', 
                   ),
                 ),
+                if (isLoggedIn && reservationsAsync != null)
+                  reservationsAsync.when(
+                    data: (reservations) {
+                      final currentRes = reservations.where((r) => 
+                        r.status != 'annulee' && r.voyageStatus == 'en attente'
+                      ).toList();
+
+                      if (currentRes.isEmpty) {
+                        return SliverToBoxAdapter(
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20),
+                            child: Center(
+                              child: Text(
+                                localizations?.noReservationPending ?? 'Aucune réservation en cours',
+                                style: const TextStyle(color: Colors.grey),
+                              ),
+                            ),
+                          ),
+                        );
+                      }
+
+                      return SliverList(
+                        delegate: SliverChildBuilderDelegate(
+                          (context, index) {
+                            final res = currentRes[index];
+                            return _buildHomeReservationCard(context, res, cs, theme, isDark);
+                          },
+                          childCount: currentRes.length,
+                        ),
+                      );
+                    },
+                    loading: () => const SliverToBoxAdapter(
+                      child: Padding(
+                        padding: EdgeInsets.all(20),
+                        child: Center(child: CircularProgressIndicator()),
+                      ),
+                    ),
+                    error: (e, s) => SliverToBoxAdapter(
+                      child: Padding(
+                        padding: const EdgeInsets.all(20),
+                        child: Center(child: Text('Erreur: $e')),
+                      ),
+                    ),
+                  )
+                else
+                  SliverToBoxAdapter(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20),
+                      child: Center(
+                        child: Text(
+                          localizations?.noReservationPending ?? 'Connectez-vous pour voir vos réservations',
+                          style: const TextStyle(color: Colors.grey),
+                        ),
+                      ),
+                    ),
+                  ),
                 const SliverToBoxAdapter(child: SizedBox(height: 120)), 
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildHomeReservationCard(
+      BuildContext context, ReservationModel res, ColorScheme cs, ThemeData theme, bool isDark) {
+    Color statusColor;
+    String statusLabel;
+    final localizations = AppLocalizations.of(context);
+    
+    switch (res.status) {
+      case 'validee':
+        statusColor = Colors.green;
+        statusLabel = localizations?.statusValidated ?? 'Validée';
+        break;
+      case 'annulee':
+        statusColor = cs.error;
+        statusLabel = localizations?.statusCancelled ?? 'Annulée';
+        break;
+      case 'en attente':
+      default:
+        statusColor = Colors.orange;
+        statusLabel = localizations?.statusPending ?? 'En attente';
+        break;
+    }
+
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0),
+      decoration: BoxDecoration(
+        color: isDark ? cs.surfaceContainerHigh : Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.04),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+        border: Border.all(
+          color: cs.outline.withOpacity(0.08),
+        ),
+      ),
+      child: Material(
+        color: Colors.transparent,
+        borderRadius: BorderRadius.circular(20),
+        child: InkWell(
+          onTap: () => context.pushNamed('reservationDetails', extra: res),
+          borderRadius: BorderRadius.circular(20),
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Row(
+              children: [
+                // Icon block
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: cs.primary.withOpacity(0.1),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(Icons.confirmation_number_rounded, color: cs.primary, size: 24),
+                ),
+                const SizedBox(width: 16),
+                
+                // Details
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        res.route ?? '...',
+                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        '${res.date} • ${res.time}',
+                        style: TextStyle(color: cs.onSurface.withOpacity(0.6), fontSize: 12),
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        res.agenceName ?? 'Agence',
+                        style: TextStyle(color: cs.primary, fontSize: 12, fontWeight: FontWeight.w600),
+                      ),
+                    ],
+                  ),
+                ),
+                
+                // Status badge
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: statusColor.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      child: Text(
+                        statusLabel,
+                        style: TextStyle(color: statusColor, fontWeight: FontWeight.bold, fontSize: 11),
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      '${res.prix.toInt()} FCFA',
+                      style: TextStyle(fontWeight: FontWeight.w900, color: cs.primary, fontSize: 14),
+                    ),
+                  ],
+                ),
               ],
             ),
           ),
