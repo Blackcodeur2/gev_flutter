@@ -16,6 +16,7 @@ import 'package:camer_trip/app/services/providers.dart';
 import 'package:camer_trip/app/services/trip_filter_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:camer_trip/l10n/app_localizations.dart';
 
 class HomePage extends ConsumerStatefulWidget {
   const HomePage({super.key});
@@ -54,6 +55,7 @@ class _HomePageState extends ConsumerState<HomePage>
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final cs = theme.colorScheme;
+    final localizations = AppLocalizations.of(context);
     final userAsync = ref.watch(currentUserProvider);
     final promosAsync = ref.watch(promosProvider);
     final agencesAsync = ref.watch(agencesProvider);
@@ -91,7 +93,7 @@ class _HomePageState extends ConsumerState<HomePage>
   
                 SliverToBoxAdapter(
                   child: SectionTitle(
-                    title: '📅 Prochains Voyages',
+                    title: localizations?.upcomingTripsTitle ?? '📅 Prochains Voyages',
                     action: '', 
                   ),
                 ),
@@ -100,7 +102,7 @@ class _HomePageState extends ConsumerState<HomePage>
   
                 SliverToBoxAdapter(
                   child: SectionTitle(
-                    title: '🏢 Agences partenaires',
+                    title: localizations?.partnerAgenciesTitle ?? '🏢 Agences partenaires',
                     action: '', 
                   ),
                 ),
@@ -112,7 +114,7 @@ class _HomePageState extends ConsumerState<HomePage>
   
                 SliverToBoxAdapter(
                   child: SectionTitle(
-                    title: '🎟️ Réservation en cours', 
+                    title: localizations?.currentReservationsTitle ?? '🎟️ Réservation en cours',
                     action: '', 
                   ),
                 ),

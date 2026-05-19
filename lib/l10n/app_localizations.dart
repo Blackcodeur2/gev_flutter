@@ -673,6 +673,102 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Change email'**
   String get changeEmail;
+
+  /// No description provided for @emailVerifiedViaLink.
+  ///
+  /// In en, this message translates to:
+  /// **'Email successfully verified via link!'**
+  String get emailVerifiedViaLink;
+
+  /// No description provided for @invalidLink.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid link'**
+  String get invalidLink;
+
+  /// No description provided for @emailVerifiedSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Email successfully verified!'**
+  String get emailVerifiedSuccess;
+
+  /// No description provided for @invalidCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid code'**
+  String get invalidCode;
+
+  /// No description provided for @codeResent.
+  ///
+  /// In en, this message translates to:
+  /// **'Code resent'**
+  String get codeResent;
+
+  /// No description provided for @verificationTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Verification'**
+  String get verificationTitle;
+
+  /// No description provided for @checkYourInbox.
+  ///
+  /// In en, this message translates to:
+  /// **'Check your inbox'**
+  String get checkYourInbox;
+
+  /// No description provided for @codeSentMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'We sent a verification code to {email}. Please enter it below.'**
+  String codeSentMessage(String email);
+
+  /// No description provided for @verificationCodeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Verification code'**
+  String get verificationCodeLabel;
+
+  /// No description provided for @verifyBtn.
+  ///
+  /// In en, this message translates to:
+  /// **'Verify'**
+  String get verifyBtn;
+
+  /// No description provided for @resendCodeInstructions.
+  ///
+  /// In en, this message translates to:
+  /// **'I didn\'t receive a code. Resend.'**
+  String get resendCodeInstructions;
+
+  /// No description provided for @upcomingTripsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'📅 Upcoming Trips'**
+  String get upcomingTripsTitle;
+
+  /// No description provided for @partnerAgenciesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'🏢 Partner Agencies'**
+  String get partnerAgenciesTitle;
+
+  /// No description provided for @currentReservationsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'🎟️ Current Reservation'**
+  String get currentReservationsTitle;
+
+  /// No description provided for @filterTypeTripComingSoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Filter by trip type \"{label}\" coming soon! 🚌'**
+  String filterTypeTripComingSoon(String label);
+
+  /// No description provided for @stationsCountNational.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} stations • National Network'**
+  String stationsCountNational(int count);
 }
 
 class _AppLocalizationsDelegate

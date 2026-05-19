@@ -3,6 +3,7 @@ import 'package:camer_trip/app/config/const_config.dart';
 import 'package:camer_trip/app/models/ag_model.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:camer_trip/l10n/app_localizations.dart';
 
 class AgenceListItem extends StatelessWidget {
   final Agence agence;
@@ -83,7 +84,7 @@ class AgenceListItem extends StatelessWidget {
                       ),
                       const SizedBox(height: 2),
                       Text(
-                        '${agence.stations.length} gares • Réseau National',
+                        AppLocalizations.of(context)?.stationsCountNational(agence.stations.length) ?? '${agence.stations.length} gares • Réseau National',
                         style: TextStyle(
                           fontSize: 12,
                           color: cs.onSurface.withOpacity(0.5),

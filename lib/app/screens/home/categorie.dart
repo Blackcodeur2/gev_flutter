@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:camer_trip/l10n/app_localizations.dart';
 
 class CategoryItem extends StatelessWidget {
   final IconData icon;
@@ -15,9 +16,10 @@ class CategoryItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
+        final localizations = AppLocalizations.of(context);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Filtre par type de trajet "$label" bientôt disponible ! 🚌'),
+            content: Text(localizations?.filterTypeTripComingSoon(label) ?? 'Filtre par type de trajet "$label" bientôt disponible ! 🚌'),
             behavior: SnackBarBehavior.floating,
             duration: const Duration(seconds: 2),
           ),

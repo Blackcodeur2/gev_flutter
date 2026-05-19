@@ -300,4 +300,58 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get changeEmail => 'Change email';
+
+  @override
+  String get emailVerifiedViaLink => 'Email successfully verified via link!';
+
+  @override
+  String get invalidLink => 'Invalid link';
+
+  @override
+  String get emailVerifiedSuccess => 'Email successfully verified!';
+
+  @override
+  String get invalidCode => 'Invalid code';
+
+  @override
+  String get codeResent => 'Code resent';
+
+  @override
+  String get verificationTitle => 'Verification';
+
+  @override
+  String get checkYourInbox => 'Check your inbox';
+
+  @override
+  String codeSentMessage(String email) {
+    return 'We sent a verification code to $email. Please enter it below.';
+  }
+
+  @override
+  String get verificationCodeLabel => 'Verification code';
+
+  @override
+  String get verifyBtn => 'Verify';
+
+  @override
+  String get resendCodeInstructions => 'I didn\'t receive a code. Resend.';
+
+  @override
+  String get upcomingTripsTitle => '📅 Upcoming Trips';
+
+  @override
+  String get partnerAgenciesTitle => '🏢 Partner Agencies';
+
+  @override
+  String get currentReservationsTitle => '🎟️ Current Reservation';
+
+  @override
+  String filterTypeTripComingSoon(String label) {
+    return 'Filter by trip type \"$label\" coming soon! 🚌';
+  }
+
+  @override
+  String stationsCountNational(int count) {
+    return '$count stations • National Network';
+  }
 }

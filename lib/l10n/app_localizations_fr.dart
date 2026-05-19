@@ -302,4 +302,58 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get changeEmail => 'Changer d\'email';
+
+  @override
+  String get emailVerifiedViaLink => 'Email vérifié avec succès via le lien !';
+
+  @override
+  String get invalidLink => 'Lien invalide';
+
+  @override
+  String get emailVerifiedSuccess => 'Email vérifié avec succès !';
+
+  @override
+  String get invalidCode => 'Code invalide';
+
+  @override
+  String get codeResent => 'Code renvoyé';
+
+  @override
+  String get verificationTitle => 'Vérification';
+
+  @override
+  String get checkYourInbox => 'Vérifiez votre boîte mail';
+
+  @override
+  String codeSentMessage(String email) {
+    return 'Nous avons envoyé un code de vérification à $email. Veuillez l\'entrer ci-dessous.';
+  }
+
+  @override
+  String get verificationCodeLabel => 'Code de vérification';
+
+  @override
+  String get verifyBtn => 'Vérifier';
+
+  @override
+  String get resendCodeInstructions => 'Je n\'ai pas reçu de code. Renvoyer.';
+
+  @override
+  String get upcomingTripsTitle => '📅 Prochains Voyages';
+
+  @override
+  String get partnerAgenciesTitle => '🏢 Agences partenaires';
+
+  @override
+  String get currentReservationsTitle => '🎟️ Réservation en cours';
+
+  @override
+  String filterTypeTripComingSoon(String label) {
+    return 'Filtre par type de trajet \"$label\" bientôt disponible ! 🚌';
+  }
+
+  @override
+  String stationsCountNational(int count) {
+    return '$count gares • Réseau National';
+  }
 }
