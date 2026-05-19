@@ -13,6 +13,7 @@ class ReservationModel {
   final String? date;
   final String? time;
   final String? status;
+  final String? voyageStatus;
 
   ReservationModel({
     this.id,
@@ -27,6 +28,7 @@ class ReservationModel {
     this.date,
     this.time,
     this.status,
+    this.voyageStatus,
   });
 
   factory ReservationModel.fromJson(Map<String, dynamic> json) {
@@ -69,6 +71,7 @@ class ReservationModel {
       place: json['place']?.toString() ?? '',
       prix: double.tryParse(json['prix'].toString()) ?? 0.0,
       status: json['statut'] ?? 'en attente',
+      voyageStatus: voyage?['statut'] ?? 'en attente',
       agenceName: agence?['nom'] ?? 'CamerTrip',
       route: '$villeDep ↔ $villeArr',
       date: dateStr,

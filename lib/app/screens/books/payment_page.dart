@@ -20,6 +20,8 @@ class _PaymentPageState extends ConsumerState<PaymentPage> {
   String selectedMethod = 'Orange Money';
   final TextEditingController _phoneController = TextEditingController();
   bool isLoading = false;
+  String? ussdCode;
+  String? operator;
 
   @override
   void initState() {
@@ -103,6 +105,11 @@ class _PaymentPageState extends ConsumerState<PaymentPage> {
 
       final reference = payResponse['reference'];
 
+      setState(() {
+        ussdCode = payResponse['ussd_code'];
+        operator = payResponse['operator'];
+      });
+
       // 3. Polling du statut du paiement
       _startPolling(reference);
 
@@ -139,7 +146,9 @@ class _PaymentPageState extends ConsumerState<PaymentPage> {
       }
 
       try {
-        final status = await paiementService.checkPaymentStatus(reference);
+        final result = await paiementService.checkPaymentStatus(reference);
+        final status = result['statut'];
+        final reason = result['reason'];
         
         if (status == 'SUCCESSFUL') {
           timer.cancel();
@@ -151,8 +160,25 @@ class _PaymentPageState extends ConsumerState<PaymentPage> {
           timer.cancel();
           if (mounted) {
             setState(() => isLoading = false);
+            String message = 'Le paiement a échoué.';
+            if (reason != null && reason.toString().isNotEmpty) {
+              String cleanReason = reason.toString().toLowerCase();
+              if (cleanReason.contains('insufficient balance') || cleanReason.contains('solde insuffisant')) {
+                message = 'Échec : Solde insuffisant sur votre compte.';
+              } else if (cleanReason.contains('limit exceeded') || cleanReason.contains('limite dépassée')) {
+                message = 'Échec : Limite de transaction dépassée.';
+              } else if (cleanReason.contains('refused') || cleanReason.contains('annulé') || cleanReason.contains('refuse')) {
+                message = 'Échec : Transaction refusée par l\'utilisateur.';
+              } else {
+                message = 'Échec : ${reason.toString()}';
+              }
+            }
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Le paiement a échoué.')),
+              SnackBar(
+                content: Text(message),
+                backgroundColor: Colors.red[800],
+                duration: const Duration(seconds: 5),
+              ),
             );
           }
         }
@@ -282,10 +308,43 @@ class _PaymentPageState extends ConsumerState<PaymentPage> {
                           ),
                           const SizedBox(height: 12),
                           Text(
-                            'Un prompt USSD de paiement a été initié vers le numéro :\n${_phoneController.text.trim()}',
+                            'Un code USSD de paiement a été initié vers le numéro :\n${_phoneController.text.trim()}',
                             textAlign: TextAlign.center,
                             style: TextStyle(color: Colors.grey[600], fontSize: 14),
                           ),
+                          if (ussdCode != null && ussdCode!.isNotEmpty) ...[
+                            const SizedBox(height: 16),
+                            Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                              decoration: BoxDecoration(
+                                color: Colors.orange.withOpacity(0.1),
+                                borderRadius: BorderRadius.circular(12),
+                                border: Border.all(color: Colors.orange.withOpacity(0.3)),
+                              ),
+                              child: Column(
+                                children: [
+                                  Text(
+                                    'Code USSD : $ussdCode',
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18,
+                                      color: Colors.orange,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                  const SizedBox(height: 6),
+                                  Text(
+                                    'Composez ce code si le prompt de validation ne s\'affiche pas automatiquement.',
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      color: isDark ? Colors.grey[300] : Colors.grey[800],
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
                           const SizedBox(height: 12),
                           Text(
                             'Saisissez votre code PIN sur votre téléphone pour autoriser le débit de ${widget.voyage.prix.toInt()} FCFA.',
@@ -304,24 +363,25 @@ class _PaymentPageState extends ConsumerState<PaymentPage> {
                               children: [
                                 Icon(Icons.sync, color: cs.primary, size: 18),
                                 const SizedBox(width: 8),
-                                Text(
-                                  'Attente du réseau...',
-                                  style: TextStyle(color: cs.primary, fontWeight: FontWeight.bold, fontSize: 13),
+                                Flexible(
+                                  child: Text(
+                                    'Vérification du statut du paiement...',
+                                    style: TextStyle(color: cs.primary, fontWeight: FontWeight.bold, fontSize: 13),
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
                                 ),
                               ],
                             ),
                           ),
-                          const SizedBox(height: 20),
-                          // Bouton de simulation pour le sandbox
+                          const SizedBox(height: 24),
                           TextButton.icon(
                             onPressed: () {
                               setState(() => isLoading = false);
-                              _showSuccessDialog();
                             },
-                            icon: const Icon(Icons.bug_report, size: 16),
-                            label: const Text('Simuler la réussite (Test Sandbox)', style: TextStyle(fontSize: 12)),
+                            icon: const Icon(Icons.close, size: 16),
+                            label: const Text('Fermer / Recommencer', style: TextStyle(fontSize: 14)),
                             style: TextButton.styleFrom(
-                              foregroundColor: Colors.orange[800],
+                              foregroundColor: Colors.grey[700],
                             ),
                           ),
                         ],

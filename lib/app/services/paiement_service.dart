@@ -29,16 +29,19 @@ class PaiementService {
   }
 
   // Vérifie le statut d'un paiement
-  Future<String> checkPaymentStatus(String reference) async {
+  Future<Map<String, dynamic>> checkPaymentStatus(String reference) async {
     try {
       final response = await dio.get('/payments/status/$reference');
       if (response.statusCode == 200) {
-        return response.data['statut'] ?? 'PENDING';
+        return {
+          'statut': response.data['statut'] ?? 'PENDING',
+          'reason': response.data['reason'],
+        };
       }
-      return 'FAILED';
+      return {'statut': 'FAILED', 'reason': 'Erreur serveur'};
     } catch (e) {
       print("Erreur check status: $e");
-      return 'ERROR';
+      return {'statut': 'ERROR', 'reason': e.toString()};
     }
   }
 }

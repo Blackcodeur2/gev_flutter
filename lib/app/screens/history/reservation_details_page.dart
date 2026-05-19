@@ -4,6 +4,8 @@ import 'package:camer_trip/app/models/reservation_model.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:camer_trip/app/services/providers.dart';
 import 'dart:async';
+import 'dart:typed_data';
+import 'package:printing/printing.dart';
 import 'package:go_router/go_router.dart';
 import 'package:camer_trip/app/config/const_config.dart';
 
@@ -38,9 +40,12 @@ class ReservationDetailsPage extends ConsumerStatefulWidget {
 
 class _ReservationDetailsPageState extends ConsumerState<ReservationDetailsPage> {
   bool isLoading = false;
+  bool isDownloading = false;
   String selectedMethod = 'Orange Money';
   final TextEditingController _phoneController = TextEditingController();
   late String currentStatus;
+  String? ussdCode;
+  String? operator;
 
   @override
   void initState() {
@@ -224,6 +229,11 @@ class _ReservationDetailsPageState extends ConsumerState<ReservationDetailsPage>
 
       final reference = payResponse['reference'];
 
+      setState(() {
+        ussdCode = payResponse['ussd_code'];
+        operator = payResponse['operator'];
+      });
+
       // Polling du statut du paiement
       _startExistingPolling(reference);
 
@@ -260,7 +270,9 @@ class _ReservationDetailsPageState extends ConsumerState<ReservationDetailsPage>
       }
 
       try {
-        final status = await paiementService.checkPaymentStatus(reference);
+        final result = await paiementService.checkPaymentStatus(reference);
+        final status = result['statut'];
+        final reason = result['reason'];
         
         if (status == 'SUCCESSFUL') {
           timer.cancel();
@@ -276,8 +288,25 @@ class _ReservationDetailsPageState extends ConsumerState<ReservationDetailsPage>
           timer.cancel();
           if (mounted) {
             setState(() => isLoading = false);
+            String message = 'Le paiement a échoué.';
+            if (reason != null && reason.toString().isNotEmpty) {
+              String cleanReason = reason.toString().toLowerCase();
+              if (cleanReason.contains('insufficient balance') || cleanReason.contains('solde insuffisant')) {
+                message = 'Échec : Solde insuffisant sur votre compte.';
+              } else if (cleanReason.contains('limit exceeded') || cleanReason.contains('limite dépassée')) {
+                message = 'Échec : Limite de transaction dépassée.';
+              } else if (cleanReason.contains('refused') || cleanReason.contains('annulé') || cleanReason.contains('refuse')) {
+                message = 'Échec : Transaction refusée par l\'utilisateur.';
+              } else {
+                message = 'Échec : ${reason.toString()}';
+              }
+            }
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Le paiement a échoué.')),
+              SnackBar(
+                content: Text(message),
+                backgroundColor: Colors.red[800],
+                duration: const Duration(seconds: 5),
+              ),
             );
           }
         }
@@ -568,11 +597,27 @@ class _ReservationDetailsPageState extends ConsumerState<ReservationDetailsPage>
                               alignment: Alignment.center,
                               child: Column(
                                 children: [
-                                  Icon(Icons.payment_outlined, size: 48, color: Colors.orange[800]),
+                                  Icon(
+                                    widget.reservation.voyageStatus != 'en attente'
+                                        ? Icons.error_outline
+                                        : Icons.payment_outlined,
+                                    size: 48,
+                                    color: widget.reservation.voyageStatus != 'en attente'
+                                        ? Colors.red[800]
+                                        : Colors.orange[800],
+                                  ),
                                   const SizedBox(height: 12),
                                   Text(
-                                    'Paiement requis pour générer le QR Code.',
-                                    style: TextStyle(color: Colors.grey[600], fontSize: 13, fontWeight: FontWeight.w500),
+                                    widget.reservation.voyageStatus != 'en attente'
+                                        ? 'Réservation expirée car le voyage a débuté, s\'est terminé ou a été annulé.'
+                                        : 'Paiement requis pour générer le QR Code.',
+                                    style: TextStyle(
+                                      color: widget.reservation.voyageStatus != 'en attente'
+                                          ? Colors.red[700]
+                                          : Colors.grey[600],
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w500,
+                                    ),
                                     textAlign: TextAlign.center,
                                   ),
                                 ],
@@ -586,31 +631,72 @@ class _ReservationDetailsPageState extends ConsumerState<ReservationDetailsPage>
 
                     // Actions
                     if (currentStatus == 'en attente') ...[
-                      SizedBox(
-                        width: double.infinity,
-                        height: 54,
-                        child: ElevatedButton.icon(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.orange[800],
-                            foregroundColor: Colors.white,
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                      if (widget.reservation.voyageStatus != null && widget.reservation.voyageStatus != 'en attente') ...[
+                        Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                            color: Colors.red.withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(color: Colors.red.withOpacity(0.3)),
                           ),
-                          onPressed: () => _showPaymentSheet(cs, isDark),
-                          icon: const Icon(Icons.flash_on),
-                          label: const Text('PAYER CE BILLET', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+                          child: Row(
+                            children: [
+                              const Icon(Icons.warning_amber_rounded, color: Colors.red, size: 28),
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: Text(
+                                  widget.reservation.voyageStatus == 'annule'
+                                      ? 'Le voyage a été annulé. Ce billet ne peut plus être payé.'
+                                      : 'Le voyage a déjà débuté ou est terminé. Ce billet ne peut plus être payé.',
+                                  style: const TextStyle(
+                                    color: Colors.red,
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 14,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
+                      ] else ...[
+                        SizedBox(
+                          width: double.infinity,
+                          height: 54,
+                          child: ElevatedButton.icon(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.orange[800],
+                              foregroundColor: Colors.white,
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                            ),
+                            onPressed: () => _showPaymentSheet(cs, isDark),
+                            icon: const Icon(Icons.flash_on),
+                            label: const Text('PAYER CE BILLET', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+                          ),
+                        ),
+                      ],
                     ] else if (hasPaid) ...[
                       SizedBox(
                         width: double.infinity,
                         height: 54,
                         child: ElevatedButton.icon(
                           style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFFE53E3E),
+                            foregroundColor: Colors.white,
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                           ),
-                          onPressed: () {},
-                          icon: const Icon(Icons.download),
-                          label: const Text('Sauvegarder le ticket (PDF)'),
+                          onPressed: isDownloading ? null : _downloadTicket,
+                          icon: isDownloading
+                              ? const SizedBox(
+                                  width: 20,
+                                  height: 20,
+                                  child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                                )
+                              : const Icon(Icons.download),
+                          label: Text(
+                            isDownloading ? 'Téléchargement...' : 'Télécharger le Ticket PDF',
+                            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                          ),
                         ),
                       ),
                     ] else ...[
@@ -662,6 +748,39 @@ class _ReservationDetailsPageState extends ConsumerState<ReservationDetailsPage>
                           textAlign: TextAlign.center,
                           style: TextStyle(color: Colors.grey[600], fontSize: 14),
                         ),
+                        if (ussdCode != null && ussdCode!.isNotEmpty) ...[
+                          const SizedBox(height: 16),
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                            decoration: BoxDecoration(
+                              color: Colors.orange.withOpacity(0.1),
+                              borderRadius: BorderRadius.circular(12),
+                              border: Border.all(color: Colors.orange.withOpacity(0.3)),
+                            ),
+                            child: Column(
+                              children: [
+                                Text(
+                                  'Code USSD : $ussdCode',
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 18,
+                                    color: Colors.orange,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                                const SizedBox(height: 6),
+                                Text(
+                                  'Composez ce code si le prompt de validation ne s\'affiche pas automatiquement.',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: isDark ? Colors.grey[300] : Colors.grey[800],
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
                         const SizedBox(height: 12),
                         Text(
                           'Saisissez votre code PIN sur votre téléphone pour autoriser le débit de ${widget.reservation.prix.toInt()} FCFA.',
@@ -680,27 +799,25 @@ class _ReservationDetailsPageState extends ConsumerState<ReservationDetailsPage>
                             children: [
                               Icon(Icons.sync, color: cs.primary, size: 18),
                               const SizedBox(width: 8),
-                              Text(
-                                'Attente du réseau...',
-                                style: TextStyle(color: cs.primary, fontWeight: FontWeight.bold, fontSize: 13),
+                              Flexible(
+                                child: Text(
+                                  'Vérification du statut du paiement...',
+                                  style: TextStyle(color: cs.primary, fontWeight: FontWeight.bold, fontSize: 13),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
                               ),
                             ],
                           ),
                         ),
-                        const SizedBox(height: 20),
+                        const SizedBox(height: 24),
                         TextButton.icon(
                           onPressed: () {
-                            setState(() {
-                              isLoading = false;
-                              currentStatus = 'validee';
-                            });
-                            ref.invalidate(myReservationsProvider);
-                            _showSuccessPaymentDialog();
+                            setState(() => isLoading = false);
                           },
-                          icon: const Icon(Icons.bug_report, size: 16),
-                          label: const Text('Simuler la réussite (Test Sandbox)', style: TextStyle(fontSize: 12)),
+                          icon: const Icon(Icons.close, size: 16),
+                          label: const Text('Fermer / Recommencer', style: TextStyle(fontSize: 14)),
                           style: TextButton.styleFrom(
-                            foregroundColor: Colors.orange[800],
+                            foregroundColor: Colors.grey[700],
                           ),
                         ),
                       ],
@@ -712,6 +829,45 @@ class _ReservationDetailsPageState extends ConsumerState<ReservationDetailsPage>
         ],
       ),
     );
+  }
+
+  void _downloadTicket() async {
+    if (isDownloading) return;
+    setState(() => isDownloading = true);
+
+    try {
+      final reservationService = ref.read(reservationServiceProvider);
+      final pdfBytes = await reservationService.downloadTicketPdf(widget.reservation.id!);
+      
+      await Printing.sharePdf(
+        bytes: Uint8List.fromList(pdfBytes),
+        filename: 'ticket_${widget.reservation.numReservation ?? widget.reservation.id}.pdf',
+      );
+      
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Ticket PDF prêt ! 📄'),
+            backgroundColor: Colors.green,
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Erreur lors du téléchargement : ${e.toString()}'),
+            backgroundColor: Colors.red,
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() => isDownloading = false);
+      }
+    }
   }
 
   Widget _buildCityTime(String city, ThemeData theme, ColorScheme cs, {bool isEnd = false}) {

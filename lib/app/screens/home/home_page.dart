@@ -12,7 +12,6 @@ import 'package:camer_trip/app/shared/others/promo_carousel.dart';
 import 'package:camer_trip/app/shared/others/section_title.dart';
 import 'package:camer_trip/app/shared/others/scheduled_trips_list.dart';
 import 'package:camer_trip/app/shared/others/trip_filter_bar.dart';
-import 'package:camer_trip/app/shared/others/kwc_reminder_banner.dart';
 import 'package:camer_trip/app/services/providers.dart';
 import 'package:camer_trip/app/services/trip_filter_provider.dart';
 import 'package:flutter/material.dart';
@@ -30,8 +29,6 @@ class _HomePageState extends ConsumerState<HomePage>
   late AnimationController _animController;
   late Animation<double> _fadeAnim;
 
-  // L'état est désormais géré à 100% par des Riverpod FutureProviders.
-
   @override
   void initState() {
     super.initState();
@@ -42,7 +39,6 @@ class _HomePageState extends ConsumerState<HomePage>
     _fadeAnim = CurvedAnimation(parent: _animController, curve: Curves.easeOut);
     _animController.forward();
     
-    // Synchronisation du statut utilisateur dès l'ouverture
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(syncUserProvider);
     });
@@ -85,15 +81,6 @@ class _HomePageState extends ConsumerState<HomePage>
               slivers: [
                 SliverToBoxAdapter(child: MyAppBar(isHome: true)),
                 
-                // 🛡️ Bannière KWC si en attente (Commentée)
-                // userAsync.when(
-                //   data: (user) => user?.statut == "en attente" 
-                //       ? const SliverToBoxAdapter(child: KwcReminderBanner())
-                //       : const SliverToBoxAdapter(child: SizedBox.shrink()),
-                //   loading: () => const SliverToBoxAdapter(child: SizedBox.shrink()),
-                //   error: (e, s) => const SliverToBoxAdapter(child: SizedBox.shrink()),
-                // ),
-  
                 promosAsync.when(
                   data: (promos) => promos.isNotEmpty 
                       ? SliverToBoxAdapter(child: PromoCarousel(promos: promos)) 
@@ -102,21 +89,19 @@ class _HomePageState extends ConsumerState<HomePage>
                   error: (e, s) => const SliverToBoxAdapter(child: SizedBox.shrink()),
                 ),
   
-                // 📅 SECTION VOYAGES ET FILTRES (Bouton Filtres masqué temporairement)
                 SliverToBoxAdapter(
                   child: SectionTitle(
                     title: '📅 Prochains Voyages',
-                    action: '', // 'Filtres'
+                    action: '', 
                   ),
                 ),
                 const SliverToBoxAdapter(child: TripFilterBar()),
                 const ScheduledTripsList(),
   
-                // 🏢 SECTION AGENCES (Bouton Voir tout masqué temporairement)
                 SliverToBoxAdapter(
                   child: SectionTitle(
                     title: '🏢 Agences partenaires',
-                    action: '', // 'Voir tout'
+                    action: '', 
                   ),
                 ),
                 agencesAsync.when(
@@ -125,32 +110,10 @@ class _HomePageState extends ConsumerState<HomePage>
                   error: (e, s) => const SliverToBoxAdapter(child: SizedBox.shrink()),
                 ),
   
-                /* Section Destinations populaires retirée temporairement
-                SliverToBoxAdapter(
-                  child: SectionTitle(
-                    title: '📍 Destinations populaires',
-                    action: 'Voir tout',
-                  ),
-                ),
-                destinationsAsync.when(
-                  data: (destinations) => SliverToBoxAdapter(child: DestinationsList(destinations: destinations)),
-                  loading: () => const SliverToBoxAdapter(child: Padding(padding: EdgeInsets.all(20), child: Center(child: CircularProgressIndicator()))),
-                  error: (e, s) => const SliverToBoxAdapter(child: SizedBox.shrink()),
-                ),
-                */
-  
-                /* Section Types de trajet retirée temporairement
-                SliverToBoxAdapter(
-                  child: SectionTitle(title: '🚌 Types de trajet', action: ''),
-                ),
-                SliverToBoxAdapter(child: buildCategories(context, cs)),
-                */
-  
-                // 🎟️ SECTION RÉSERVATION EN COURS (Bouton Détails masqué temporairement)
                 SliverToBoxAdapter(
                   child: SectionTitle(
                     title: '🎟️ Réservation en cours', 
-                    action: '', // 'Détails'
+                    action: '', 
                   ),
                 ),
                 const SliverToBoxAdapter(child: SizedBox(height: 120)), 

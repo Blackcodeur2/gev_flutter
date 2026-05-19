@@ -5,7 +5,7 @@ import 'api_client_service.dart';
 class ReservationService {
   final Dio dio = ApiClient().dio;
 
-  // Créer une nouvelle réservation (Aligné sur le modèle Laravel)
+  // Créer une nouvelle réservation
   Future<Response?> createReservation({
     required int voyageId,
     required int stationId,
@@ -35,12 +35,11 @@ class ReservationService {
     }
   }
 
-  // Récupérer les places occupées pour un voyage (Aligné sur le backend Laravel)
+  // Récupérer les places occupées pour un voyage
   Future<List<String>> getOccupiedSeats(int voyageId) async {
     try {
       final response = await dio.get('/client/voyages/$voyageId/occupations');
       if (response.statusCode == 200 && response.data != null) {
-        // Le backend Laravel renvoie {'status': true, 'data': [...]}
         final occupiedData = response.data['data'] ?? response.data['occupied'];
         if (occupiedData != null) {
           return List<String>.from(occupiedData);
@@ -62,6 +61,20 @@ class ReservationService {
     } catch (e) {
       print("Erreur getMyReservations: $e");
       return [];
+    }
+  }
+
+  // Télécharger le ticket PDF en bytes
+  Future<List<int>> downloadTicketPdf(int reservationId) async {
+    try {
+      final response = await dio.get(
+        '/client/reservations/$reservationId/ticket',
+        options: Options(responseType: ResponseType.bytes),
+      );
+      return response.data as List<int>;
+    } on DioException catch (e) {
+      print("Erreur téléchargement ticket PDF: ${e.response?.data}");
+      rethrow;
     }
   }
 }

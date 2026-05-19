@@ -4,6 +4,7 @@ import 'package:camer_trip/app/routes/app_routter.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'dart:math';
 
 class AgenceDetailsPage extends StatefulWidget {
   final Agence agence;
@@ -53,6 +54,7 @@ class _AgenceDetailsPageState extends State<AgenceDetailsPage> with SingleTicker
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final cs = theme.colorScheme;
+    final isDark = theme.brightness == Brightness.dark;
     
     return Scaffold(
       backgroundColor: cs.surface,
@@ -75,43 +77,87 @@ class _AgenceDetailsPageState extends State<AgenceDetailsPage> with SingleTicker
                 background: Stack(
                   fit: StackFit.expand,
                   children: [
+                    // Arrière-plan coloré principal de l'agence
                     Container(
-                      color: widget.agence.logoUrl != null ? Colors.transparent : widget.agence.color.withOpacity(0.8),
+                      color: widget.agence.color,
                     ),
-                    if (widget.agence.logoUrl != null)
-                      Image.network(
-                        widget.agence.logoUrl!,
-                        fit: BoxFit.contain, // Pour ne pas couper le logo
-                      )
-
-                    else
-                      Center(
+                    
+                    // Icône d'agence en filigrane en arrière-plan
+                    Positioned.fill(
+                      child: Opacity(
+                        opacity: 0.12,
                         child: Icon(
-                          widget.agence.icon, 
-                          size: 100, 
-                          color: Colors.white.withOpacity(0.2)
+                          widget.agence.icon,
+                          size: 160,
+                          color: Colors.white,
                         ),
                       ),
+                    ),
 
-                    // Dégradé au bas pour améliorer la lisibilité du titre
-                    Positioned(
-                      bottom: 0,
-                      left: 0,
-                      right: 0,
-                      height: 80,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            begin: Alignment.bottomCenter,
-                            end: Alignment.topCenter,
-                            colors: [
-                              Colors.black.withOpacity(0.6),
-                              Colors.transparent,
+                    // Carte du logo au centre, garantissant sa lisibilité sur fond blanc
+                    if (widget.agence.logoUrl != null)
+                      Center(
+                        child: Container(
+                          width: 110,
+                          height: 110,
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(24),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.25),
+                                blurRadius: 15,
+                                offset: const Offset(0, 5),
+                              ),
                             ],
+                          ),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(16),
+                            child: Image.network(
+                              widget.agence.logoUrl!,
+                              fit: BoxFit.contain,
+                              errorBuilder: (context, error, stackTrace) => Icon(
+                                widget.agence.icon,
+                                size: 48,
+                                color: widget.agence.color,
+                              ),
+                            ),
+                          ),
+                        ),
+                      )
+                    else
+                      Center(
+                        child: CircleAvatar(
+                          radius: 45,
+                          backgroundColor: Colors.white.withOpacity(0.2),
+                          child: Icon(
+                            widget.agence.icon,
+                            size: 50,
+                            color: Colors.white,
                           ),
                         ),
                       ),
-                    )
+
+                      // Dégradé au bas pour améliorer la lisibilité du titre
+                      Positioned(
+                        bottom: 0,
+                        left: 0,
+                        right: 0,
+                        height: 80,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment.bottomCenter,
+                              end: Alignment.topCenter,
+                              colors: [
+                                Colors.black.withOpacity(0.6),
+                                Colors.transparent,
+                              ],
+                            ),
+                          ),
+                        ),
+                      )
                   ],
                 ),
               ),
@@ -125,7 +171,7 @@ class _AgenceDetailsPageState extends State<AgenceDetailsPage> with SingleTicker
               delegate: _SliverAppBarDelegate(
                 TabBar(
                   controller: _tabController,
-                  labelColor: cs.primary,
+                  labelColor: widget.agence.color,
                   unselectedLabelColor: cs.onSurface.withOpacity(0.5),
                   indicatorColor: widget.agence.color,
                   indicatorWeight: 3,
@@ -158,28 +204,67 @@ class _AgenceDetailsPageState extends State<AgenceDetailsPage> with SingleTicker
     if (stations.isEmpty) {
       return _buildEmptyState(cs, 'Aucune station trouvée', Icons.location_off);
     }
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    
     return ListView.builder(
       padding: const EdgeInsets.all(16),
       itemCount: stations.length,
       itemBuilder: (context, index) {
         final station = stations[index];
-        return Card(
+        return Container(
           margin: const EdgeInsets.only(bottom: 12),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-          elevation: 2,
-          shadowColor: cs.shadow.withOpacity(0.1),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8),
-            child: ListTile(
-              leading: CircleAvatar(
-                backgroundColor: widget.agence.color.withOpacity(0.15),
-                child: Icon(Icons.location_city, color: widget.agence.color),
+          decoration: BoxDecoration(
+            color: isDark ? cs.surfaceContainerHigh : Colors.white,
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(
+              color: isDark ? Colors.white.withOpacity(0.05) : Colors.black.withOpacity(0.05),
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: isDark ? Colors.black26 : cs.shadow.withOpacity(0.04),
+                blurRadius: 10,
+                offset: const Offset(0, 4),
               ),
-              title: Text(station['ville'] ?? 'Station', style: const TextStyle(fontWeight: FontWeight.bold)),
-              subtitle: Text('${station['nom']} - ${station['adresse'] ?? ''}'),
-              trailing: IconButton(
-                icon: Icon(Icons.map, color: cs.primary),
-                onPressed: () {}, 
+            ],
+          ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 4),
+            child: ListTile(
+              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+              leading: Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: widget.agence.color.withOpacity(0.15),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(Icons.location_on_outlined, color: widget.agence.color, size: 22),
+              ),
+              title: Text(
+                station['ville'] ?? 'Station', 
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: cs.onSurface,
+                ),
+              ),
+              subtitle: Padding(
+                padding: const EdgeInsets.only(top: 4.0),
+                child: Text(
+                  '${station['nom']} - ${station['adresse'] ?? ''}',
+                  style: TextStyle(
+                    color: cs.onSurface.withOpacity(0.6),
+                    fontSize: 13,
+                  ),
+                ),
+              ),
+              trailing: Container(
+                decoration: BoxDecoration(
+                  color: widget.agence.color.withOpacity(0.1),
+                  shape: BoxShape.circle,
+                ),
+                child: IconButton(
+                  icon: Icon(Icons.map_outlined, color: widget.agence.color, size: 20),
+                  onPressed: () {}, 
+                ),
               ),
             ),
           ),
@@ -193,60 +278,130 @@ class _AgenceDetailsPageState extends State<AgenceDetailsPage> with SingleTicker
     if (voyages.isEmpty) {
       return _buildEmptyState(cs, 'Aucun voyage en attente', Icons.event_busy);
     }
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    
     return ListView.builder(
       padding: const EdgeInsets.all(16),
       itemCount: voyages.length,
       itemBuilder: (context, index) {
         final voy = voyages[index];
-        return Card(
+        final totalSeats = voy.nbPlaces != null ? (voy.nbPlaces! - 2) : 68;
+        final reservationsCount = voy.reservationsCount ?? 0;
+        final available = max(0, totalSeats - reservationsCount);
+        
+        return Container(
           margin: const EdgeInsets.only(bottom: 16),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-          elevation: 3,
-          shadowColor: cs.shadow.withOpacity(0.2),
+          decoration: BoxDecoration(
+            color: isDark ? cs.surfaceContainerHigh : Colors.white,
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(
+              color: isDark ? Colors.white.withOpacity(0.05) : Colors.black.withOpacity(0.05),
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: isDark ? Colors.black26 : cs.shadow.withOpacity(0.05),
+                blurRadius: 10,
+                offset: const Offset(0, 4),
+              ),
+            ],
+          ),
           child: Padding(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(18),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Expanded(
-                      child: Text('${voy.villeSource} → ${voy.villeDestination}', style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 16)),
+                      child: Text(
+                        '${voy.villeSource} → ${voy.villeDestination}', 
+                        style: TextStyle(
+                          fontWeight: FontWeight.w800, 
+                          fontSize: 16,
+                          color: cs.onSurface,
+                        ),
+                      ),
                     ),
                     const SizedBox(width: 8),
-                    Text('${voy.prix.toInt()} FCFA', style: TextStyle(fontWeight: FontWeight.bold, color: widget.agence.color, fontSize: 16)),
-                  ],
-                ),
-                const SizedBox(height: 12),
-                Row(
-                  children: [
-                    Icon(Icons.access_time, size: 18, color: cs.onSurface.withOpacity(0.6)),
-                    const SizedBox(width: 6),
-                    Expanded(
-                      child: Text('${voy.dateStr} à ${voy.timeStr}', style: TextStyle(color: cs.onSurface.withOpacity(0.8), fontWeight: FontWeight.w500)),
+                    Text(
+                      '${voy.prix.toInt()} FCFA', 
+                      style: TextStyle(
+                        fontWeight: FontWeight.w900, 
+                        color: widget.agence.color, 
+                        fontSize: 16,
+                      ),
                     ),
                   ],
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 14),
+                Row(
+                  children: [
+                    Icon(Icons.calendar_today_outlined, size: 15, color: cs.onSurface.withOpacity(0.5)),
+                    const SizedBox(width: 8),
+                    Text(
+                      voy.dateStr, 
+                      style: TextStyle(
+                        color: cs.onSurface.withOpacity(0.7), 
+                        fontWeight: FontWeight.w600,
+                        fontSize: 13,
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    Icon(Icons.access_time_outlined, size: 15, color: cs.onSurface.withOpacity(0.5)),
+                    const SizedBox(width: 8),
+                    Text(
+                      voy.timeStr, 
+                      style: TextStyle(
+                        color: cs.onSurface.withOpacity(0.7), 
+                        fontWeight: FontWeight.w600,
+                        fontSize: 13,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 18),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Expanded(
-                      child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                          decoration: BoxDecoration(
-                            color: Colors.orange.withOpacity(0.1),
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: Text('Sièges disponibles', 
-                            style: const TextStyle(color: Colors.deepOrange, fontWeight: FontWeight.bold, fontSize: 12),
-                            overflow: TextOverflow.ellipsis,
-                          ),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                      decoration: BoxDecoration(
+                        color: available > 0 
+                            ? (isDark ? Colors.green.withOpacity(0.15) : Colors.green.withOpacity(0.1))
+                            : (isDark ? Colors.red.withOpacity(0.15) : Colors.red.withOpacity(0.1)),
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(
+                          color: available > 0 
+                              ? (isDark ? Colors.green.withOpacity(0.3) : Colors.green.withOpacity(0.2))
+                              : (isDark ? Colors.red.withOpacity(0.3) : Colors.red.withOpacity(0.2)),
                         ),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            available > 0 ? Icons.event_seat : Icons.block,
+                            size: 16,
+                            color: available > 0 
+                                ? (isDark ? Colors.green[300] : Colors.green[800])
+                                : (isDark ? Colors.red[300] : Colors.red[800]),
+                          ),
+                          const SizedBox(width: 6),
+                          Text(
+                            available > 0
+                                ? '$available places dispo'
+                                : 'Voyage Complet', 
+                            style: TextStyle(
+                              color: available > 0 
+                                  ? (isDark ? Colors.green[300] : Colors.green[800])
+                                  : (isDark ? Colors.red[300] : Colors.red[800]), 
+                              fontWeight: FontWeight.bold, 
+                              fontSize: 12,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                     const SizedBox(width: 8),
@@ -255,12 +410,18 @@ class _AgenceDetailsPageState extends State<AgenceDetailsPage> with SingleTicker
                         minimumSize: Size.zero, 
                         backgroundColor: widget.agence.color,
                         foregroundColor: Colors.white,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12)
+                        elevation: 0,
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                        padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 12),
                       ),
-                      onPressed: () => context.pushNamed(AppRouter.booking, extra: voy),
-                      child: const Text('Réserver', style: TextStyle(fontWeight: FontWeight.bold)),
-                    )
+                      onPressed: available > 0
+                          ? () => context.pushNamed(AppRouter.booking, extra: voy)
+                          : null, 
+                      child: Text(
+                        available > 0 ? 'Réserver' : 'Complet', 
+                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+                      ),
+                    ),
                   ],
                 ),
               ],
@@ -276,33 +437,67 @@ class _AgenceDetailsPageState extends State<AgenceDetailsPage> with SingleTicker
     if (trajets.isEmpty) {
       return _buildEmptyState(cs, 'Aucun trajet disponible', Icons.alt_route);
     }
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    
     return ListView.builder(
       padding: const EdgeInsets.all(16),
       itemCount: trajets.length,
       itemBuilder: (context, index) {
         final traj = trajets[index];
-        return Card(
+        return Container(
           margin: const EdgeInsets.only(bottom: 12),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-          elevation: 2,
-          shadowColor: cs.shadow.withOpacity(0.1),
+          decoration: BoxDecoration(
+            color: isDark ? cs.surfaceContainerHigh : Colors.white,
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(
+              color: isDark ? Colors.white.withOpacity(0.05) : Colors.black.withOpacity(0.05),
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: isDark ? Colors.black26 : cs.shadow.withOpacity(0.04),
+                blurRadius: 10,
+                offset: const Offset(0, 4),
+              ),
+            ],
+          ),
           child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8),
+            padding: const EdgeInsets.symmetric(vertical: 4),
             child: ListTile(
+              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
               leading: Container(
-                padding: const EdgeInsets.all(10),
+                padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: widget.agence.color.withOpacity(0.1),
+                  color: widget.agence.color.withOpacity(0.15),
                   shape: BoxShape.circle,
                 ),
-                child: Icon(Icons.route, color: widget.agence.color),
+                child: Icon(Icons.alt_route_outlined, color: widget.agence.color, size: 22),
               ),
-              title: Text('${traj['depart']} ↔ ${traj['arrivee']}', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
-              subtitle: const Padding(
-                padding: EdgeInsets.only(top: 4.0),
-                child: Text('Réseau GEV'),
+              title: Text(
+                '${traj['depart']} ↔ ${traj['arrivee']}', 
+                style: TextStyle(
+                  fontWeight: FontWeight.bold, 
+                  fontSize: 15,
+                  color: cs.onSurface,
+                ),
               ),
-              trailing: Text(traj['prix']!, style: TextStyle(fontWeight: FontWeight.w900, color: widget.agence.color, fontSize: 15)),
+              subtitle: Padding(
+                padding: const EdgeInsets.only(top: 4.0),
+                child: Text(
+                  'Réseau GEV',
+                  style: TextStyle(
+                    color: cs.onSurface.withOpacity(0.5),
+                    fontSize: 13,
+                  ),
+                ),
+              ),
+              trailing: Text(
+                traj['prix']!, 
+                style: TextStyle(
+                  fontWeight: FontWeight.w900, 
+                  color: widget.agence.color, 
+                  fontSize: 15,
+                ),
+              ),
             ),
           ),
         );

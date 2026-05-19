@@ -108,32 +108,6 @@ class _SettingPageState extends ConsumerState<SettingPage> {
                   // 🔐 Sécurité & Données
                   _buildSectionTitle(cs, 'Sécurité'),
                   _buildSettingsCard(cs, isDark, [
-                    // _buildSettingsTile(
-                    //   cs, 
-                    //   isDark, 
-                    //   userAsync.value?.statut == "approuve" 
-                    //       ? Icons.check_circle_rounded 
-                    //       : Icons.verified_user_rounded, 
-                    //   'Vérification KWC ${userAsync.value?.statut == "approuve" ? " ✅" : ""}', 
-                    //   userAsync.value?.statut == "approuve" 
-                    //       ? 'Votre compte est vérifié' 
-                    //       : 'Soumettre ma CNI', 
-                    //   userAsync.value?.statut == "approuve" ? Colors.green : Colors.teal,
-                    //   onTap: () {
-                    //     if (userAsync.value?.statut == "approuve") {
-                    //       ScaffoldMessenger.of(context).showSnackBar(
-                    //         const SnackBar(
-                    //           content: Text('Votre compte est déjà vérifié ! 🚀'),
-                    //           backgroundColor: Colors.green,
-                    //           behavior: SnackBarBehavior.floating,
-                    //         ),
-                    //       );
-                    //     } else {
-                    //       context.pushNamed(AppRouter.kwc);
-                    //     }
-                    //   },
-                    // ),
-                    _buildSettingsTile(cs, isDark, Icons.lock_person_rounded, 'Confidentialité', 'Mot de passe et Accès', Colors.cyan),
                     _buildSettingsTile(
                       cs, 
                       isDark, 

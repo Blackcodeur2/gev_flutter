@@ -49,19 +49,8 @@ class Agence {
       logoUrl: json['logo_url'],
       stations: stationsJson,
       allVoyages: voyages,
-      color: _getRandomColor(json['id'] ?? 0), 
+      color: const Color(0xFFE53E3E), // Couleur rouge unifiée pour toutes les agences
       icon: Icons.directions_bus_filled_rounded,
     );
-  }
-
-  static Color _getRandomColor(int id) {
-    final colors = [
-      const Color(0xFF2E3192),
-      const Color(0xFF1B1464),
-      const Color(0xFF006837),
-      const Color(0xFFC1272D),
-      const Color(0xFF8B5CF6),
-    ];
-    return colors[id % colors.length];
   }
 }

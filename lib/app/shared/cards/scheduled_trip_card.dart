@@ -1,6 +1,4 @@
 import 'package:camer_trip/app/models/voyage_model.dart';
-import 'package:camer_trip/app/services/providers.dart';
-import 'package:camer_trip/app/shared/others/kwc_restriction_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -19,7 +17,6 @@ class ScheduledTripCard extends ConsumerWidget {
     final cs = theme.colorScheme;
     final isDark = theme.brightness == Brightness.dark;
     
-    final userAsync = ref.watch(currentUserProvider);
     final timeFormat = DateFormat('HH:mm');
     final dateFormat = DateFormat('dd MMM');
 
@@ -41,18 +38,11 @@ class ScheduledTripCard extends ConsumerWidget {
         child: InkWell(
           borderRadius: BorderRadius.circular(20),
           onTap: () {
-            userAsync.whenData((user) {
-              // Restriction KWC désactivée temporairement
-              // if (user?.statut == "en attente") {
-              //   KwcRestrictionDialog.show(context);
-              // } else {
-                if (onTap != null) {
-                  onTap!();
-                } else {
-                  context.pushNamed(AppRouter.booking, extra: voyage);
-                }
-              // }
-            });
+            if (onTap != null) {
+              onTap!();
+            } else {
+              context.pushNamed(AppRouter.booking, extra: voyage);
+            }
           },
           child: Padding(
             padding: const EdgeInsets.all(16),
