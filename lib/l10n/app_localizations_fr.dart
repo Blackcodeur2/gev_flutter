@@ -758,4 +758,228 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get confirmPayment => 'CONFIRMER LE PAIEMENT';
+
+  @override
+  String get virtualTicketTitle => 'Billet Virtuel';
+
+  @override
+  String get finalizePaymentTitle => 'Finaliser le Paiement';
+
+  @override
+  String get finalizePaymentSubtitle =>
+      'Complétez votre paiement pour sécuriser définitivement votre place.';
+
+  @override
+  String get paymentPhoneNumber => 'Numéro de téléphone';
+
+  @override
+  String get confirmAndPay => 'CONFIRMER & PAYER';
+
+  @override
+  String ticketSeat(String seat) {
+    return 'Siège #$seat';
+  }
+
+  @override
+  String get ticketDate => 'Date';
+
+  @override
+  String get ticketTime => 'Heure';
+
+  @override
+  String get ticketSeatLabel => 'Siège';
+
+  @override
+  String get ticketPassenger => 'Passager';
+
+  @override
+  String get ticketPassengerValue => 'Client (Moi)';
+
+  @override
+  String get ticketPricePaid => 'Prix payé';
+
+  @override
+  String ticketReference(int id) {
+    return 'Référence: $id';
+  }
+
+  @override
+  String get payThisTicket => 'PAYER CE BILLET';
+
+  @override
+  String get downloadPdf => 'Télécharger le Ticket PDF';
+
+  @override
+  String get downloading => 'Téléchargement...';
+
+  @override
+  String get rebookTrip => 'Réserver ce trajet à nouveau';
+
+  @override
+  String get ticketPdfReady => 'Ticket PDF prêt ! 📄';
+
+  @override
+  String downloadError(String error) {
+    return 'Erreur lors du téléchargement : $error';
+  }
+
+  @override
+  String get paymentDone => 'Paiement Effectué !';
+
+  @override
+  String get paymentDoneMessage =>
+      'Votre place est désormais validée. Le QR code a été activé sur votre billet.';
+
+  @override
+  String get paymentRequired => 'Paiement requis pour générer le QR Code.';
+
+  @override
+  String get reservationExpired =>
+      'Réservation expirée car le voyage a débuté, s\'est terminé ou a été annulé.';
+
+  @override
+  String get voyageCancelled =>
+      'Le voyage a été annulé. Ce billet ne peut plus être payé.';
+
+  @override
+  String get voyageStarted =>
+      'Le voyage a déjà débuté ou est terminé. Ce billet ne peut plus être payé.';
+
+  @override
+  String get paymentTimeout2 => 'Délai de paiement dépassé.';
+
+  @override
+  String ussdPromptMessage(String phone) {
+    return 'Un prompt USSD de paiement a été initié vers le numéro :\n$phone';
+  }
+
+  @override
+  String get editProfileTitle => 'Modifier le profil';
+
+  @override
+  String get profileUpdatedSuccess => 'Profil mis à jour avec succès';
+
+  @override
+  String get profileUpdatedError => 'Échec de la mise à jour';
+
+  @override
+  String get editProfileNote =>
+      'Note : Certaines informations comme votre matricule ou votre rôle ne peuvent être modifiées manuellement.';
+
+  @override
+  String get fieldRequired => 'Ce champ est requis';
+
+  @override
+  String get dobFormatHint => 'AAAA-MM-JJ';
+
+  @override
+  String get faqTitle => 'Questions Fréquentes 🤔';
+
+  @override
+  String get faqSubtitle => 'Tout ce qu\'il faut savoir sur CamerTrip.';
+
+  @override
+  String get contactSupport => 'Contacter le Support';
+
+  @override
+  String get contactSupportDesc =>
+      'Notre service client est disponible 24h/24 et 7j/7. Cliquez sur un moyen de contact pour le copier.';
+
+  @override
+  String get directCall => 'Appel Direct';
+
+  @override
+  String get whatsappSupport => 'WhatsApp Support';
+
+  @override
+  String get emailAddressLabel => 'Adresse E-mail';
+
+  @override
+  String get aiAssistantLabel => 'Assistant IA';
+
+  @override
+  String get aiAssistantDesc => 'Disponible via l\'onglet Assistant';
+
+  @override
+  String get closeBtn => 'FERMER';
+
+  @override
+  String copiedToClipboard(String label) {
+    return '$label copié dans le presse-papiers !';
+  }
+
+  @override
+  String get stillNeedHelp => 'Encore besoin d\'aide ?';
+
+  @override
+  String get supportAvailabilityDesc =>
+      'Notre équipe de support client est disponible 24/7 pour vous assister à tout moment.';
+
+  @override
+  String get contactSupportBtn => 'CONTACTER LE SUPPORT';
+
+  @override
+  String get faqQ1 => 'Comment effectuer une réservation ?';
+
+  @override
+  String get faqA1 =>
+      'Recherchez un trajet sur la page d\'accueil, sélectionnez le voyage qui vous convient, choisissez votre siège et procédez au paiement via Orange Money ou MTN Mobile Money.';
+
+  @override
+  String get faqQ2 => 'Quels sont les moyens de paiement acceptés ?';
+
+  @override
+  String get faqA2 =>
+      'Nous acceptons Orange Money (OM) et MTN Mobile Money (MoMo). Les paiements sont entièrement sécurisés, cryptés et traités instantanément.';
+
+  @override
+  String get faqQ3 => 'Pas de code USSD reçu lors du paiement ?';
+
+  @override
+  String get faqA3 =>
+      'Si la fenêtre de confirmation USSD ne s\'affiche pas automatiquement, pas d\'inquiétude ! Composez manuellement le code de secours de votre opérateur (*126# pour MTN ou #150*4*4# pour Orange) afin d\'autoriser la transaction dans les minutes qui suivent.';
+
+  @override
+  String get faqQ4 => 'Combien de temps avant le départ à la gare ?';
+
+  @override
+  String get faqA4 =>
+      'Nous vous conseillons vivement de vous présenter à la gare d\'embarquement au moins 45 minutes avant l\'heure de départ afin de procéder à l\'enregistrement des bagages et à la validation de votre billet numérique.';
+
+  @override
+  String get faqQ5 => 'Comment récupérer mon ticket après l\'achat ?';
+
+  @override
+  String get faqA5 =>
+      'Votre ticket numérique est généré instantanément après validation du paiement. Vous le retrouverez dans l\'onglet \"Billets\" sous forme de QR Code que vous présenterez au guichet d\'embarquement.';
+
+  @override
+  String get faqQ6 => 'Puis-je annuler ou reporter un voyage ?';
+
+  @override
+  String get faqA6 =>
+      'Vous pouvez annuler ou demander un report jusqu\'à 24 heures avant le départ depuis les détails de votre réservation dans l\'onglet \"Billets\". Des frais d\'annulation minimes peuvent être retenus par l\'agence.';
+
+  @override
+  String appVersionString(String version) {
+    return 'Version $version';
+  }
+
+  @override
+  String get ourMissionTitle => 'Notre Mission 🚀';
+
+  @override
+  String get ourMissionContent =>
+      'Simplifier la vie des voyageurs au Cameroun en offrant une plateforme de réservation de bus intuitive, sécurisée et rapide. Plus besoin de faire la queue pendant des heures !';
+
+  @override
+  String get ourVisionTitle => 'Notre Vision 🌍';
+
+  @override
+  String get ourVisionContent =>
+      'Devenir le leader de la mobilité digitale au Cameroun et en Afrique centrale, en connectant toutes les agences de transport à travers une interface unique et premium.';
+
+  @override
+  String get copyrightText =>
+      '©2026 CamerTrip - Tous droits réservés\nFait avec ❤️ au Cameroun';
 }

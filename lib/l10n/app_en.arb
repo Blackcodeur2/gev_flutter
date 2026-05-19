@@ -409,5 +409,56 @@
     "placeholders": {
       "phone": { "type": "String" }
     }
-  }
+  },
+  "statusValidated": "Validated",
+  "statusCancelled": "Cancelled",
+  "statusPending": "Pending",
+  "editProfileTitle": "Edit Profile",
+  "profileUpdatedSuccess": "Profile updated successfully",
+  "profileUpdatedError": "Failed to update profile",
+  "editProfileNote": "Note: Some information such as your registration number or your role cannot be modified manually.",
+  "fieldRequired": "This field is required",
+  "dobFormatHint": "YYYY-MM-DD",
+  "faqTitle": "Frequently Asked Questions 🤔",
+  "faqSubtitle": "Everything you need to know about CamerTrip.",
+  "contactSupport": "Contact Support",
+  "contactSupportDesc": "Our customer service is available 24/7. Click on a contact method to copy it.",
+  "directCall": "Direct Call",
+  "whatsappSupport": "WhatsApp Support",
+  "emailAddressLabel": "Email Address",
+  "aiAssistantLabel": "AI Assistant",
+  "aiAssistantDesc": "Available via the Assistant tab",
+  "closeBtn": "CLOSE",
+  "copiedToClipboard": "{label} copied to clipboard!",
+  "@copiedToClipboard": {
+    "placeholders": {
+      "label": { "type": "String" }
+    }
+  },
+  "stillNeedHelp": "Still need help?",
+  "supportAvailabilityDesc": "Our customer support team is available 24/7 to assist you at any time.",
+  "contactSupportBtn": "CONTACT SUPPORT",
+  "faqQ1": "How do I make a booking?",
+  "faqA1": "Search for a trip on the home page, select the journey that suits you, choose your seat and proceed with payment via Orange Money or MTN Mobile Money.",
+  "faqQ2": "What payment methods are accepted?",
+  "faqA2": "We accept Orange Money (OM) and MTN Mobile Money (MoMo). Payments are fully secure, encrypted, and processed instantly.",
+  "faqQ3": "No USSD code received during payment?",
+  "faqA3": "If the USSD confirmation prompt does not display automatically, don't worry! Manually dial your operator's backup code (*126# for MTN or #150*4*4# for Orange) to authorize the transaction within a few minutes.",
+  "faqQ4": "How long before departure should I arrive at the station?",
+  "faqA4": "We strongly advise arriving at the boarding station at least 45 minutes before departure to check-in baggage and validate your digital ticket.",
+  "faqQ5": "How do I get my ticket after purchase?",
+  "faqA5": "Your digital ticket is generated instantly after payment validation. You can find it under the \"Tickets\" tab in the form of a QR Code to present at the boarding gate.",
+  "faqQ6": "Can I cancel or reschedule a trip?",
+  "faqA6": "You can cancel or request a reschedule up to 24 hours before departure from your reservation details under the \"Tickets\" tab. A small cancellation fee may be charged by the agency.",
+  "appVersionString": "Version {version}",
+  "@appVersionString": {
+    "placeholders": {
+      "version": { "type": "String" }
+    }
+  },
+  "ourMissionTitle": "Our Mission 🚀",
+  "ourMissionContent": "Simplify the life of travelers in Cameroon by providing an intuitive, secure, and fast bus booking platform. No more queuing for hours!",
+  "ourVisionTitle": "Our Vision 🌍",
+  "ourVisionContent": "Become the leader in digital mobility in Cameroon and Central Africa by connecting all transport agencies through a unique and premium interface.",
+  "copyrightText": "©2026 CamerTrip - All rights reserved\nMade with ❤️ in Cameroon"
 }

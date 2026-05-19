@@ -308,7 +308,7 @@ class _PaymentPageState extends ConsumerState<PaymentPage> {
                           ),
                           const SizedBox(height: 12),
                           Text(
-                            'Un code USSD de paiement a été initié vers le numéro :\n${_phoneController.text.trim()}',
+                            AppLocalizations.of(context)?.paymentUssdMessage(_phoneController.text.trim()) ?? 'Un code USSD de paiement a été initié vers le numéro :\n${_phoneController.text.trim()}',
                             textAlign: TextAlign.center,
                             style: TextStyle(color: Colors.grey[600], fontSize: 14),
                           ),

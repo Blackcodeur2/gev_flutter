@@ -109,9 +109,9 @@ class _ReservationDetailsPageState extends ConsumerState<ReservationDetailsPage>
                       ),
                     ),
                     const SizedBox(height: 24),
-                    const Text(
-                      'Finaliser le Paiement',
-                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                    Text(
+                      AppLocalizations.of(context)?.finalizePaymentTitle ?? 'Finaliser le Paiement',
+                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                     ),
                     const SizedBox(height: 8),
                     Text(
@@ -135,7 +135,10 @@ class _ReservationDetailsPageState extends ConsumerState<ReservationDetailsPage>
                             children: [
                               Text(widget.reservation.agenceName ?? 'Agence', style: const TextStyle(fontWeight: FontWeight.bold)),
                               const SizedBox(height: 4),
-                              Text('Siège #${widget.reservation.place}', style: TextStyle(color: cs.primary, fontSize: 13, fontWeight: FontWeight.w600)),
+                              Text(
+                                AppLocalizations.of(context)?.ticketSeat(widget.reservation.place) ?? 'Siège #${widget.reservation.place}',
+                                style: TextStyle(color: cs.primary, fontSize: 13, fontWeight: FontWeight.w600),
+                              ),
                             ],
                           ),
                           Text(
@@ -695,7 +698,9 @@ class _ReservationDetailsPageState extends ConsumerState<ReservationDetailsPage>
                                 )
                               : const Icon(Icons.download),
                           label: Text(
-                            isDownloading ? 'Téléchargement...' : 'Télécharger le Ticket PDF',
+                            isDownloading
+                                ? (AppLocalizations.of(context)?.downloading ?? 'Téléchargement...')
+                                : (AppLocalizations.of(context)?.downloadPdf ?? 'Télécharger le Ticket PDF'),
                             style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
                           ),
                         ),
@@ -710,7 +715,7 @@ class _ReservationDetailsPageState extends ConsumerState<ReservationDetailsPage>
                           ),
                           onPressed: () {},
                           icon: const Icon(Icons.replay),
-                          label: const Text('Réserver ce trajet à nouveau'),
+                          label: Text(AppLocalizations.of(context)?.rebookTrip ?? 'Réserver ce trajet à nouveau'),
                         ),
                       ),
                     ]
@@ -738,14 +743,14 @@ class _ReservationDetailsPageState extends ConsumerState<ReservationDetailsPage>
                           child: CircularProgressIndicator(strokeWidth: 4.5),
                         ),
                         const SizedBox(height: 24),
-                        const Text(
-                          'Validation du Paiement',
-                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                        Text(
+                          AppLocalizations.of(context)?.paymentValidationTitle ?? 'Validation du Paiement',
+                          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                           textAlign: TextAlign.center,
                         ),
                         const SizedBox(height: 12),
                         Text(
-                          'Un prompt USSD de paiement a été initié vers le numéro :\n${_phoneController.text.trim()}',
+                          AppLocalizations.of(context)?.ussdPromptMessage(_phoneController.text.trim()) ?? 'Un prompt USSD de paiement a été initié vers le numéro :\n${_phoneController.text.trim()}',
                           textAlign: TextAlign.center,
                           style: TextStyle(color: Colors.grey[600], fontSize: 14),
                         ),
@@ -761,7 +766,7 @@ class _ReservationDetailsPageState extends ConsumerState<ReservationDetailsPage>
                             child: Column(
                               children: [
                                 Text(
-                                  'Code USSD : $ussdCode',
+                                  AppLocalizations.of(context)?.paymentUssdCode(ussdCode!) ?? 'Code USSD : $ussdCode',
                                   style: const TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 18,
@@ -771,7 +776,7 @@ class _ReservationDetailsPageState extends ConsumerState<ReservationDetailsPage>
                                 ),
                                 const SizedBox(height: 6),
                                 Text(
-                                  'Composez ce code si le prompt de validation ne s\'affiche pas automatiquement.',
+                                  AppLocalizations.of(context)?.paymentUssdTip ?? 'Composez ce code si le prompt de validation ne s\'affiche pas automatiquement.',
                                   style: TextStyle(
                                     fontSize: 12,
                                     color: isDark ? Colors.grey[300] : Colors.grey[800],
@@ -784,7 +789,7 @@ class _ReservationDetailsPageState extends ConsumerState<ReservationDetailsPage>
                         ],
                         const SizedBox(height: 12),
                         Text(
-                          'Saisissez votre code PIN sur votre téléphone pour autoriser le débit de ${widget.reservation.prix.toInt()} FCFA.',
+                          AppLocalizations.of(context)?.paymentPinPrompt(widget.reservation.prix.toInt()) ?? 'Saisissez votre code PIN sur votre téléphone pour autoriser le débit de ${widget.reservation.prix.toInt()} FCFA.',
                           textAlign: TextAlign.center,
                           style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
                         ),
@@ -802,7 +807,7 @@ class _ReservationDetailsPageState extends ConsumerState<ReservationDetailsPage>
                               const SizedBox(width: 8),
                               Flexible(
                                 child: Text(
-                                  'Vérification du statut du paiement...',
+                                  AppLocalizations.of(context)?.paymentCheckingStatus ?? 'Vérification du statut du paiement...',
                                   style: TextStyle(color: cs.primary, fontWeight: FontWeight.bold, fontSize: 13),
                                   overflow: TextOverflow.ellipsis,
                                 ),
@@ -847,8 +852,8 @@ class _ReservationDetailsPageState extends ConsumerState<ReservationDetailsPage>
       
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Ticket PDF prêt ! 📄'),
+          SnackBar(
+            content: Text(AppLocalizations.of(context)?.ticketPdfReady ?? 'Ticket PDF prêt ! 📄'),
             backgroundColor: Colors.green,
             behavior: SnackBarBehavior.floating,
           ),
@@ -858,7 +863,7 @@ class _ReservationDetailsPageState extends ConsumerState<ReservationDetailsPage>
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Erreur lors du téléchargement : ${e.toString()}'),
+            content: Text(AppLocalizations.of(context)?.downloadError(e.toString()) ?? 'Erreur lors du téléchargement : ${e.toString()}'),
             backgroundColor: Colors.red,
             behavior: SnackBarBehavior.floating,
           ),

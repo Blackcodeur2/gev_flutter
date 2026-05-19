@@ -210,7 +210,7 @@ class _BookingPageState extends ConsumerState<BookingPage> {
                       ),
                       const SizedBox(height: 2),
                       Text(
-                        'Porte',
+                        AppLocalizations.of(context)?.door ?? 'Porte',
                         style: TextStyle(
                           fontSize: 8,
                           fontWeight: FontWeight.bold,

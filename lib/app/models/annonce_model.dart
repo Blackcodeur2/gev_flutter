@@ -21,6 +21,26 @@ class AnnonceModel {
     this.isPromo = false,
     this.actionLabel,
   });
+
+  factory AnnonceModel.fromJson(Map<String, dynamic> json) {
+    Map<String, dynamic>? stationJson = json['station'];
+    Map<String, dynamic>? agenceJson = stationJson != null ? stationJson['agence'] : null;
+    
+    Agence agence = agenceJson != null 
+        ? Agence.fromJson(agenceJson) 
+        : const Agence(id: 0, name: 'Agence', color: Colors.blue, icon: Icons.campaign);
+
+    return AnnonceModel(
+      id: json['id']?.toString() ?? '',
+      agence: agence,
+      content: json['contenu_text'] ?? '',
+      imageUrl: json['image_url'],
+      date: json['created_at'] != null ? DateTime.parse(json['created_at']) : DateTime.now(),
+      likes: json['likes'] ?? 0,
+      isPromo: json['is_promo'] == true || json['is_promo'] == 1,
+      actionLabel: json['is_promo'] == true || json['is_promo'] == 1 ? 'Réserver Promo' : null,
+    );
+  }
 }
 
 // 📌 Données simulées

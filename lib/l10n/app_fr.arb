@@ -411,5 +411,56 @@
     "placeholders": {
       "phone": { "type": "String" }
     }
-  }
+  },
+  "statusValidated": "Validée",
+  "statusCancelled": "Annulée",
+  "statusPending": "En attente",
+  "editProfileTitle": "Modifier le profil",
+  "profileUpdatedSuccess": "Profil mis à jour avec succès",
+  "profileUpdatedError": "Échec de la mise à jour",
+  "editProfileNote": "Note : Certaines informations comme votre matricule ou votre rôle ne peuvent être modifiées manuellement.",
+  "fieldRequired": "Ce champ est requis",
+  "dobFormatHint": "AAAA-MM-JJ",
+  "faqTitle": "Questions Fréquentes 🤔",
+  "faqSubtitle": "Tout ce qu'il faut savoir sur CamerTrip.",
+  "contactSupport": "Contacter le Support",
+  "contactSupportDesc": "Notre service client est disponible 24h/24 et 7j/7. Cliquez sur un moyen de contact pour le copier.",
+  "directCall": "Appel Direct",
+  "whatsappSupport": "WhatsApp Support",
+  "emailAddressLabel": "Adresse E-mail",
+  "aiAssistantLabel": "Assistant IA",
+  "aiAssistantDesc": "Disponible via l'onglet Assistant",
+  "closeBtn": "FERMER",
+  "copiedToClipboard": "{label} copié dans le presse-papiers !",
+  "@copiedToClipboard": {
+    "placeholders": {
+      "label": { "type": "String" }
+    }
+  },
+  "stillNeedHelp": "Encore besoin d'aide ?",
+  "supportAvailabilityDesc": "Notre équipe de support client est disponible 24/7 pour vous assister à tout moment.",
+  "contactSupportBtn": "CONTACTER LE SUPPORT",
+  "faqQ1": "Comment effectuer une réservation ?",
+  "faqA1": "Recherchez un trajet sur la page d'accueil, sélectionnez le voyage qui vous convient, choisissez votre siège et procédez au paiement via Orange Money ou MTN Mobile Money.",
+  "faqQ2": "Quels sont les moyens de paiement acceptés ?",
+  "faqA2": "Nous acceptons Orange Money (OM) et MTN Mobile Money (MoMo). Les paiements sont entièrement sécurisés, cryptés et traités instantanément.",
+  "faqQ3": "Pas de code USSD reçu lors du paiement ?",
+  "faqA3": "Si la fenêtre de confirmation USSD ne s'affiche pas automatiquement, pas d'inquiétude ! Composez manuellement le code de secours de votre opérateur (*126# pour MTN ou #150*4*4# pour Orange) afin d'autoriser la transaction dans les minutes qui suivent.",
+  "faqQ4": "Combien de temps avant le départ à la gare ?",
+  "faqA4": "Nous vous conseillons vivement de vous présenter à la gare d'embarquement au moins 45 minutes avant l'heure de départ afin de procéder à l'enregistrement des bagages et à la validation de votre billet numérique.",
+  "faqQ5": "Comment récupérer mon ticket après l'achat ?",
+  "faqA5": "Votre ticket numérique est généré instantanément après validation du paiement. Vous le retrouverez dans l'onglet \"Billets\" sous forme de QR Code que vous présenterez au guichet d'embarquement.",
+  "faqQ6": "Puis-je annuler ou reporter un voyage ?",
+  "faqA6": "Vous pouvez annuler ou demander un report jusqu'à 24 heures avant le départ depuis les détails de votre réservation dans l'onglet \"Billets\". Des frais d'annulation minimes peuvent être retenus par l'agence.",
+  "appVersionString": "Version {version}",
+  "@appVersionString": {
+    "placeholders": {
+      "version": { "type": "String" }
+    }
+  },
+  "ourMissionTitle": "Notre Mission 🚀",
+  "ourMissionContent": "Simplifier la vie des voyageurs au Cameroun en offrant une plateforme de réservation de bus intuitive, sécurisée et rapide. Plus besoin de faire la queue pendant des heures !",
+  "ourVisionTitle": "Notre Vision 🌍",
+  "ourVisionContent": "Devenir le leader de la mobilité digitale au Cameroun et en Afrique centrale, en connectant toutes les agences de transport à travers une interface unique et premium.",
+  "copyrightText": "©2026 CamerTrip - Tous droits réservés\nFait avec ❤️ au Cameroun"
 }

@@ -1483,6 +1483,396 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'CONFIRM PAYMENT'**
   String get confirmPayment;
+
+  /// No description provided for @virtualTicketTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Virtual Ticket'**
+  String get virtualTicketTitle;
+
+  /// No description provided for @finalizePaymentTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Finalize Payment'**
+  String get finalizePaymentTitle;
+
+  /// No description provided for @finalizePaymentSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete your payment to permanently secure your seat.'**
+  String get finalizePaymentSubtitle;
+
+  /// No description provided for @paymentPhoneNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone number'**
+  String get paymentPhoneNumber;
+
+  /// No description provided for @confirmAndPay.
+  ///
+  /// In en, this message translates to:
+  /// **'CONFIRM & PAY'**
+  String get confirmAndPay;
+
+  /// No description provided for @ticketSeat.
+  ///
+  /// In en, this message translates to:
+  /// **'Seat #{seat}'**
+  String ticketSeat(String seat);
+
+  /// No description provided for @ticketDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Date'**
+  String get ticketDate;
+
+  /// No description provided for @ticketTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Time'**
+  String get ticketTime;
+
+  /// No description provided for @ticketSeatLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Seat'**
+  String get ticketSeatLabel;
+
+  /// No description provided for @ticketPassenger.
+  ///
+  /// In en, this message translates to:
+  /// **'Passenger'**
+  String get ticketPassenger;
+
+  /// No description provided for @ticketPassengerValue.
+  ///
+  /// In en, this message translates to:
+  /// **'Client (Me)'**
+  String get ticketPassengerValue;
+
+  /// No description provided for @ticketPricePaid.
+  ///
+  /// In en, this message translates to:
+  /// **'Price paid'**
+  String get ticketPricePaid;
+
+  /// No description provided for @ticketReference.
+  ///
+  /// In en, this message translates to:
+  /// **'Reference: {id}'**
+  String ticketReference(int id);
+
+  /// No description provided for @payThisTicket.
+  ///
+  /// In en, this message translates to:
+  /// **'PAY THIS TICKET'**
+  String get payThisTicket;
+
+  /// No description provided for @downloadPdf.
+  ///
+  /// In en, this message translates to:
+  /// **'Download PDF Ticket'**
+  String get downloadPdf;
+
+  /// No description provided for @downloading.
+  ///
+  /// In en, this message translates to:
+  /// **'Downloading...'**
+  String get downloading;
+
+  /// No description provided for @rebookTrip.
+  ///
+  /// In en, this message translates to:
+  /// **'Book this trip again'**
+  String get rebookTrip;
+
+  /// No description provided for @ticketPdfReady.
+  ///
+  /// In en, this message translates to:
+  /// **'PDF ticket ready! 📄'**
+  String get ticketPdfReady;
+
+  /// No description provided for @downloadError.
+  ///
+  /// In en, this message translates to:
+  /// **'Download error: {error}'**
+  String downloadError(String error);
+
+  /// No description provided for @paymentDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment Complete!'**
+  String get paymentDone;
+
+  /// No description provided for @paymentDoneMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Your seat is now validated. The QR code has been activated on your ticket.'**
+  String get paymentDoneMessage;
+
+  /// No description provided for @paymentRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment required to generate the QR Code.'**
+  String get paymentRequired;
+
+  /// No description provided for @reservationExpired.
+  ///
+  /// In en, this message translates to:
+  /// **'Reservation expired because the trip has started, ended or was cancelled.'**
+  String get reservationExpired;
+
+  /// No description provided for @voyageCancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'The trip has been cancelled. This ticket can no longer be paid.'**
+  String get voyageCancelled;
+
+  /// No description provided for @voyageStarted.
+  ///
+  /// In en, this message translates to:
+  /// **'The trip has already started or ended. This ticket can no longer be paid.'**
+  String get voyageStarted;
+
+  /// No description provided for @paymentTimeout2.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment timed out.'**
+  String get paymentTimeout2;
+
+  /// No description provided for @ussdPromptMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'A USSD payment prompt has been sent to:\n{phone}'**
+  String ussdPromptMessage(String phone);
+
+  /// No description provided for @editProfileTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Profile'**
+  String get editProfileTitle;
+
+  /// No description provided for @profileUpdatedSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile updated successfully'**
+  String get profileUpdatedSuccess;
+
+  /// No description provided for @profileUpdatedError.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to update profile'**
+  String get profileUpdatedError;
+
+  /// No description provided for @editProfileNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Note: Some information such as your registration number or your role cannot be modified manually.'**
+  String get editProfileNote;
+
+  /// No description provided for @fieldRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'This field is required'**
+  String get fieldRequired;
+
+  /// No description provided for @dobFormatHint.
+  ///
+  /// In en, this message translates to:
+  /// **'YYYY-MM-DD'**
+  String get dobFormatHint;
+
+  /// No description provided for @faqTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Frequently Asked Questions 🤔'**
+  String get faqTitle;
+
+  /// No description provided for @faqSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Everything you need to know about CamerTrip.'**
+  String get faqSubtitle;
+
+  /// No description provided for @contactSupport.
+  ///
+  /// In en, this message translates to:
+  /// **'Contact Support'**
+  String get contactSupport;
+
+  /// No description provided for @contactSupportDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Our customer service is available 24/7. Click on a contact method to copy it.'**
+  String get contactSupportDesc;
+
+  /// No description provided for @directCall.
+  ///
+  /// In en, this message translates to:
+  /// **'Direct Call'**
+  String get directCall;
+
+  /// No description provided for @whatsappSupport.
+  ///
+  /// In en, this message translates to:
+  /// **'WhatsApp Support'**
+  String get whatsappSupport;
+
+  /// No description provided for @emailAddressLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Email Address'**
+  String get emailAddressLabel;
+
+  /// No description provided for @aiAssistantLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'AI Assistant'**
+  String get aiAssistantLabel;
+
+  /// No description provided for @aiAssistantDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Available via the Assistant tab'**
+  String get aiAssistantDesc;
+
+  /// No description provided for @closeBtn.
+  ///
+  /// In en, this message translates to:
+  /// **'CLOSE'**
+  String get closeBtn;
+
+  /// No description provided for @copiedToClipboard.
+  ///
+  /// In en, this message translates to:
+  /// **'{label} copied to clipboard!'**
+  String copiedToClipboard(String label);
+
+  /// No description provided for @stillNeedHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Still need help?'**
+  String get stillNeedHelp;
+
+  /// No description provided for @supportAvailabilityDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Our customer support team is available 24/7 to assist you at any time.'**
+  String get supportAvailabilityDesc;
+
+  /// No description provided for @contactSupportBtn.
+  ///
+  /// In en, this message translates to:
+  /// **'CONTACT SUPPORT'**
+  String get contactSupportBtn;
+
+  /// No description provided for @faqQ1.
+  ///
+  /// In en, this message translates to:
+  /// **'How do I make a booking?'**
+  String get faqQ1;
+
+  /// No description provided for @faqA1.
+  ///
+  /// In en, this message translates to:
+  /// **'Search for a trip on the home page, select the journey that suits you, choose your seat and proceed with payment via Orange Money or MTN Mobile Money.'**
+  String get faqA1;
+
+  /// No description provided for @faqQ2.
+  ///
+  /// In en, this message translates to:
+  /// **'What payment methods are accepted?'**
+  String get faqQ2;
+
+  /// No description provided for @faqA2.
+  ///
+  /// In en, this message translates to:
+  /// **'We accept Orange Money (OM) and MTN Mobile Money (MoMo). Payments are fully secure, encrypted, and processed instantly.'**
+  String get faqA2;
+
+  /// No description provided for @faqQ3.
+  ///
+  /// In en, this message translates to:
+  /// **'No USSD code received during payment?'**
+  String get faqQ3;
+
+  /// No description provided for @faqA3.
+  ///
+  /// In en, this message translates to:
+  /// **'If the USSD confirmation prompt does not display automatically, don\'t worry! Manually dial your operator\'s backup code (*126# for MTN or #150*4*4# for Orange) to authorize the transaction within a few minutes.'**
+  String get faqA3;
+
+  /// No description provided for @faqQ4.
+  ///
+  /// In en, this message translates to:
+  /// **'How long before departure should I arrive at the station?'**
+  String get faqQ4;
+
+  /// No description provided for @faqA4.
+  ///
+  /// In en, this message translates to:
+  /// **'We strongly advise arriving at the boarding station at least 45 minutes before departure to check-in baggage and validate your digital ticket.'**
+  String get faqA4;
+
+  /// No description provided for @faqQ5.
+  ///
+  /// In en, this message translates to:
+  /// **'How do I get my ticket after purchase?'**
+  String get faqQ5;
+
+  /// No description provided for @faqA5.
+  ///
+  /// In en, this message translates to:
+  /// **'Your digital ticket is generated instantly after payment validation. You can find it under the \"Tickets\" tab in the form of a QR Code to present at the boarding gate.'**
+  String get faqA5;
+
+  /// No description provided for @faqQ6.
+  ///
+  /// In en, this message translates to:
+  /// **'Can I cancel or reschedule a trip?'**
+  String get faqQ6;
+
+  /// No description provided for @faqA6.
+  ///
+  /// In en, this message translates to:
+  /// **'You can cancel or request a reschedule up to 24 hours before departure from your reservation details under the \"Tickets\" tab. A small cancellation fee may be charged by the agency.'**
+  String get faqA6;
+
+  /// No description provided for @appVersionString.
+  ///
+  /// In en, this message translates to:
+  /// **'Version {version}'**
+  String appVersionString(String version);
+
+  /// No description provided for @ourMissionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Our Mission 🚀'**
+  String get ourMissionTitle;
+
+  /// No description provided for @ourMissionContent.
+  ///
+  /// In en, this message translates to:
+  /// **'Simplify the life of travelers in Cameroon by providing an intuitive, secure, and fast bus booking platform. No more queuing for hours!'**
+  String get ourMissionContent;
+
+  /// No description provided for @ourVisionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Our Vision 🌍'**
+  String get ourVisionTitle;
+
+  /// No description provided for @ourVisionContent.
+  ///
+  /// In en, this message translates to:
+  /// **'Become the leader in digital mobility in Cameroon and Central Africa by connecting all transport agencies through a unique and premium interface.'**
+  String get ourVisionContent;
+
+  /// No description provided for @copyrightText.
+  ///
+  /// In en, this message translates to:
+  /// **'©2026 CamerTrip - All rights reserved\nMade with ❤️ in Cameroon'**
+  String get copyrightText;
 }
 
 class _AppLocalizationsDelegate

@@ -1,12 +1,14 @@
 import 'package:camer_trip/app/shared/others/app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:camer_trip/l10n/app_localizations.dart';
 
 class FaqPage extends StatelessWidget {
   const FaqPage({super.key});
 
   void _showSupportDialog(BuildContext context, ColorScheme cs, bool isDark) {
     const Color brandRed = Color(0xFFE53E3E);
+    final localizations = AppLocalizations.of(context);
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -23,9 +25,9 @@ class FaqPage extends StatelessWidget {
               child: const Icon(Icons.support_agent_rounded, color: brandRed, size: 24),
             ),
             const SizedBox(width: 12),
-            const Text(
-              'Contacter le Support',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+            Text(
+              localizations?.contactSupport ?? 'Contacter le Support',
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
             ),
           ],
         ),
@@ -34,14 +36,14 @@ class FaqPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Notre service client est disponible 24h/24 et 7j/7. Cliquez sur un moyen de contact pour le copier.',
+              localizations?.contactSupportDesc ?? 'Notre service client est disponible 24h/24 et 7j/7. Cliquez sur un moyen de contact pour le copier.',
               style: TextStyle(color: cs.onSurface.withOpacity(0.6), fontSize: 13),
             ),
             const SizedBox(height: 20),
             _buildContactTile(
               context,
               Icons.phone_rounded,
-              'Appel Direct',
+              localizations?.directCall ?? 'Appel Direct',
               '+237 6 77 77 77 77',
               brandRed,
               cs,
@@ -50,7 +52,7 @@ class FaqPage extends StatelessWidget {
             _buildContactTile(
               context,
               Icons.chat_bubble_outline_rounded,
-              'WhatsApp Support',
+              localizations?.whatsappSupport ?? 'WhatsApp Support',
               '+237 6 99 99 99 99',
               Colors.green,
               cs,
@@ -59,7 +61,7 @@ class FaqPage extends StatelessWidget {
             _buildContactTile(
               context,
               Icons.email_outlined,
-              'Adresse E-mail',
+              localizations?.emailAddressLabel ?? 'Adresse E-mail',
               'support@camertrip.com',
               Colors.blue,
               cs,
@@ -68,8 +70,8 @@ class FaqPage extends StatelessWidget {
             _buildContactTile(
               context,
               Icons.auto_awesome_rounded,
-              'Assistant IA',
-              'Disponible via l\'onglet Assistant',
+              localizations?.aiAssistantLabel ?? 'Assistant IA',
+              localizations?.aiAssistantDesc ?? 'Disponible via l\'onglet Assistant',
               brandRed,
               cs,
               isCopyable: false,
@@ -79,7 +81,7 @@ class FaqPage extends StatelessWidget {
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: const Text('FERMER', style: TextStyle(fontWeight: FontWeight.bold, color: brandRed)),
+            child: Text(localizations?.closeBtn ?? 'FERMER', style: const TextStyle(fontWeight: FontWeight.bold, color: brandRed)),
           ),
         ],
       ),
@@ -95,6 +97,7 @@ class FaqPage extends StatelessWidget {
     ColorScheme cs, {
     bool isCopyable = true,
   }) {
+    final localizations = AppLocalizations.of(context);
     return InkWell(
       onTap: () {
         if (isCopyable) {
@@ -102,7 +105,7 @@ class FaqPage extends StatelessWidget {
           Navigator.of(context).pop();
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('$label copié dans le presse-papiers !'),
+              content: Text(localizations?.copiedToClipboard(label) ?? '$label copié dans le presse-papiers !'),
               backgroundColor: const Color(0xFFE53E3E),
               behavior: SnackBarBehavior.floating,
               duration: const Duration(seconds: 2),
@@ -143,43 +146,43 @@ class FaqPage extends StatelessWidget {
       ),
     );
   }
-
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final cs = theme.colorScheme;
     final isDark = theme.brightness == Brightness.dark;
     const Color brandRed = Color(0xFFE53E3E);
+    final localizations = AppLocalizations.of(context);
 
     final faqItems = [
       {
-        'q': 'Comment effectuer une réservation ?',
-        'a': 'Recherchez un trajet sur la page d\'accueil, sélectionnez le voyage qui vous convient, choisissez votre siège et procédez au paiement via Orange Money ou MTN Mobile Money.',
+        'q': localizations?.faqQ1 ?? 'Comment effectuer une réservation ?',
+        'a': localizations?.faqA1 ?? 'Recherchez un trajet sur la page d\'accueil, sélectionnez le voyage qui vous convient, choisissez votre siège et procédez au paiement via Orange Money ou MTN Mobile Money.',
         'icon': Icons.search_rounded,
       },
       {
-        'q': 'Quels sont les moyens de paiement acceptés ?',
-        'a': 'Nous acceptons Orange Money (OM) et MTN Mobile Money (MoMo). Les paiements sont entièrement sécurisés, cryptés et traités instantanément.',
+        'q': localizations?.faqQ2 ?? 'Quels sont les moyens de paiement acceptés ?',
+        'a': localizations?.faqA2 ?? 'Nous acceptons Orange Money (OM) et MTN Mobile Money (MoMo). Les paiements sont entièrement sécurisés, cryptés et traités instantanément.',
         'icon': Icons.payments_rounded,
       },
       {
-        'q': 'Pas de code USSD reçu lors du paiement ?',
-        'a': 'Si la fenêtre de confirmation USSD ne s\'affiche pas automatiquement, pas d\'inquiétude ! Composez manuellement le code de secours de votre opérateur (*126# pour MTN ou #150*4*4# pour Orange) afin d\'autoriser la transaction dans les minutes qui suivent.',
+        'q': localizations?.faqQ3 ?? 'Pas de code USSD reçu lors du paiement ?',
+        'a': localizations?.faqA3 ?? 'Si la fenêtre de confirmation USSD ne s\'affiche pas automatiquement, pas d\'inquiétude ! Composez manuellement le code de secours de votre opérateur (*126# pour MTN ou #150*4*4# pour Orange) afin d\'autoriser la transaction dans les minutes qui suivent.',
         'icon': Icons.sms_failed_rounded,
       },
       {
-        'q': 'Combien de temps avant le départ à la gare ?',
-        'a': 'Nous vous conseillons vivement de vous présenter à la gare d\'embarquement au moins 45 minutes avant l\'heure de départ afin de procéder à l\'enregistrement des bagages et à la validation de votre billet numérique.',
+        'q': localizations?.faqQ4 ?? 'Combien de temps avant le départ à la gare ?',
+        'a': localizations?.faqA4 ?? 'Nous vous conseillons vivement de vous présenter à la gare d\'embarquement au moins 45 minutes avant l\'heure de départ afin de procéder à l\'enregistrement des bagages et à la validation de votre billet numérique.',
         'icon': Icons.alarm_rounded,
       },
       {
-        'q': 'Comment récupérer mon ticket après l\'achat ?',
-        'a': 'Votre ticket numérique est généré instantanément après validation du paiement. Vous le retrouverez dans l\'onglet "Billets" sous forme de QR Code que vous présenterez au guichet d\'embarquement.',
+        'q': localizations?.faqQ5 ?? 'Comment récupérer mon ticket après l\'achat ?',
+        'a': localizations?.faqA5 ?? 'Votre ticket numérique est généré instantanément après validation du paiement. Vous le retrouverez dans l\'onglet "Billets" sous forme de QR Code que vous présenterez au guichet d\'embarquement.',
         'icon': Icons.qr_code_scanner_rounded,
       },
       {
-        'q': 'Puis-je annuler ou reporter un voyage ?',
-        'a': 'Vous pouvez annuler ou demander un report jusqu\'à 24 heures avant le départ depuis les détails de votre réservation dans l\'onglet "Billets". Des frais d\'annulation minimes peuvent être retenus par l\'agence.',
+        'q': localizations?.faqQ6 ?? 'Puis-je annuler ou reporter un voyage ?',
+        'a': localizations?.faqA6 ?? 'Vous pouvez annuler ou demander un report jusqu\'à 24 heures avant le départ depuis les détails de votre réservation dans l\'onglet "Billets". Des frais d\'annulation minimes peuvent être retenus par l\'agence.',
         'icon': Icons.cancel_schedule_send_rounded,
       },
     ];
@@ -189,13 +192,13 @@ class FaqPage extends StatelessWidget {
       body: SafeArea(
         child: Column(
           children: [
-            const MyAppBar(title: 'Centre d\'Aide'),
+            MyAppBar(title: localizations?.helpCenter ?? 'Centre d\'Aide'),
             Expanded(
               child: ListView(
                 padding: const EdgeInsets.all(24),
                 children: [
                   Text(
-                    'Questions Fréquentes 🤔',
+                    localizations?.faqTitle ?? 'Questions Fréquentes 🤔',
                     style: theme.textTheme.headlineSmall?.copyWith(
                       fontWeight: FontWeight.w900,
                       color: cs.onSurface,
@@ -203,7 +206,7 @@ class FaqPage extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    'Tout ce qu\'il faut savoir sur CamerTrip / GEV.',
+                    localizations?.faqSubtitle ?? 'Tout ce qu\'il faut savoir sur CamerTrip / GEV.',
                     style: TextStyle(color: cs.onSurface.withOpacity(0.5)),
                   ),
                   const SizedBox(height: 24),
@@ -229,13 +232,13 @@ class FaqPage extends StatelessWidget {
                           child: const Icon(Icons.support_agent_rounded, size: 36, color: brandRed),
                         ),
                         const SizedBox(height: 16),
-                        const Text(
-                          'Encore besoin d\'aide ?',
-                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                        Text(
+                          localizations?.stillNeedHelp ?? 'Encore besoin d\'aide ?',
+                          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                         ),
                         const SizedBox(height: 8),
                         Text(
-                          'Notre équipe de support client est disponible 24/7 pour vous assister à tout moment.',
+                          localizations?.supportAvailabilityDesc ?? 'Notre équipe de support client est disponible 24/7 pour vous assister à tout moment.',
                           textAlign: TextAlign.center,
                           style: TextStyle(color: cs.onSurface.withOpacity(0.6), height: 1.4),
                         ),
@@ -245,7 +248,7 @@ class FaqPage extends StatelessWidget {
                           child: ElevatedButton.icon(
                             onPressed: () => _showSupportDialog(context, cs, isDark),
                             icon: const Icon(Icons.message_rounded),
-                            label: const Text('CONTACTER LE SUPPORT'),
+                            label: Text(localizations?.contactSupportBtn ?? 'CONTACTER LE SUPPORT'),
                             style: ElevatedButton.styleFrom(
                               backgroundColor: brandRed,
                               foregroundColor: Colors.white,

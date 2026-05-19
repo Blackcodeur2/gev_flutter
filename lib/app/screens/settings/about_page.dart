@@ -1,6 +1,6 @@
-import 'package:camer_trip/app/config/colors_config.dart';
 import 'package:camer_trip/app/shared/others/app_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:camer_trip/l10n/app_localizations.dart';
 
 class AboutPage extends StatelessWidget {
   const AboutPage({super.key});
@@ -9,13 +9,14 @@ class AboutPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final cs = theme.colorScheme;
+    final localizations = AppLocalizations.of(context);
 
     return Scaffold(
       backgroundColor: cs.surface,
       body: SafeArea(
         child: Column(
           children: [
-            const MyAppBar(title: 'À propos'),
+            MyAppBar(title: localizations?.about ?? 'À propos'),
             Expanded(
               child: SingleChildScrollView(
                 padding: const EdgeInsets.all(24),
@@ -35,14 +36,14 @@ class AboutPage extends StatelessWidget {
                     ),
                     const SizedBox(height: 16),
                     Text(
-                      'CamerTrip',
+                      localizations?.appName ?? 'CamerTrip',
                       style: theme.textTheme.headlineMedium?.copyWith(
                         fontWeight: FontWeight.w900,
                         color: cs.onSurface,
                       ),
                     ),
                     Text(
-                      'Version 1.0.0',
+                      localizations?.appVersionString('1.0.0') ?? 'Version 1.0.0',
                       style: TextStyle(color: cs.onSurface.withOpacity(0.5)),
                     ),
                     const SizedBox(height: 48),
@@ -50,16 +51,16 @@ class AboutPage extends StatelessWidget {
                     // Mission Section
                     _buildAboutSection(
                       context,
-                      'Notre Mission 🚀',
-                      'Simplifier la vie des voyageurs au Cameroun en offrant une plateforme de réservation de bus intuitive, sécurisée et rapide. Plus besoin de faire la queue pendant des heures !',
+                      localizations?.ourMissionTitle ?? 'Notre Mission 🚀',
+                      localizations?.ourMissionContent ?? 'Simplifier la vie des voyageurs au Cameroun en offrant une plateforme de réservation de bus intuitive, sécurisée et rapide. Plus besoin de faire la queue pendant des heures !',
                     ),
                     const SizedBox(height: 32),
 
                     // Vision Section
                     _buildAboutSection(
                       context,
-                      'Notre Vision 🌍',
-                      'Devenir le leader de la mobilité digitale au Cameroun et en Afrique centrale, en connectant toutes les agences de transport à travers une interface unique et premium.',
+                      localizations?.ourVisionTitle ?? 'Notre Vision 🌍',
+                      localizations?.ourVisionContent ?? 'Devenir le leader de la mobilité digitale au Cameroun et en Afrique centrale, en connectant toutes les agences de transport à travers une interface unique et premium.',
                     ),
                     const SizedBox(height: 32),
 
@@ -67,7 +68,7 @@ class AboutPage extends StatelessWidget {
                     const Divider(),
                     const SizedBox(height: 24),
                     Text(
-                      '©2026 CamerTrip - Tous droits réservés\nFait avec ❤️ au Cameroun',
+                      localizations?.copyrightText ?? '©2026 CamerTrip - Tous droits réservés\nFait avec ❤️ au Cameroun',
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         color: cs.onSurface.withOpacity(0.4),

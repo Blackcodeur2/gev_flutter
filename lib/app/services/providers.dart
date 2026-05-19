@@ -11,6 +11,8 @@ import 'colis_service.dart';
 import '../models/colis_model.dart';
 import 'notification_service.dart';
 import '../models/notification_model.dart';
+import 'annonce_service.dart';
+import '../models/annonce_model.dart';
 
 
 
@@ -101,4 +103,12 @@ final notificationServiceProvider = Provider<NotificationService>((ref) {
 
 final myNotificationsProvider = FutureProvider<List<NotificationModel>>((ref) async {
   return ref.watch(notificationServiceProvider).getNotifications();
+});
+
+final annonceServiceProvider = Provider<AnnonceService>((ref) {
+  return AnnonceService();
+});
+
+final annoncesProvider = FutureProvider<List<AnnonceModel>>((ref) async {
+  return ref.watch(annonceServiceProvider).getAnnonces();
 });

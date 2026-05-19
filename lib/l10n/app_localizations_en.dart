@@ -754,4 +754,229 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get confirmPayment => 'CONFIRM PAYMENT';
+
+  @override
+  String get virtualTicketTitle => 'Virtual Ticket';
+
+  @override
+  String get finalizePaymentTitle => 'Finalize Payment';
+
+  @override
+  String get finalizePaymentSubtitle =>
+      'Complete your payment to permanently secure your seat.';
+
+  @override
+  String get paymentPhoneNumber => 'Phone number';
+
+  @override
+  String get confirmAndPay => 'CONFIRM & PAY';
+
+  @override
+  String ticketSeat(String seat) {
+    return 'Seat #$seat';
+  }
+
+  @override
+  String get ticketDate => 'Date';
+
+  @override
+  String get ticketTime => 'Time';
+
+  @override
+  String get ticketSeatLabel => 'Seat';
+
+  @override
+  String get ticketPassenger => 'Passenger';
+
+  @override
+  String get ticketPassengerValue => 'Client (Me)';
+
+  @override
+  String get ticketPricePaid => 'Price paid';
+
+  @override
+  String ticketReference(int id) {
+    return 'Reference: $id';
+  }
+
+  @override
+  String get payThisTicket => 'PAY THIS TICKET';
+
+  @override
+  String get downloadPdf => 'Download PDF Ticket';
+
+  @override
+  String get downloading => 'Downloading...';
+
+  @override
+  String get rebookTrip => 'Book this trip again';
+
+  @override
+  String get ticketPdfReady => 'PDF ticket ready! 📄';
+
+  @override
+  String downloadError(String error) {
+    return 'Download error: $error';
+  }
+
+  @override
+  String get paymentDone => 'Payment Complete!';
+
+  @override
+  String get paymentDoneMessage =>
+      'Your seat is now validated. The QR code has been activated on your ticket.';
+
+  @override
+  String get paymentRequired => 'Payment required to generate the QR Code.';
+
+  @override
+  String get reservationExpired =>
+      'Reservation expired because the trip has started, ended or was cancelled.';
+
+  @override
+  String get voyageCancelled =>
+      'The trip has been cancelled. This ticket can no longer be paid.';
+
+  @override
+  String get voyageStarted =>
+      'The trip has already started or ended. This ticket can no longer be paid.';
+
+  @override
+  String get paymentTimeout2 => 'Payment timed out.';
+
+  @override
+  String ussdPromptMessage(String phone) {
+    return 'A USSD payment prompt has been sent to:\n$phone';
+  }
+
+  @override
+  String get editProfileTitle => 'Edit Profile';
+
+  @override
+  String get profileUpdatedSuccess => 'Profile updated successfully';
+
+  @override
+  String get profileUpdatedError => 'Failed to update profile';
+
+  @override
+  String get editProfileNote =>
+      'Note: Some information such as your registration number or your role cannot be modified manually.';
+
+  @override
+  String get fieldRequired => 'This field is required';
+
+  @override
+  String get dobFormatHint => 'YYYY-MM-DD';
+
+  @override
+  String get faqTitle => 'Frequently Asked Questions 🤔';
+
+  @override
+  String get faqSubtitle => 'Everything you need to know about CamerTrip.';
+
+  @override
+  String get contactSupport => 'Contact Support';
+
+  @override
+  String get contactSupportDesc =>
+      'Our customer service is available 24/7. Click on a contact method to copy it.';
+
+  @override
+  String get directCall => 'Direct Call';
+
+  @override
+  String get whatsappSupport => 'WhatsApp Support';
+
+  @override
+  String get emailAddressLabel => 'Email Address';
+
+  @override
+  String get aiAssistantLabel => 'AI Assistant';
+
+  @override
+  String get aiAssistantDesc => 'Available via the Assistant tab';
+
+  @override
+  String get closeBtn => 'CLOSE';
+
+  @override
+  String copiedToClipboard(String label) {
+    return '$label copied to clipboard!';
+  }
+
+  @override
+  String get stillNeedHelp => 'Still need help?';
+
+  @override
+  String get supportAvailabilityDesc =>
+      'Our customer support team is available 24/7 to assist you at any time.';
+
+  @override
+  String get contactSupportBtn => 'CONTACT SUPPORT';
+
+  @override
+  String get faqQ1 => 'How do I make a booking?';
+
+  @override
+  String get faqA1 =>
+      'Search for a trip on the home page, select the journey that suits you, choose your seat and proceed with payment via Orange Money or MTN Mobile Money.';
+
+  @override
+  String get faqQ2 => 'What payment methods are accepted?';
+
+  @override
+  String get faqA2 =>
+      'We accept Orange Money (OM) and MTN Mobile Money (MoMo). Payments are fully secure, encrypted, and processed instantly.';
+
+  @override
+  String get faqQ3 => 'No USSD code received during payment?';
+
+  @override
+  String get faqA3 =>
+      'If the USSD confirmation prompt does not display automatically, don\'t worry! Manually dial your operator\'s backup code (*126# for MTN or #150*4*4# for Orange) to authorize the transaction within a few minutes.';
+
+  @override
+  String get faqQ4 =>
+      'How long before departure should I arrive at the station?';
+
+  @override
+  String get faqA4 =>
+      'We strongly advise arriving at the boarding station at least 45 minutes before departure to check-in baggage and validate your digital ticket.';
+
+  @override
+  String get faqQ5 => 'How do I get my ticket after purchase?';
+
+  @override
+  String get faqA5 =>
+      'Your digital ticket is generated instantly after payment validation. You can find it under the \"Tickets\" tab in the form of a QR Code to present at the boarding gate.';
+
+  @override
+  String get faqQ6 => 'Can I cancel or reschedule a trip?';
+
+  @override
+  String get faqA6 =>
+      'You can cancel or request a reschedule up to 24 hours before departure from your reservation details under the \"Tickets\" tab. A small cancellation fee may be charged by the agency.';
+
+  @override
+  String appVersionString(String version) {
+    return 'Version $version';
+  }
+
+  @override
+  String get ourMissionTitle => 'Our Mission 🚀';
+
+  @override
+  String get ourMissionContent =>
+      'Simplify the life of travelers in Cameroon by providing an intuitive, secure, and fast bus booking platform. No more queuing for hours!';
+
+  @override
+  String get ourVisionTitle => 'Our Vision 🌍';
+
+  @override
+  String get ourVisionContent =>
+      'Become the leader in digital mobility in Cameroon and Central Africa by connecting all transport agencies through a unique and premium interface.';
+
+  @override
+  String get copyrightText =>
+      '©2026 CamerTrip - All rights reserved\nMade with ❤️ in Cameroon';
 }

@@ -181,6 +181,7 @@ class _NotificationPageState extends ConsumerState<NotificationPage>
   }
 
   Widget _buildEmptyState(ColorScheme cs, ThemeData theme) {
+    final localizations = AppLocalizations.of(context);
     return SingleChildScrollView(
       physics: const AlwaysScrollableScrollPhysics(),
       child: Container(

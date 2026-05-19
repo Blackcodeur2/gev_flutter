@@ -9,6 +9,7 @@ import 'package:camer_trip/app/services/api_client_service.dart';
 import 'package:camer_trip/app/shared/others/app_bar.dart';
 import 'package:camer_trip/app/config/const_config.dart';
 import 'package:go_router/go_router.dart';
+import 'package:camer_trip/l10n/app_localizations.dart';
 
 class EditProfilePage extends ConsumerStatefulWidget {
 
@@ -66,6 +67,7 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
   Future<void> _handleSave() async {
     if (!_formKey.currentState!.validate()) return;
 
+    final localizations = AppLocalizations.of(context);
     setState(() => _isLoading = true);
 
     try {
@@ -84,7 +86,7 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
         ref.invalidate(currentUserProvider);
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Profil mis à jour avec succès')),
+            SnackBar(content: Text(localizations?.profileUpdatedSuccess ?? 'Profil mis à jour avec succès')),
           );
           if (context.canPop()) {
             context.pop();
@@ -95,14 +97,14 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
       } else {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(response.message ?? 'Échec de la mise à jour')),
+            SnackBar(content: Text(response.message ?? (localizations?.profileUpdatedError ?? 'Échec de la mise à jour'))),
           );
         }
       }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Erreur: $e')),
+          SnackBar(content: Text('${localizations?.errorPrefix ?? 'Erreur : '}$e')),
         );
       }
     } finally {
@@ -115,6 +117,7 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
     final theme = Theme.of(context);
     final cs = theme.colorScheme;
     final isDark = theme.brightness == Brightness.dark;
+    final localizations = AppLocalizations.of(context);
 
     String getAvatarUrl(String? url) {
       if (url == null || url.isEmpty) return "";
@@ -135,7 +138,7 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
         child: Column(
           children: [
             MyAppBar(
-              title: 'Modifier le profil',
+              title: localizations?.editProfileTitle ?? 'Modifier le profil',
               trailing: _isLoading 
                 ? const SizedBox(width: 24, height: 24, child: CircularProgressIndicator(strokeWidth: 2))
                 : IconButton(
@@ -195,17 +198,17 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                       const SizedBox(height: 32),
 
                       // 📝 Champs de texte
-                      _buildTextField(cs, 'Nom', _nomController, Icons.person_outline),
+                      _buildTextField(cs, localizations?.lastName ?? 'Nom', _nomController, Icons.person_outline),
                       const SizedBox(height: 16),
-                      _buildTextField(cs, 'Prénom', _prenomController, Icons.person_outline),
+                      _buildTextField(cs, localizations?.firstName ?? 'Prénom', _prenomController, Icons.person_outline),
                       const SizedBox(height: 16),
-                      _buildTextField(cs, 'Email', _emailController, Icons.email_outlined, keyboardType: TextInputType.emailAddress),
+                      _buildTextField(cs, localizations?.emailPlaceholder ?? 'Email', _emailController, Icons.email_outlined, keyboardType: TextInputType.emailAddress),
                       const SizedBox(height: 16),
-                      _buildTextField(cs, 'Téléphone', _phoneController, Icons.phone_outlined, keyboardType: TextInputType.phone),
+                      _buildTextField(cs, localizations?.phonePlaceholder ?? 'Téléphone', _phoneController, Icons.phone_outlined, keyboardType: TextInputType.phone),
                       const SizedBox(height: 16),
                       
                       // Date de naissance
-                      _buildDateField(context, cs),
+                      _buildDateField(cs),
                       const SizedBox(height: 16),
 
                       // Sexe
@@ -214,7 +217,7 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                       const SizedBox(height: 40),
                       
                       Text(
-                        "Note: Certaines informations comme votre matricule ou votre rôle ne peuvent être modifiées manuellement.",
+                        localizations?.editProfileNote ?? "Note: Certaines informations comme votre matricule ou votre rôle ne peuvent être modifiées manuellement.",
                         style: TextStyle(color: cs.onSurface.withOpacity(0.5), fontSize: 12, fontStyle: FontStyle.italic),
                         textAlign: TextAlign.center,
                       ),
@@ -229,11 +232,12 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
     );
   }
 
-  Widget _buildDateField(BuildContext context, ColorScheme cs) {
+  Widget _buildDateField(ColorScheme cs) {
+    final localizations = AppLocalizations.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text("Date de naissance", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+        Text(localizations?.birthDate ?? "Date de naissance", style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
         const SizedBox(height: 8),
         TextFormField(
           controller: _dobController,
@@ -242,7 +246,7 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
             prefixIcon: const Icon(Icons.calendar_today_outlined, size: 20),
             filled: true,
             fillColor: cs.surfaceContainerHigh,
-            hintText: "AAAA-MM-JJ",
+            hintText: localizations?.dobFormatHint ?? "AAAA-MM-JJ",
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: BorderSide.none),
           ),
           onTap: () async {
@@ -264,16 +268,17 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
   }
 
   Widget _buildGenderField(ColorScheme cs) {
+    final localizations = AppLocalizations.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text("Sexe", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+        Text(localizations?.genderSection ?? "Sexe", style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
         const SizedBox(height: 8),
         Row(
           children: [
             Expanded(
               child: ChoiceChip(
-                label: const Center(child: Text("Masculin")),
+                label: Center(child: Text(localizations?.male ?? "Masculin")),
                 selected: _selectedGender == 'M',
                 onSelected: (selected) {
                   if (selected) setState(() => _selectedGender = 'M');
@@ -283,7 +288,7 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
             const SizedBox(width: 12),
             Expanded(
               child: ChoiceChip(
-                label: const Center(child: Text("Féminin")),
+                label: Center(child: Text(localizations?.female ?? "Féminin")),
                 selected: _selectedGender == 'F',
                 onSelected: (selected) {
                   if (selected) setState(() => _selectedGender = 'F');
@@ -297,6 +302,7 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
   }
 
   Widget _buildTextField(ColorScheme cs, String label, TextEditingController controller, IconData icon, {TextInputType? keyboardType}) {
+    final localizations = AppLocalizations.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -319,7 +325,7 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
             contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
           ),
           validator: (value) {
-            if (value == null || value.isEmpty) return 'Ce champ est requis';
+            if (value == null || value.isEmpty) return localizations?.fieldRequired ?? 'Ce champ est requis';
             return null;
           },
         ),
