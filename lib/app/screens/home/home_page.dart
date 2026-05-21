@@ -18,6 +18,7 @@ import 'package:camer_trip/app/services/trip_filter_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:camer_trip/l10n/app_localizations.dart';
+import 'package:go_router/go_router.dart';
 
 class HomePage extends ConsumerStatefulWidget {
   const HomePage({super.key});
@@ -58,10 +59,8 @@ class _HomePageState extends ConsumerState<HomePage>
     final cs = theme.colorScheme;
     final isDark = theme.brightness == Brightness.dark;
     final localizations = AppLocalizations.of(context);
-    final userAsync = ref.watch(currentUserProvider);
     final promosAsync = ref.watch(promosProvider);
     final agencesAsync = ref.watch(agencesProvider);
-    final destinationsAsync = ref.watch(destinationsProvider);
     final isLoggedIn = ref.watch(isLoggedInProvider).value ?? false;
     final reservationsAsync = isLoggedIn ? ref.watch(myReservationsProvider) : null;
 
@@ -77,7 +76,7 @@ class _HomePageState extends ConsumerState<HomePage>
               ref.invalidate(destinationsProvider);
               ref.invalidate(allScheduledTripsProvider);
               ref.invalidate(myReservationsProvider);
-              await ref.refresh(syncUserProvider.future);
+              final _ = await ref.refresh(syncUserProvider.future);
             },
             displacement: 20,
             color: cs.primary,
@@ -114,7 +113,7 @@ class _HomePageState extends ConsumerState<HomePage>
                 agencesAsync.when(
                   data: (agences) => SliverToBoxAdapter(child: ListAgenceComponent(agences: agences)),
                   loading: () => const SliverToBoxAdapter(child: Padding(padding: EdgeInsets.all(20), child: Center(child: CircularProgressIndicator()))),
-                  error: (e, s) => const SliverToBoxAdapter(child: SizedBox.shrink()),
+                  error: (e, s) => SliverToBoxAdapter(child: Padding(padding: const EdgeInsets.all(20), child: Center(child: Text('Erreur: $e')))),
                 ),
   
                 SliverToBoxAdapter(

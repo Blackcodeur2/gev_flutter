@@ -4,7 +4,9 @@ import 'package:camer_trip/app/config/const_config.dart';
 import 'package:camer_trip/app/models/user_model.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'api_client_service.dart';
+import 'push_notification_service.dart';
 
 class AuthResponse {
   final bool success;
@@ -34,6 +36,9 @@ class AuthService {
           key: AppConstants.userDataKey,
           value: jsonEncode(userData),
         );
+
+        // Envoyer le token FCM au backend après connexion
+        PushNotificationService.sendTokenToBackend();
 
         return AuthResponse(success: true, user: UserModel.fromJson(userData));
       }
@@ -70,6 +75,9 @@ class AuthService {
           key: AppConstants.userDataKey,
           value: jsonEncode(userData),
         );
+
+        // Envoyer le token FCM au backend après connexion Google
+        PushNotificationService.sendTokenToBackend();
 
         return AuthResponse(success: true, user: UserModel.fromJson(userData));
       }
@@ -148,7 +156,16 @@ class AuthService {
 
   Future<void> logout() async {
     try {
-      await dio.post("/logout");
+      String? fcmToken;
+      try {
+        fcmToken = await FirebaseMessaging.instance.getToken();
+      } catch (e) {
+        print("Erreur getToken pour logout: $e");
+      }
+
+      await dio.post("/logout", data: {
+        if (fcmToken != null) "fcm_token": fcmToken
+      });
     } catch (e) {
       print("Erreur logout backend: $e");
     } finally {

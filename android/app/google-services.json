@@ -37,6 +37,13 @@
             {
               "client_id": "893580875542-p5icibpqvsgt5868h1rgt3l5s1i0hb2b.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "893580875542-28l1ipc9ebh0curdigkhcshig60divsf.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.gevFlutter"
+              }
             }
           ]
         }

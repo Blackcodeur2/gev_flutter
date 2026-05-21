@@ -8,15 +8,11 @@ class HomeService {
   final Dio dio = ApiClient().dio;
 
   Future<List<Agence>> getAgencesPartenaires() async {
-    try {
-      final response = await dio.get('/agences');
-      final List<dynamic> list = response.data["data"];
-
-      return list.map((json) => Agence.fromJson(json)).toList();
-    } catch (e) {
-      print("Erreur getAgencesPartenaires : \$e");
-      return [];
-    }
+    final response = await dio.get('/agences');
+    final data = response.data["data"];
+    if (data == null) return [];
+    final List<dynamic> list = data;
+    return list.map((json) => Agence.fromJson(json)).toList();
   }
 
   Future<List<Destination>> getDestinationsPopulaires() async {

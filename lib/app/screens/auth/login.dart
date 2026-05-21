@@ -179,26 +179,28 @@ class _LoginPageState extends ConsumerState<LoginPage>
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    localizations?.loginTitle ?? 'Connexion',
-                                    style: theme.textTheme.headlineSmall
-                                        ?.copyWith(
-                                          fontWeight: FontWeight.w900,
-                                          color: cs.onSurface,
-                                          letterSpacing: -1.0,
-                                        ),
-                                  ),
-                                  const SizedBox(height: 4),
-                                  Text(
-                                    localizations?.loginSubtitle ?? 'Bon retour 👋 Heureux de te revoir.',
-                                    style: theme.textTheme.bodyMedium?.copyWith(
-                                      color: cs.onSurface.withOpacity(0.55),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      localizations?.loginTitle ?? 'Connexion',
+                                      style: theme.textTheme.headlineSmall
+                                          ?.copyWith(
+                                            fontWeight: FontWeight.w900,
+                                            color: cs.onSurface,
+                                            letterSpacing: -1.0,
+                                          ),
                                     ),
-                                  ),
-                                ],
+                                    const SizedBox(height: 4),
+                                    Text(
+                                      localizations?.loginSubtitle ?? 'Bon retour 👋 Heureux de te revoir.',
+                                      style: theme.textTheme.bodyMedium?.copyWith(
+                                        color: cs.onSurface.withOpacity(0.55),
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
                               ThemeToggleButton(
                                 isDark: isDark,

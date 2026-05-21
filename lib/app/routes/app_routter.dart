@@ -99,7 +99,7 @@ class AppRouter {
         name: agenceDetails,
         builder: (context, state) => AgenceDetailsPage(agence: state.extra as Agence),
       ),
-      GoRoute(path: kwcPath, name: kwc, builder: (context, state) => const KwcPage()),
+     // GoRoute(path: kwcPath, name: kwc, builder: (context, state) => const KwcPage()),
       GoRoute(path: aboutPath, name: about, builder: (context, state) => const AboutPage()),
       GoRoute(path: faqPath, name: faq, builder: (context, state) => const FaqPage()),
       GoRoute(

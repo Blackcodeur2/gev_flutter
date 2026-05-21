@@ -5,6 +5,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:camer_trip/app/services/providers.dart';
 import 'dart:async';
 import 'dart:typed_data';
+import 'dart:io';
+import 'package:file_picker/file_picker.dart';
+import 'package:dio/dio.dart' as dio_lib;
+import 'package:camer_trip/app/services/api_client_service.dart';
 import 'package:printing/printing.dart';
 import 'package:go_router/go_router.dart';
 import 'package:camer_trip/app/config/const_config.dart';
@@ -48,6 +52,12 @@ class _ReservationDetailsPageState extends ConsumerState<ReservationDetailsPage>
   String? ussdCode;
   String? operator;
 
+  final TextEditingController _incidentLocationController = TextEditingController();
+  final TextEditingController _incidentDescriptionController = TextEditingController();
+  File? _incidentPhoto;
+  String _selectedIncidentType = 'Panne mécanique';
+  String _selectedGravity = 'MOYEN';
+
   @override
   void initState() {
     super.initState();
@@ -71,6 +81,8 @@ class _ReservationDetailsPageState extends ConsumerState<ReservationDetailsPage>
   @override
   void dispose() {
     _phoneController.dispose();
+    _incidentLocationController.dispose();
+    _incidentDescriptionController.dispose();
     super.dispose();
   }
 
@@ -679,7 +691,6 @@ class _ReservationDetailsPageState extends ConsumerState<ReservationDetailsPage>
                           ),
                         ),
                       ],
-                    ] else if (hasPaid) ...[
                       SizedBox(
                         width: double.infinity,
                         height: 54,
@@ -705,6 +716,26 @@ class _ReservationDetailsPageState extends ConsumerState<ReservationDetailsPage>
                           ),
                         ),
                       ),
+                      if (widget.reservation.voyageStatus == 'en cours') ...[
+                        const SizedBox(height: 12),
+                        SizedBox(
+                          width: double.infinity,
+                          height: 54,
+                          child: ElevatedButton.icon(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.orange[800],
+                              foregroundColor: Colors.white,
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                            ),
+                            onPressed: () => _showReportIncidentDialog(cs, isDark),
+                            icon: const Icon(Icons.warning_amber_rounded),
+                            label: const Text(
+                              'Signaler un incident',
+                              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                            ),
+                          ),
+                        ),
+                      ],
                     ]
                   ],
                 ),
@@ -912,5 +943,296 @@ class _ReservationDetailsPageState extends ConsumerState<ReservationDetailsPage>
         ),
       ],
     );
+  }
+
+  void _showReportIncidentDialog(ColorScheme cs, bool isDark) {
+    _incidentLocationController.clear();
+    _incidentDescriptionController.clear();
+    _incidentPhoto = null;
+    _selectedIncidentType = 'Panne mécanique';
+    _selectedGravity = 'MOYEN';
+
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setDialogState) {
+            return AlertDialog(
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+              title: Row(
+                children: [
+                  Icon(Icons.warning_amber_rounded, color: cs.error, size: 28),
+                  const SizedBox(width: 8),
+                  const Text('Signaler un incident', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+                ],
+              ),
+              content: SingleChildScrollView(
+                child: SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.9,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'Aidez-nous à améliorer le voyage en signalant tout incident rencontré.',
+                        style: TextStyle(fontSize: 13, color: Colors.grey),
+                      ),
+                      const SizedBox(height: 16),
+                      
+                      const Text('Type d\'incident', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+                      const SizedBox(height: 6),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 12),
+                        decoration: BoxDecoration(
+                          border: Border.all(color: cs.outline.withOpacity(0.3)),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: DropdownButtonHideUnderline(
+                          child: DropdownButton<String>(
+                            value: _selectedIncidentType,
+                            isExpanded: true,
+                            items: <String>[
+                              'Panne mécanique',
+                              'Accident',
+                              'Problème de climatisation',
+                              'Comportement du chauffeur',
+                              'Retard important',
+                              'Autre'
+                            ].map<DropdownMenuItem<String>>((String value) {
+                              return DropdownMenuItem<String>(
+                                value: value,
+                                child: Text(value, style: const TextStyle(fontSize: 14)),
+                              );
+                            }).toList(),
+                            onChanged: (String? newValue) {
+                              if (newValue != null) {
+                                setDialogState(() {
+                                  _selectedIncidentType = newValue;
+                                });
+                              }
+                            },
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+
+                      const Text('Niveau de gravité', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+                      const SizedBox(height: 6),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          _buildGravityOption(setDialogState, 'FAIBLE', Colors.green),
+                          _buildGravityOption(setDialogState, 'MOYEN', Colors.orange),
+                          _buildGravityOption(setDialogState, 'CRITIQUE', Colors.red),
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+
+                      const Text('Lieu de l\'incident (Optionnel)', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+                      const SizedBox(height: 6),
+                      TextField(
+                        controller: _incidentLocationController,
+                        decoration: InputDecoration(
+                          hintText: 'Ex: Entrée de la ville de Boumnyebel',
+                          hintStyle: const TextStyle(fontSize: 13),
+                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                          contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+
+                      const Text('Description de l\'incident', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+                      const SizedBox(height: 6),
+                      TextField(
+                        controller: _incidentDescriptionController,
+                        maxLines: 3,
+                        decoration: InputDecoration(
+                          hintText: 'Décrivez brièvement ce qui s\'est passé...',
+                          hintStyle: const TextStyle(fontSize: 13),
+                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                          contentPadding: const EdgeInsets.all(12),
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+
+                      const Text('Photo de l\'incident', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+                      const SizedBox(height: 6),
+                      GestureDetector(
+                        onTap: () => _pickIncidentPhoto(setDialogState),
+                        child: Container(
+                          width: double.infinity,
+                          height: 100,
+                          decoration: BoxDecoration(
+                            border: Border.all(color: cs.outline.withOpacity(0.3)),
+                            borderRadius: BorderRadius.circular(12),
+                            color: cs.primary.withOpacity(0.05),
+                          ),
+                          child: _incidentPhoto != null
+                              ? ClipRRect(
+                                  borderRadius: BorderRadius.circular(12),
+                                  child: Image.file(_incidentPhoto!, fit: BoxFit.cover),
+                                )
+                              : Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(Icons.add_a_photo_rounded, color: cs.primary, size: 28),
+                                    const SizedBox(height: 4),
+                                    Text('Ajouter une photo', style: TextStyle(color: cs.primary, fontSize: 12, fontWeight: FontWeight.bold)),
+                                  ],
+                                ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: const Text('Annuler', style: TextStyle(color: Colors.grey)),
+                ),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: cs.error,
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  ),
+                  onPressed: () => _submitIncident(cs),
+                  child: const Text('Signaler', style: TextStyle(fontWeight: FontWeight.bold)),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
+
+  Widget _buildGravityOption(StateSetter setDialogState, String gravity, Color color) {
+    final isSelected = _selectedGravity == gravity;
+    return GestureDetector(
+      onTap: () {
+        setDialogState(() {
+          _selectedGravity = gravity;
+        });
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        decoration: BoxDecoration(
+          color: isSelected ? color.withOpacity(0.2) : Colors.transparent,
+          border: Border.all(color: isSelected ? color : Colors.grey.withOpacity(0.3), width: 1.5),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Text(
+          gravity,
+          style: TextStyle(
+            color: isSelected ? color : Colors.grey,
+            fontWeight: FontWeight.bold,
+            fontSize: 12,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Future<void> _pickIncidentPhoto(StateSetter setDialogState) async {
+    try {
+      final result = await FilePicker.platform.pickFiles(
+        type: FileType.image,
+      );
+      if (result != null && result.files.single.path != null) {
+        setDialogState(() {
+          _incidentPhoto = File(result.files.single.path!);
+        });
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Erreur lors de la sélection de la photo : $e')),
+      );
+    }
+  }
+
+  Future<void> _submitIncident(ColorScheme cs) async {
+    if (_incidentDescriptionController.text.trim().isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Veuillez saisir une description de l\'incident.')),
+      );
+      return;
+    }
+    if (_incidentPhoto == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Veuillez sélectionner une photo pour illustrer l\'incident.')),
+      );
+      return;
+    }
+
+    setState(() {
+      isLoading = true;
+    });
+
+    try {
+      final dio = ApiClient().dio;
+      final fileName = _incidentPhoto!.path.split('/').last;
+      
+      final multipartFile = await dio_lib.MultipartFile.fromFile(
+        _incidentPhoto!.path,
+        filename: fileName,
+      );
+
+      final formData = dio_lib.FormData.fromMap({
+        'voyage_id': widget.reservation.voyageId,
+        'type': _selectedIncidentType,
+        'description': _incidentDescriptionController.text.trim(),
+        'niveau_gravite': _selectedGravity,
+        'lieu': _incidentLocationController.text.trim(),
+        'photo': multipartFile,
+      });
+
+      final response = await dio.post('/client/incidents', data: formData);
+
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+
+        if (response.statusCode == 201) {
+          Navigator.of(context).pop(); // Fermer le formulaire
+          showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+              title: const Row(
+                children: [
+                  Icon(Icons.check_circle, color: Colors.green, size: 28),
+                  SizedBox(width: 8),
+                  Text('Signalement envoyé'),
+                ],
+              ),
+              content: const Text(
+                'L\'incident a été signalé avec succès au gestionnaire de l\'agence. Merci pour votre signalement.',
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: const Text('OK'),
+                ),
+              ],
+            ),
+          );
+        } else {
+          throw Exception(response.data['message'] ?? 'Erreur lors du signalement');
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Erreur : $e')),
+        );
+      }
+    }
   }
 }

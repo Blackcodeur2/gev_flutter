@@ -10,9 +10,20 @@ import 'package:camer_trip/app/config/locale_provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:camer_trip/l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:firebase_core/firebase_core.dart';
+// import 'firebase_options.dart'; // TODO: Décommentez ceci après avoir exécuté 'flutterfire configure'
+import 'package:camer_trip/app/services/push_notification_service.dart';
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await ApiClient.init();
+
+  // Initialisation de Firebase
+  // Décommentez la ligne suivante APRÈS avoir exécuté 'flutterfire configure' dans le terminal
+  // await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  
+  // Initialisation du service de notification Push (Décommentez après Firebase)
+  // await PushNotificationService.init();
 
   runApp(
     ProviderScope(
