@@ -1,3 +1,5 @@
+// ignore_for_file: unnecessary_null_comparison
+
 import 'package:camer_trip/app/config/colors_config.dart';
 import 'package:camer_trip/app/config/const_config.dart';
 import 'package:camer_trip/app/config/theme_provider.dart';
@@ -333,24 +335,15 @@ class _LoginPageState extends ConsumerState<LoginPage>
                           const SizedBox(height: 24),
 
                           // ── Boutons sociaux ───────────────────────────
-                          Row(
-                            children: [
-                              Expanded(
-                                child: _SocialButton(
-                                  label: 'Google',
-                                  icon: Icons.g_mobiledata_rounded,
-                                  onPressed: _handleGoogleLogin,
-                                ),
+                          Center(
+                            child: SizedBox(
+                              width: 250,
+                              child: _SocialButton(
+                                label: 'Google',
+                                icon: Icons.g_mobiledata_rounded,
+                                onPressed: _handleGoogleLogin,
                               ),
-                              const SizedBox(width: 16),
-                              Expanded(
-                                child: _SocialButton(
-                                  label: 'Facebook',
-                                  icon: Icons.facebook_rounded,
-                                  onPressed: () {},
-                                ),
-                              ),
-                            ],
+                            ),
                           ),
 
                           const SizedBox(height: 40),

@@ -99,7 +99,7 @@ class _SettingPageState extends ConsumerState<SettingPage> {
                       isDark, 
                       Icons.language_rounded, 
                       localizations?.language ?? 'Langue', 
-                      localeProvider.locale?.languageCode == 'en' ? (localizations?.english ?? 'Anglais') : (localizations?.french ?? 'Français'), 
+                      localeProvider.locale.languageCode == 'en' ? (localizations?.english ?? 'Anglais') : (localizations?.french ?? 'Français'), 
                       Colors.blue,
                       onTap: () => _showLanguageDialog(context, localeProvider, localizations),
                     ),
@@ -407,7 +407,7 @@ class _SettingPageState extends ConsumerState<SettingPage> {
             children: [
               ListTile(
                 title: Text(localizations?.french ?? 'Français'),
-                trailing: localeProvider.locale?.languageCode != 'en' ? const Icon(Icons.check, color: Colors.green) : null,
+                trailing: localeProvider.locale.languageCode != 'en' ? const Icon(Icons.check, color: Colors.green) : null,
                 onTap: () {
                   localeProvider.setLocale(const Locale('fr'));
                   Navigator.pop(context);
@@ -415,7 +415,7 @@ class _SettingPageState extends ConsumerState<SettingPage> {
               ),
               ListTile(
                 title: Text(localizations?.english ?? 'Anglais'),
-                trailing: localeProvider.locale?.languageCode == 'en' ? const Icon(Icons.check, color: Colors.green) : null,
+                trailing: localeProvider.locale.languageCode == 'en' ? const Icon(Icons.check, color: Colors.green) : null,
                 onTap: () {
                   localeProvider.setLocale(const Locale('en'));
                   Navigator.pop(context);

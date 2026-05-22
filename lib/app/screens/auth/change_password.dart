@@ -70,7 +70,6 @@ class _ChangePasswordPageState extends ConsumerState<ChangePasswordPage> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final cs = theme.colorScheme;
-    final isDark = theme.brightness == Brightness.dark;
     final userAsync = ref.watch(currentUserProvider);
     final hasPassword = userAsync.value?.hasPassword ?? true;
     final localizations = AppLocalizations.of(context);

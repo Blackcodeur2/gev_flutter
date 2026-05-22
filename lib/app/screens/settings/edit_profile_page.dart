@@ -116,7 +116,6 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final cs = theme.colorScheme;
-    final isDark = theme.brightness == Brightness.dark;
     final localizations = AppLocalizations.of(context);
 
     String getAvatarUrl(String? url) {

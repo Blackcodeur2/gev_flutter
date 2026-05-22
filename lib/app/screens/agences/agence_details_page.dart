@@ -55,7 +55,6 @@ class _AgenceDetailsPageState extends State<AgenceDetailsPage> with SingleTicker
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final cs = theme.colorScheme;
-    final isDark = theme.brightness == Brightness.dark;
     
     return Scaffold(
       backgroundColor: cs.surface,

@@ -1,3 +1,5 @@
+// ignore_for_file: unnecessary_null_comparison
+
 import 'package:camer_trip/app/models/voyage_model.dart';
 import 'package:camer_trip/app/services/providers.dart';
 import 'package:camer_trip/app/shared/others/app_bar.dart';
@@ -30,7 +32,7 @@ class _PaymentPageState extends ConsumerState<PaymentPage> {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final user = await ref.read(currentUserProvider.future);
       if (user != null && user.telephone != null) {
-        String phone = user.telephone!;
+        String phone = user.telephone;
         if (phone.startsWith('237')) {
           phone = phone.substring(3);
         }

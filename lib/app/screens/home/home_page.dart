@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:camer_trip/app/config/colors_config.dart';
 import 'package:camer_trip/app/config/const_config.dart';
 import 'package:camer_trip/app/models/ag_model.dart';
@@ -31,6 +32,7 @@ class _HomePageState extends ConsumerState<HomePage>
     with SingleTickerProviderStateMixin {
   late AnimationController _animController;
   late Animation<double> _fadeAnim;
+  Timer? _refreshTimer;
 
   @override
   void initState() {
@@ -45,10 +47,25 @@ class _HomePageState extends ConsumerState<HomePage>
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(syncUserProvider);
     });
+
+    // Actualiser les données toutes les 5 minutes
+    _refreshTimer = Timer.periodic(const Duration(minutes: 5), (_) {
+      _refreshData();
+    });
+  }
+
+  Future<void> _refreshData() async {
+    ref.invalidate(promosProvider);
+    ref.invalidate(agencesProvider);
+    ref.invalidate(destinationsProvider);
+    ref.invalidate(allScheduledTripsProvider);
+    ref.invalidate(myReservationsProvider);
+    await ref.refresh(syncUserProvider.future);
   }
 
   @override
   void dispose() {
+    _refreshTimer?.cancel();
     _animController.dispose();
     super.dispose();
   }
@@ -71,12 +88,7 @@ class _HomePageState extends ConsumerState<HomePage>
         child: SafeArea(
           child: RefreshIndicator(
             onRefresh: () async {
-              ref.invalidate(promosProvider);
-              ref.invalidate(agencesProvider);
-              ref.invalidate(destinationsProvider);
-              ref.invalidate(allScheduledTripsProvider);
-              ref.invalidate(myReservationsProvider);
-              final _ = await ref.refresh(syncUserProvider.future);
+              await _refreshData();
             },
             displacement: 20,
             color: cs.primary,
