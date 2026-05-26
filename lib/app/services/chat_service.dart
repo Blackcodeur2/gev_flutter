@@ -31,4 +31,15 @@ class ChatService {
       throw Exception("Une erreur s'est produite. Veuillez réessayer.");
     }
   }
+  Future<List<Map<String, dynamic>>> getChatHistory() async {
+    try {
+      final response = await dio.get("/chat/history");
+      if (response.statusCode == 200 && response.data['status'] == true) {
+        return List<Map<String, dynamic>>.from(response.data['data']);
+      }
+      return [];
+    } catch (e) {
+      return [];
+    }
+  }
 }

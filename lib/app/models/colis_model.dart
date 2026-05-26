@@ -43,6 +43,18 @@ class ColisModel {
     final station = json['station'];
     final agence = station?['agence'];
     final trajet = json['trajet'];
+    final user = json['user'];
+
+    String resolvedNomExp = json['nom_expediteur']?.toString().trim() ?? '';
+    if (resolvedNomExp.isEmpty && user != null) {
+      resolvedNomExp = '${user['prenom'] ?? ''} ${user['nom'] ?? ''}'.trim();
+    }
+    if (resolvedNomExp.isEmpty) resolvedNomExp = 'Inconnu';
+
+    String resolvedTelExp = json['tel_expediteur']?.toString().trim() ?? '';
+    if (resolvedTelExp.isEmpty && user != null) {
+      resolvedTelExp = user['telephone']?.toString() ?? '';
+    }
 
     return ColisModel(
       id: json['id'],
@@ -51,8 +63,8 @@ class ColisModel {
       trajetId: json['trajet_id'],
       nomColis: json['nom_colis'] ?? 'Colis sans nom',
       description: json['description'],
-      nomExpediteur: json['nom_expediteur'] ?? 'Inconnu',
-      telExpediteur: json['tel_expediteur'] ?? '',
+      nomExpediteur: resolvedNomExp,
+      telExpediteur: resolvedTelExp,
       nomDestinataire: json['nom_destinataire'] ?? 'Inconnu',
       telDestinataire: json['tel_destinataire'] ?? '',
       destination: json['destination'] ?? '',

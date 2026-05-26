@@ -32,6 +32,27 @@ class _ChatBotPageState extends ConsumerState<ChatBotPage> {
   Future<void> _loadHistory() async {
     try {
       final user = ref.read(currentUserProvider).value;
+      
+      // Essayer de charger depuis le backend si l'utilisateur est connecté
+      if (user != null) {
+        final historyFromDb = await _chatService.getChatHistory();
+        if (historyFromDb.isNotEmpty && mounted) {
+           final loadedMessages = historyFromDb.map((item) {
+             return ChatMessage(
+               text: item['content'] ?? '',
+               isUser: item['role'] == 'user',
+               time: DateTime.tryParse(item['created_at'] ?? '') ?? DateTime.now(),
+             );
+           }).toList().reversed.toList();
+           
+           setState(() {
+             _messages = loadedMessages;
+           });
+           return;
+        }
+      }
+
+      // Fallback local (invité ou échec DB)
       final historyKey = user != null ? 'chatbot_history_${user.id}' : 'chatbot_history_guest';
       final prefs = await SharedPreferences.getInstance();
       final String? historyJson = prefs.getString(historyKey);
@@ -41,33 +62,28 @@ class _ChatBotPageState extends ConsumerState<ChatBotPage> {
         if (loadedMessages.isNotEmpty && mounted) {
           setState(() { _messages = loadedMessages; });
         } else if (mounted && _messages.isEmpty) {
-          // Initialise avec le message de bienvenue localisé
-          final localizations = AppLocalizations.of(context);
-          setState(() {
-            _messages = [
-              ChatMessage(
-                text: localizations?.chatbotGreeting ?? "Bonjour ! Je suis votre assistant CamerTrip conçu avec une IA avancée. Comment puis-je vous aider aujourd'hui ?",
-                isUser: false,
-                time: DateTime.now(),
-              ),
-            ];
-          });
+          _initWelcomeMessage();
         }
       } else if (mounted) {
-        final localizations = AppLocalizations.of(context);
-        setState(() {
-          _messages = [
-            ChatMessage(
-              text: localizations?.chatbotGreeting ?? "Bonjour ! Je suis votre assistant CamerTrip conçu avec une IA avancée. Comment puis-je vous aider aujourd'hui ?",
-              isUser: false,
-              time: DateTime.now(),
-            ),
-          ];
-        });
+        _initWelcomeMessage();
       }
     } catch (e) {
-      debugPrint("Erreur chargement historique : \$e");
+      debugPrint("Erreur chargement historique : $e");
+      if (mounted && _messages.isEmpty) _initWelcomeMessage();
     }
+  }
+
+  void _initWelcomeMessage() {
+    final localizations = AppLocalizations.of(context);
+    setState(() {
+      _messages = [
+        ChatMessage(
+          text: localizations?.chatbotGreeting ?? "Bonjour ! Je suis votre assistant CamerTrip conçu avec une IA avancée. Comment puis-je vous aider aujourd'hui ?",
+          isUser: false,
+          time: DateTime.now(),
+        ),
+      ];
+    });
   }
 
   Future<void> _saveHistory() async {
