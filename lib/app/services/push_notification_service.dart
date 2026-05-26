@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'package:camer_trip/app/config/colors_config.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -29,7 +30,7 @@ class PushNotificationService {
 
     // Configuration des notifications locales
     const AndroidInitializationSettings initializationSettingsAndroid =
-        AndroidInitializationSettings('@mipmap/ic_launcher');
+        AndroidInitializationSettings('@drawable/ic_notification');
     
     const InitializationSettings initializationSettings =
         InitializationSettings(android: initializationSettingsAndroid);
@@ -113,6 +114,8 @@ class PushNotificationService {
             channelDescription: 'Canal principal pour les notifications',
             importance: Importance.max,
             priority: Priority.high,
+            icon: '@drawable/ic_notification',
+            color: AppColors.primaryGreen,
           ),
         ),
         payload: message.data.toString(),
