@@ -18,6 +18,7 @@ class _NotificationPageState extends ConsumerState<NotificationPage>
   late AnimationController _animController;
   late Animation<double> _fadeAnim;
   bool isActionLoading = false;
+  final Set<int> _deletedIds = {};
   
   @override
   void initState() {
@@ -77,6 +78,10 @@ class _NotificationPageState extends ConsumerState<NotificationPage>
   }
 
   Future<void> _deleteNotification(NotificationModel notification) async {
+    setState(() {
+      _deletedIds.add(notification.id);
+    });
+    
     final success = await ref.read(notificationServiceProvider).deleteNotification(notification.id);
     if (success) {
       ref.invalidate(myNotificationsProvider);
@@ -139,7 +144,9 @@ class _NotificationPageState extends ConsumerState<NotificationPage>
                     ref.invalidate(myNotificationsProvider);
                   },
                   child: notificationsAsync.when(
-                    data: (notifications) {
+                    data: (allNotifications) {
+                      final notifications = allNotifications.where((n) => !_deletedIds.contains(n.id)).toList();
+                      
                       if (notifications.isEmpty) {
                         return _buildEmptyState(cs, theme);
                       }
@@ -147,9 +154,30 @@ class _NotificationPageState extends ConsumerState<NotificationPage>
                       return ListView.builder(
                         physics: const AlwaysScrollableScrollPhysics(),
                         padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 16.0),
-                        itemCount: notifications.length,
+                        itemCount: notifications.length + 1,
                         itemBuilder: (context, index) {
-                          final notif = notifications[index];
+                          if (index == 0) {
+                            return Padding(
+                              padding: const EdgeInsets.only(bottom: 12.0),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(Icons.swipe_left_rounded, size: 16, color: cs.onSurface.withOpacity(0.5)),
+                                  const SizedBox(width: 8),
+                                  Text(
+                                    localizations?.swipeToDelete ?? 'Glissez vers la gauche pour supprimer',
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w500,
+                                      color: cs.onSurface.withOpacity(0.5),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          }
+                          
+                          final notif = notifications[index - 1];
                           return _buildNotificationCard(notif, cs, theme, isDark);
                         },
                       );

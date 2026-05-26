@@ -207,8 +207,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get termsRequired => 'Please accept the terms of use';
 
   @override
-  String get registerSuccess =>
-      'Registration successful. Please check your email.';
+  String get registerSuccess => 'Registration successful. Please check your email.';
 
   @override
   String get errorPrefix => 'Error: ';
@@ -232,8 +231,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get currentPassword => 'Current password';
 
   @override
-  String get noPasswordSet =>
-      'You have not set a password yet. Please create one to secure your account.';
+  String get noPasswordSet => 'You have not set a password yet. Please create one to secure your account.';
 
   @override
   String get newPassword => 'New password';
@@ -248,8 +246,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get updateBtn => 'UPDATE';
 
   @override
-  String get passwordSecurityInfo =>
-      'For security reasons, choose a strong password of at least 8 characters.';
+  String get passwordSecurityInfo => 'For security reasons, choose a strong password of at least 8 characters.';
 
   @override
   String get passwordChangedSuccess => 'Password successfully changed!';
@@ -267,8 +264,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get resetError => 'Reset error';
 
   @override
-  String get resetSuccessMessage =>
-      'Your password has been successfully reset. You can now log in.';
+  String get resetSuccessMessage => 'Your password has been successfully reset. You can now log in.';
 
   @override
   String get loginBtn => 'LOG IN';
@@ -280,8 +276,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get forgotPasswordTitle => 'Forgot password';
 
   @override
-  String get enterCodeAndNewPassword =>
-      'Enter the code received and your new password.';
+  String get enterCodeAndNewPassword => 'Enter the code received and your new password.';
 
   @override
   String get enterEmailForCode => 'Enter your email to receive the reset code.';
@@ -416,8 +411,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get noInternetTitle => 'No connection';
 
   @override
-  String get noInternetMessage =>
-      'Check your Wi-Fi or mobile data connection and try again.';
+  String get noInternetMessage => 'Check your Wi-Fi or mobile data connection and try again.';
 
   @override
   String get retryBtn => 'Retry';
@@ -438,8 +432,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get noNotifications => 'No Notifications';
 
   @override
-  String get noNotificationsDesc =>
-      'You\'re all caught up! Your trip alerts, reminders and incident reports will appear here.';
+  String get noNotificationsDesc => 'You\'re all caught up! Your trip alerts, reminders and incident reports will appear here.';
 
   @override
   String loadingError(String error) {
@@ -496,8 +489,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get newsHeaderTitle => 'The Traveller\'s Journal';
 
   @override
-  String get newsHeaderSubtitle =>
-      'Latest updates from your favourite agencies';
+  String get newsHeaderSubtitle => 'Latest updates from your favourite agencies';
 
   @override
   String get justNow => 'Just now';
@@ -569,8 +561,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get chatbotTitle => 'AI Assistant';
 
   @override
-  String get chatbotGreeting =>
-      'Hello! I am your CamerTrip assistant powered by advanced AI. How can I help you today?';
+  String get chatbotGreeting => 'Hello! I am your CamerTrip assistant powered by advanced AI. How can I help you today?';
 
   @override
   String get chatbotTyping => 'AI is thinking...';
@@ -691,8 +682,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get paymentUssdTip =>
-      'Dial this code if the payment prompt does not appear automatically.';
+  String get paymentUssdTip => 'Dial this code if the payment prompt does not appear automatically.';
 
   @override
   String paymentPinPrompt(int amount) {
@@ -717,12 +707,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get paymentFailedGeneric => 'The payment failed.';
 
   @override
-  String get paymentFailedInsufficientBalance =>
-      'Failed: Insufficient balance.';
+  String get paymentFailedInsufficientBalance => 'Failed: Insufficient balance.';
 
   @override
-  String get paymentFailedLimitExceeded =>
-      'Failed: Transaction limit exceeded.';
+  String get paymentFailedLimitExceeded => 'Failed: Transaction limit exceeded.';
 
   @override
   String get paymentFailedRefused => 'Failed: Transaction refused by user.';
@@ -762,8 +750,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get finalizePaymentTitle => 'Finalize Payment';
 
   @override
-  String get finalizePaymentSubtitle =>
-      'Complete your payment to permanently secure your seat.';
+  String get finalizePaymentSubtitle => 'Complete your payment to permanently secure your seat.';
 
   @override
   String get paymentPhoneNumber => 'Phone number';
@@ -823,23 +810,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String get paymentDone => 'Payment Complete!';
 
   @override
-  String get paymentDoneMessage =>
-      'Your seat is now validated. The QR code has been activated on your ticket.';
+  String get paymentDoneMessage => 'Your seat is now validated. The QR code has been activated on your ticket.';
 
   @override
   String get paymentRequired => 'Payment required to generate the QR Code.';
 
   @override
-  String get reservationExpired =>
-      'Reservation expired because the trip has started, ended or was cancelled.';
+  String get reservationExpired => 'Reservation expired because the trip has started, ended or was cancelled.';
 
   @override
-  String get voyageCancelled =>
-      'The trip has been cancelled. This ticket can no longer be paid.';
+  String get voyageCancelled => 'The trip has been cancelled. This ticket can no longer be paid.';
 
   @override
-  String get voyageStarted =>
-      'The trip has already started or ended. This ticket can no longer be paid.';
+  String get voyageStarted => 'The trip has already started or ended. This ticket can no longer be paid.';
 
   @override
   String get paymentTimeout2 => 'Payment timed out.';
@@ -859,8 +842,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get profileUpdatedError => 'Failed to update profile';
 
   @override
-  String get editProfileNote =>
-      'Note: Some information such as your registration number or your role cannot be modified manually.';
+  String get editProfileNote => 'Note: Some information such as your registration number or your role cannot be modified manually.';
 
   @override
   String get fieldRequired => 'This field is required';
@@ -878,8 +860,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get contactSupport => 'Contact Support';
 
   @override
-  String get contactSupportDesc =>
-      'Our customer service is available 24/7. Click on a contact method to copy it.';
+  String get contactSupportDesc => 'Our customer service is available 24/7. Click on a contact method to copy it.';
 
   @override
   String get directCall => 'Direct Call';
@@ -908,8 +889,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get stillNeedHelp => 'Still need help?';
 
   @override
-  String get supportAvailabilityDesc =>
-      'Our customer support team is available 24/7 to assist you at any time.';
+  String get supportAvailabilityDesc => 'Our customer support team is available 24/7 to assist you at any time.';
 
   @override
   String get contactSupportBtn => 'CONTACT SUPPORT';
@@ -918,44 +898,37 @@ class AppLocalizationsEn extends AppLocalizations {
   String get faqQ1 => 'How do I make a booking?';
 
   @override
-  String get faqA1 =>
-      'Search for a trip on the home page, select the journey that suits you, choose your seat and proceed with payment via Orange Money or MTN Mobile Money.';
+  String get faqA1 => 'Search for a trip on the home page, select the journey that suits you, choose your seat and proceed with payment via Orange Money or MTN Mobile Money.';
 
   @override
   String get faqQ2 => 'What payment methods are accepted?';
 
   @override
-  String get faqA2 =>
-      'We accept Orange Money (OM) and MTN Mobile Money (MoMo). Payments are fully secure, encrypted, and processed instantly.';
+  String get faqA2 => 'We accept Orange Money (OM) and MTN Mobile Money (MoMo). Payments are fully secure, encrypted, and processed instantly.';
 
   @override
   String get faqQ3 => 'No USSD code received during payment?';
 
   @override
-  String get faqA3 =>
-      'If the USSD confirmation prompt does not display automatically, don\'t worry! Manually dial your operator\'s backup code (*126# for MTN or #150*4*4# for Orange) to authorize the transaction within a few minutes.';
+  String get faqA3 => 'If the USSD confirmation prompt does not display automatically, don\'t worry! Manually dial your operator\'s backup code (*126# for MTN or #150*4*4# for Orange) to authorize the transaction within a few minutes.';
 
   @override
-  String get faqQ4 =>
-      'How long before departure should I arrive at the station?';
+  String get faqQ4 => 'How long before departure should I arrive at the station?';
 
   @override
-  String get faqA4 =>
-      'We strongly advise arriving at the boarding station at least 45 minutes before departure to check-in baggage and validate your digital ticket.';
+  String get faqA4 => 'We strongly advise arriving at the boarding station at least 45 minutes before departure to check-in baggage and validate your digital ticket.';
 
   @override
   String get faqQ5 => 'How do I get my ticket after purchase?';
 
   @override
-  String get faqA5 =>
-      'Your digital ticket is generated instantly after payment validation. You can find it under the \"Tickets\" tab in the form of a QR Code to present at the boarding gate.';
+  String get faqA5 => 'Your digital ticket is generated instantly after payment validation. You can find it under the \"Tickets\" tab in the form of a QR Code to present at the boarding gate.';
 
   @override
   String get faqQ6 => 'Can I cancel or reschedule a trip?';
 
   @override
-  String get faqA6 =>
-      'You can cancel or request a reschedule up to 24 hours before departure from your reservation details under the \"Tickets\" tab. A small cancellation fee may be charged by the agency.';
+  String get faqA6 => 'You can cancel or request a reschedule up to 24 hours before departure from your reservation details under the \"Tickets\" tab. A small cancellation fee may be charged by the agency.';
 
   @override
   String appVersionString(String version) {
@@ -966,17 +939,17 @@ class AppLocalizationsEn extends AppLocalizations {
   String get ourMissionTitle => 'Our Mission 🚀';
 
   @override
-  String get ourMissionContent =>
-      'Simplify the life of travelers in Cameroon by providing an intuitive, secure, and fast bus booking platform. No more queuing for hours!';
+  String get ourMissionContent => 'Simplify the life of travelers in Cameroon by providing an intuitive, secure, and fast bus booking platform. No more queuing for hours!';
 
   @override
   String get ourVisionTitle => 'Our Vision 🌍';
 
   @override
-  String get ourVisionContent =>
-      'Become the leader in digital mobility in Cameroon and Central Africa by connecting all transport agencies through a unique and premium interface.';
+  String get ourVisionContent => 'Become the leader in digital mobility in Cameroon and Central Africa by connecting all transport agencies through a unique and premium interface.';
 
   @override
-  String get copyrightText =>
-      '©2026 CamerTrip - All rights reserved\nMade with ❤️ in Cameroon';
+  String get copyrightText => '©2026 CamerTrip - All rights reserved\nMade with ❤️ in Cameroon';
+
+  @override
+  String get swipeToDelete => 'Swipe left to delete';
 }

@@ -183,8 +183,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get strong => 'Fort';
 
   @override
-  String get acceptTerms =>
-      'J\'accepte les conditions d\'utilisation et la politique de confidentialité.';
+  String get acceptTerms => 'J\'accepte les conditions d\'utilisation et la politique de confidentialité.';
 
   @override
   String get createAccountBtn => 'CRÉER MON COMPTE';
@@ -208,8 +207,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get termsRequired => 'Veuillez accepter les conditions d\'utilisation';
 
   @override
-  String get registerSuccess =>
-      'Inscription réussie. Veuillez vérifier votre email.';
+  String get registerSuccess => 'Inscription réussie. Veuillez vérifier votre email.';
 
   @override
   String get errorPrefix => 'Erreur : ';
@@ -233,8 +231,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get currentPassword => 'Mot de passe actuel';
 
   @override
-  String get noPasswordSet =>
-      'Vous n\'avez pas encore de mot de passe défini. Veuillez en créer un pour sécuriser votre compte.';
+  String get noPasswordSet => 'Vous n\'avez pas encore de mot de passe défini. Veuillez en créer un pour sécuriser votre compte.';
 
   @override
   String get newPassword => 'Nouveau mot de passe';
@@ -249,8 +246,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get updateBtn => 'METTRE À JOUR';
 
   @override
-  String get passwordSecurityInfo =>
-      'Pour des raisons de sécurité, choisissez un mot de passe robuste d\'au moins 8 caractères.';
+  String get passwordSecurityInfo => 'Pour des raisons de sécurité, choisissez un mot de passe robuste d\'au moins 8 caractères.';
 
   @override
   String get passwordChangedSuccess => 'Mot de passe modifié avec succès !';
@@ -268,8 +264,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get resetError => 'Erreur de réinitialisation';
 
   @override
-  String get resetSuccessMessage =>
-      'Votre mot de passe a été réinitialisé avec succès. Vous pouvez maintenant vous connecter.';
+  String get resetSuccessMessage => 'Votre mot de passe a été réinitialisé avec succès. Vous pouvez maintenant vous connecter.';
 
   @override
   String get loginBtn => 'SE CONNECTER';
@@ -281,12 +276,10 @@ class AppLocalizationsFr extends AppLocalizations {
   String get forgotPasswordTitle => 'Mot de passe oublié';
 
   @override
-  String get enterCodeAndNewPassword =>
-      'Entrez le code reçu et votre nouveau mot de passe.';
+  String get enterCodeAndNewPassword => 'Entrez le code reçu et votre nouveau mot de passe.';
 
   @override
-  String get enterEmailForCode =>
-      'Entrez votre email pour recevoir le code de réinitialisation.';
+  String get enterEmailForCode => 'Entrez votre email pour recevoir le code de réinitialisation.';
 
   @override
   String get yourEmailAddress => 'Votre adresse email';
@@ -418,8 +411,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get noInternetTitle => 'Pas de connexion';
 
   @override
-  String get noInternetMessage =>
-      'Vérifiez votre connexion Wi-Fi ou vos données mobiles et réessayez.';
+  String get noInternetMessage => 'Vérifiez votre connexion Wi-Fi ou vos données mobiles et réessayez.';
 
   @override
   String get retryBtn => 'Réessayer';
@@ -431,8 +423,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get markAllRead => 'Tout lire';
 
   @override
-  String get allNotificationsRead =>
-      'Toutes les notifications sont marquées comme lues';
+  String get allNotificationsRead => 'Toutes les notifications sont marquées comme lues';
 
   @override
   String get notificationDeleted => 'Notification supprimée';
@@ -441,8 +432,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get noNotifications => 'Aucune Notification';
 
   @override
-  String get noNotificationsDesc =>
-      'Vous êtes à jour ! Vos alertes de voyage, rappels et rapports d\'incidents apparaîtront ici.';
+  String get noNotificationsDesc => 'Vous êtes à jour ! Vos alertes de voyage, rappels et rapports d\'incidents apparaîtront ici.';
 
   @override
   String loadingError(String error) {
@@ -571,8 +561,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get chatbotTitle => 'Assistant IA';
 
   @override
-  String get chatbotGreeting =>
-      'Bonjour ! Je suis votre assistant CamerTrip conçu avec une IA avancée. Comment puis-je vous aider aujourd\'hui ?';
+  String get chatbotGreeting => 'Bonjour ! Je suis votre assistant CamerTrip conçu avec une IA avancée. Comment puis-je vous aider aujourd\'hui ?';
 
   @override
   String get chatbotTyping => 'L\'IA réfléchit...';
@@ -693,8 +682,7 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
-  String get paymentUssdTip =>
-      'Composez ce code si le prompt de validation ne s\'affiche pas automatiquement.';
+  String get paymentUssdTip => 'Composez ce code si le prompt de validation ne s\'affiche pas automatiquement.';
 
   @override
   String paymentPinPrompt(int amount) {
@@ -708,8 +696,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get paymentCloseRetry => 'Fermer / Recommencer';
 
   @override
-  String get paymentTimeout =>
-      'Délai de paiement dépassé. Vérifiez vos billets.';
+  String get paymentTimeout => 'Délai de paiement dépassé. Vérifiez vos billets.';
 
   @override
   String paymentError(String message) {
@@ -720,16 +707,13 @@ class AppLocalizationsFr extends AppLocalizations {
   String get paymentFailedGeneric => 'Le paiement a échoué.';
 
   @override
-  String get paymentFailedInsufficientBalance =>
-      'Échec : Solde insuffisant sur votre compte.';
+  String get paymentFailedInsufficientBalance => 'Échec : Solde insuffisant sur votre compte.';
 
   @override
-  String get paymentFailedLimitExceeded =>
-      'Échec : Limite de transaction dépassée.';
+  String get paymentFailedLimitExceeded => 'Échec : Limite de transaction dépassée.';
 
   @override
-  String get paymentFailedRefused =>
-      'Échec : Transaction refusée par l\'utilisateur.';
+  String get paymentFailedRefused => 'Échec : Transaction refusée par l\'utilisateur.';
 
   @override
   String paymentFailedReason(String reason) {
@@ -766,8 +750,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get finalizePaymentTitle => 'Finaliser le Paiement';
 
   @override
-  String get finalizePaymentSubtitle =>
-      'Complétez votre paiement pour sécuriser définitivement votre place.';
+  String get finalizePaymentSubtitle => 'Complétez votre paiement pour sécuriser définitivement votre place.';
 
   @override
   String get paymentPhoneNumber => 'Numéro de téléphone';
@@ -827,23 +810,19 @@ class AppLocalizationsFr extends AppLocalizations {
   String get paymentDone => 'Paiement Effectué !';
 
   @override
-  String get paymentDoneMessage =>
-      'Votre place est désormais validée. Le QR code a été activé sur votre billet.';
+  String get paymentDoneMessage => 'Votre place est désormais validée. Le QR code a été activé sur votre billet.';
 
   @override
   String get paymentRequired => 'Paiement requis pour générer le QR Code.';
 
   @override
-  String get reservationExpired =>
-      'Réservation expirée car le voyage a débuté, s\'est terminé ou a été annulé.';
+  String get reservationExpired => 'Réservation expirée car le voyage a débuté, s\'est terminé ou a été annulé.';
 
   @override
-  String get voyageCancelled =>
-      'Le voyage a été annulé. Ce billet ne peut plus être payé.';
+  String get voyageCancelled => 'Le voyage a été annulé. Ce billet ne peut plus être payé.';
 
   @override
-  String get voyageStarted =>
-      'Le voyage a déjà débuté ou est terminé. Ce billet ne peut plus être payé.';
+  String get voyageStarted => 'Le voyage a déjà débuté ou est terminé. Ce billet ne peut plus être payé.';
 
   @override
   String get paymentTimeout2 => 'Délai de paiement dépassé.';
@@ -863,8 +842,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get profileUpdatedError => 'Échec de la mise à jour';
 
   @override
-  String get editProfileNote =>
-      'Note : Certaines informations comme votre matricule ou votre rôle ne peuvent être modifiées manuellement.';
+  String get editProfileNote => 'Note : Certaines informations comme votre matricule ou votre rôle ne peuvent être modifiées manuellement.';
 
   @override
   String get fieldRequired => 'Ce champ est requis';
@@ -882,8 +860,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get contactSupport => 'Contacter le Support';
 
   @override
-  String get contactSupportDesc =>
-      'Notre service client est disponible 24h/24 et 7j/7. Cliquez sur un moyen de contact pour le copier.';
+  String get contactSupportDesc => 'Notre service client est disponible 24h/24 et 7j/7. Cliquez sur un moyen de contact pour le copier.';
 
   @override
   String get directCall => 'Appel Direct';
@@ -912,8 +889,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get stillNeedHelp => 'Encore besoin d\'aide ?';
 
   @override
-  String get supportAvailabilityDesc =>
-      'Notre équipe de support client est disponible 24/7 pour vous assister à tout moment.';
+  String get supportAvailabilityDesc => 'Notre équipe de support client est disponible 24/7 pour vous assister à tout moment.';
 
   @override
   String get contactSupportBtn => 'CONTACTER LE SUPPORT';
@@ -922,43 +898,37 @@ class AppLocalizationsFr extends AppLocalizations {
   String get faqQ1 => 'Comment effectuer une réservation ?';
 
   @override
-  String get faqA1 =>
-      'Recherchez un trajet sur la page d\'accueil, sélectionnez le voyage qui vous convient, choisissez votre siège et procédez au paiement via Orange Money ou MTN Mobile Money.';
+  String get faqA1 => 'Recherchez un trajet sur la page d\'accueil, sélectionnez le voyage qui vous convient, choisissez votre siège et procédez au paiement via Orange Money ou MTN Mobile Money.';
 
   @override
   String get faqQ2 => 'Quels sont les moyens de paiement acceptés ?';
 
   @override
-  String get faqA2 =>
-      'Nous acceptons Orange Money (OM) et MTN Mobile Money (MoMo). Les paiements sont entièrement sécurisés, cryptés et traités instantanément.';
+  String get faqA2 => 'Nous acceptons Orange Money (OM) et MTN Mobile Money (MoMo). Les paiements sont entièrement sécurisés, cryptés et traités instantanément.';
 
   @override
   String get faqQ3 => 'Pas de code USSD reçu lors du paiement ?';
 
   @override
-  String get faqA3 =>
-      'Si la fenêtre de confirmation USSD ne s\'affiche pas automatiquement, pas d\'inquiétude ! Composez manuellement le code de secours de votre opérateur (*126# pour MTN ou #150*4*4# pour Orange) afin d\'autoriser la transaction dans les minutes qui suivent.';
+  String get faqA3 => 'Si la fenêtre de confirmation USSD ne s\'affiche pas automatiquement, pas d\'inquiétude ! Composez manuellement le code de secours de votre opérateur (*126# pour MTN ou #150*4*4# pour Orange) afin d\'autoriser la transaction dans les minutes qui suivent.';
 
   @override
   String get faqQ4 => 'Combien de temps avant le départ à la gare ?';
 
   @override
-  String get faqA4 =>
-      'Nous vous conseillons vivement de vous présenter à la gare d\'embarquement au moins 45 minutes avant l\'heure de départ afin de procéder à l\'enregistrement des bagages et à la validation de votre billet numérique.';
+  String get faqA4 => 'Nous vous conseillons vivement de vous présenter à la gare d\'embarquement au moins 45 minutes avant l\'heure de départ afin de procéder à l\'enregistrement des bagages et à la validation de votre billet numérique.';
 
   @override
   String get faqQ5 => 'Comment récupérer mon ticket après l\'achat ?';
 
   @override
-  String get faqA5 =>
-      'Votre ticket numérique est généré instantanément après validation du paiement. Vous le retrouverez dans l\'onglet \"Billets\" sous forme de QR Code que vous présenterez au guichet d\'embarquement.';
+  String get faqA5 => 'Votre ticket numérique est généré instantanément après validation du paiement. Vous le retrouverez dans l\'onglet \"Billets\" sous forme de QR Code que vous présenterez au guichet d\'embarquement.';
 
   @override
   String get faqQ6 => 'Puis-je annuler ou reporter un voyage ?';
 
   @override
-  String get faqA6 =>
-      'Vous pouvez annuler ou demander un report jusqu\'à 24 heures avant le départ depuis les détails de votre réservation dans l\'onglet \"Billets\". Des frais d\'annulation minimes peuvent être retenus par l\'agence.';
+  String get faqA6 => 'Vous pouvez annuler ou demander un report jusqu\'à 24 heures avant le départ depuis les détails de votre réservation dans l\'onglet \"Billets\". Des frais d\'annulation minimes peuvent être retenus par l\'agence.';
 
   @override
   String appVersionString(String version) {
@@ -969,17 +939,17 @@ class AppLocalizationsFr extends AppLocalizations {
   String get ourMissionTitle => 'Notre Mission 🚀';
 
   @override
-  String get ourMissionContent =>
-      'Simplifier la vie des voyageurs au Cameroun en offrant une plateforme de réservation de bus intuitive, sécurisée et rapide. Plus besoin de faire la queue pendant des heures !';
+  String get ourMissionContent => 'Simplifier la vie des voyageurs au Cameroun en offrant une plateforme de réservation de bus intuitive, sécurisée et rapide. Plus besoin de faire la queue pendant des heures !';
 
   @override
   String get ourVisionTitle => 'Notre Vision 🌍';
 
   @override
-  String get ourVisionContent =>
-      'Devenir le leader de la mobilité digitale au Cameroun et en Afrique centrale, en connectant toutes les agences de transport à travers une interface unique et premium.';
+  String get ourVisionContent => 'Devenir le leader de la mobilité digitale au Cameroun et en Afrique centrale, en connectant toutes les agences de transport à travers une interface unique et premium.';
 
   @override
-  String get copyrightText =>
-      '©2026 CamerTrip - Tous droits réservés\nFait avec ❤️ au Cameroun';
+  String get copyrightText => '©2026 CamerTrip - Tous droits réservés\nFait avec ❤️ au Cameroun';
+
+  @override
+  String get swipeToDelete => 'Glissez vers la gauche pour supprimer';
 }
