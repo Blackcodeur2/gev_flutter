@@ -20,7 +20,6 @@ class ReservationService {
         data: {
           'voyage_id': voyageId,
           'station_id': stationId,
-
           'place': place,
           'prix': prix,
           'payment_phone': telephonePaiement, // Champ utile pour l'API
