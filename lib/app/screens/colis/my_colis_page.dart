@@ -162,6 +162,8 @@ class _MyColisPageState extends ConsumerState<MyColisPage> with SingleTickerProv
                     children: [
                       Text(
                         colis.nomColis,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                         style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                       ),
                       Text(
@@ -199,12 +201,17 @@ class _MyColisPageState extends ConsumerState<MyColisPage> with SingleTickerProv
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  isSent
-                    ? (AppLocalizations.of(context)?.colisRecipient(colis.nomDestinataire) ?? 'Destinataire: ${colis.nomDestinataire}')
-                    : (AppLocalizations.of(context)?.colisSender(colis.nomExpediteur) ?? 'Expéditeur: ${colis.nomExpediteur}'),
-                  style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+                Expanded(
+                  child: Text(
+                    isSent
+                      ? (AppLocalizations.of(context)?.colisRecipient(colis.nomDestinataire) ?? 'Destinataire: ${colis.nomDestinataire}')
+                      : (AppLocalizations.of(context)?.colisSender(colis.nomExpediteur) ?? 'Expéditeur: ${colis.nomExpediteur}'),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+                  ),
                 ),
+                const SizedBox(width: 12),
                 Text(
                   dateFormat.format(colis.createdAt),
                   style: TextStyle(fontSize: 11, color: cs.onSurface.withOpacity(0.6)),
