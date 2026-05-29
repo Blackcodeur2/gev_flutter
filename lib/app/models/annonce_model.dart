@@ -1,4 +1,5 @@
 import 'package:camer_trip/app/models/ag_model.dart';
+import 'package:camer_trip/app/services/api_client_service.dart';
 import 'package:flutter/material.dart';
 
 class AnnonceModel {
@@ -34,12 +35,30 @@ class AnnonceModel {
       id: json['id']?.toString() ?? '',
       agence: agence,
       content: json['contenu_text'] ?? '',
-      imageUrl: json['image_url'],
+      imageUrl: _resolveImageUrl(json['image_url']),
       date: json['created_at'] != null ? DateTime.parse(json['created_at']) : DateTime.now(),
       likes: json['likes'] ?? 0,
       isPromo: json['is_promo'] == true || json['is_promo'] == 1,
       actionLabel: json['is_promo'] == true || json['is_promo'] == 1 ? 'Réserver Promo' : null,
     );
+  }
+
+  static String? _resolveImageUrl(dynamic raw) {
+    if (raw == null) return null;
+    final url = raw.toString().trim();
+    if (url.isEmpty) return null;
+
+    if (url.startsWith('http')) {
+      if (url.contains('localhost')) {
+        final serverIp = Uri.parse(ApiClient().baseUrl).host;
+        return url.replaceAll('localhost', serverIp);
+      }
+      return url;
+    }
+
+    final base = ApiClient().baseUrl.replaceAll('/api', '');
+    final path = url.replaceAll('\\', '/').replaceFirst(RegExp(r'^storage/'), '');
+    return '$base/storage/$path';
   }
 }
 
