@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:camer_trip/app/models/reservation_model.dart';
 import 'package:camer_trip/app/services/providers.dart';
 import 'package:camer_trip/app/shared/others/app_bar.dart';
@@ -5,6 +7,7 @@ import 'package:camer_trip/app/utils/api_error_handler.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:printing/printing.dart';
 import 'package:camer_trip/l10n/app_localizations.dart';
 
 class ReservationsPages extends ConsumerStatefulWidget {
@@ -17,6 +20,7 @@ class ReservationsPages extends ConsumerStatefulWidget {
 class _ReservationsPagesState extends ConsumerState<ReservationsPages>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
+  final Set<int> _downloadingReservations = {};
 
   @override
   void initState() {
@@ -42,7 +46,9 @@ class _ReservationsPagesState extends ConsumerState<ReservationsPages>
       body: SafeArea(
         child: Column(
           children: [
-            MyAppBar(title: localizations?.myReservationsTitle ?? 'Mes Réservations'),
+            MyAppBar(
+              title: localizations?.myReservationsTitle ?? 'Mes Réservations',
+            ),
             const SizedBox(height: 16),
             TabBar(
               controller: _tabController,
@@ -70,10 +76,14 @@ class _ReservationsPagesState extends ConsumerState<ReservationsPages>
                 loading: () => const Center(child: CircularProgressIndicator()),
                 error: (e, s) => Center(
                   child: Text(
+<<<<<<< HEAD
                     '${AppLocalizations.of(context)?.errorPrefix2 ?? 'Erreur: '}${ApiErrorHandler.userMessage(
                       e,
                       fallback: AppLocalizations.of(context)?.unknownError ?? 'Erreur inconnue',
                     )}',
+=======
+                    '${AppLocalizations.of(context)?.errorPrefix2 ?? 'Erreur: '}$e',
+>>>>>>> ba1fd260a3e5279e30d933afe0e1bf4699fbc9e1
                   ),
                 ),
               ),
@@ -84,8 +94,13 @@ class _ReservationsPagesState extends ConsumerState<ReservationsPages>
     );
   }
 
-  Widget _buildReservationList(List<ReservationModel> all, String statusFilter) {
-    final filtered = all.where((element) => element.status == statusFilter).toList();
+  Widget _buildReservationList(
+    List<ReservationModel> all,
+    String statusFilter,
+  ) {
+    final filtered = all
+        .where((element) => element.status == statusFilter)
+        .toList();
 
     if (filtered.isEmpty) {
       return RefreshIndicator(
@@ -98,16 +113,31 @@ class _ReservationsPagesState extends ConsumerState<ReservationsPages>
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.history_rounded, size: 64, color: Theme.of(context).colorScheme.onSurface.withOpacity(0.1)),
+                  Icon(
+                    Icons.history_rounded,
+                    size: 64,
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.onSurface.withOpacity(0.1),
+                  ),
                   const SizedBox(height: 16),
                   Text(
                     statusFilter == 'validee'
-                      ? (AppLocalizations.of(context)?.noReservationValidated ?? 'Aucune réservation validée')
-                      : statusFilter == 'annulee'
-                        ? (AppLocalizations.of(context)?.noReservationCancelled ?? 'Aucune réservation annulée')
-                        : (AppLocalizations.of(context)?.noReservationPending ?? 'Aucune réservation en attente'),
+                        ? (AppLocalizations.of(
+                                context,
+                              )?.noReservationValidated ??
+                              'Aucune réservation validée')
+                        : statusFilter == 'annulee'
+                        ? (AppLocalizations.of(
+                                context,
+                              )?.noReservationCancelled ??
+                              'Aucune réservation annulée')
+                        : (AppLocalizations.of(context)?.noReservationPending ??
+                              'Aucune réservation en attente'),
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+                      color: Theme.of(
+                        context,
+                      ).colorScheme.onSurface.withOpacity(0.6),
                     ),
                   ),
                 ],
@@ -121,7 +151,12 @@ class _ReservationsPagesState extends ConsumerState<ReservationsPages>
     return RefreshIndicator(
       onRefresh: () => ref.refresh(myReservationsProvider.future),
       child: ListView.builder(
-        padding: const EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 130),
+        padding: const EdgeInsets.only(
+          left: 16,
+          right: 16,
+          top: 16,
+          bottom: 130,
+        ),
         physics: const AlwaysScrollableScrollPhysics(),
         itemCount: filtered.length,
         itemBuilder: (context, index) {
@@ -190,24 +225,38 @@ class _ReservationsPagesState extends ConsumerState<ReservationsPages>
                             color: cs.primary.withOpacity(0.1),
                             shape: BoxShape.circle,
                           ),
-                          child: Icon(Icons.directions_bus_rounded, color: cs.primary, size: 20),
+                          child: Icon(
+                            Icons.directions_bus_rounded,
+                            color: cs.primary,
+                            size: 20,
+                          ),
                         ),
                         const SizedBox(width: 12),
                         Text(
                           res.agenceName ?? 'Agence',
-                          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
                         ),
                       ],
                     ),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 6,
+                      ),
                       decoration: BoxDecoration(
                         color: statusColor.withOpacity(0.1),
                         borderRadius: BorderRadius.circular(30),
                       ),
                       child: Text(
                         statusLabel,
-                        style: TextStyle(color: statusColor, fontWeight: FontWeight.bold, fontSize: 12),
+                        style: TextStyle(
+                          color: statusColor,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 12,
+                        ),
                       ),
                     ),
                   ],
@@ -219,20 +268,44 @@ class _ReservationsPagesState extends ConsumerState<ReservationsPages>
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(res.route?.split(' ↔ ').first ?? '...', style: const TextStyle(fontWeight: FontWeight.bold)),
+                          Text(
+                            res.route?.split(' ↔ ').first ?? '...',
+                            style: const TextStyle(fontWeight: FontWeight.bold),
+                          ),
                           const SizedBox(height: 4),
-                          Text('${res.date} • ${res.time}', style: const TextStyle(color: Colors.grey, fontSize: 12)),
+                          Text(
+                            '${res.date} • ${res.time}',
+                            style: const TextStyle(
+                              color: Colors.grey,
+                              fontSize: 12,
+                            ),
+                          ),
                         ],
                       ),
                     ),
-                    Icon(Icons.arrow_forward_rounded, color: cs.primary.withOpacity(0.3), size: 20),
+                    Icon(
+                      Icons.arrow_forward_rounded,
+                      color: cs.primary.withOpacity(0.3),
+                      size: 20,
+                    ),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
-                          Text(res.route?.split(' ↔ ').last ?? '...', style: const TextStyle(fontWeight: FontWeight.bold)),
+                          Text(
+                            res.route?.split(' ↔ ').last ?? '...',
+                            style: const TextStyle(fontWeight: FontWeight.bold),
+                          ),
                           const SizedBox(height: 4),
-                          Text(localizations?.seatLabel(res.place.toString()) ?? 'Siège #${res.place}', style: TextStyle(color: cs.primary, fontWeight: FontWeight.bold, fontSize: 12)),
+                          Text(
+                            localizations?.seatLabel(res.place.toString()) ??
+                                'Siège #${res.place}',
+                            style: TextStyle(
+                              color: cs.primary,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 12,
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -248,19 +321,123 @@ class _ReservationsPagesState extends ConsumerState<ReservationsPages>
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('Référence: ${res.numReservation}', style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500)),
+                      Expanded(
+                        child: Text(
+                          'Référence: ${res.numReservation}',
+                          style: const TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
                       Text(
                         '${res.prix.toInt()} FCFA',
-                        style: TextStyle(color: cs.primary, fontWeight: FontWeight.w900, fontSize: 16),
+                        style: TextStyle(
+                          color: cs.primary,
+                          fontWeight: FontWeight.w900,
+                          fontSize: 16,
+                        ),
                       ),
                     ],
                   ),
                 ),
+                if (res.status == 'validee') ...[
+                  const SizedBox(height: 14),
+                  SizedBox(
+                    width: double.infinity,
+                    child: OutlinedButton.icon(
+                      onPressed:
+                          res.id != null &&
+                              _downloadingReservations.contains(res.id!)
+                          ? null
+                          : () => _downloadReservationTicket(res),
+                      icon:
+                          res.id != null &&
+                              _downloadingReservations.contains(res.id!)
+                          ? const SizedBox(
+                              width: 18,
+                              height: 18,
+                              child: CircularProgressIndicator(strokeWidth: 2),
+                            )
+                          : const Icon(Icons.download_outlined),
+                      label: Text(
+                        res.id != null &&
+                                _downloadingReservations.contains(res.id!)
+                            ? (AppLocalizations.of(context)?.downloading ??
+                                  'Téléchargement...')
+                            : (AppLocalizations.of(context)?.downloadPdf ??
+                                  'Télécharger le Ticket PDF'),
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14,
+                        ),
+                      ),
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: cs.primary,
+                        side: BorderSide(color: cs.primary.withOpacity(0.25)),
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ],
             ),
           ),
         ),
       ),
     );
+  }
+
+  Future<void> _downloadReservationTicket(ReservationModel reservation) async {
+    final reservationId = reservation.id;
+    if (reservationId == null ||
+        _downloadingReservations.contains(reservationId))
+      return;
+    setState(() => _downloadingReservations.add(reservationId));
+
+    try {
+      final reservationService = ref.read(reservationServiceProvider);
+      final pdfBytes = await reservationService.downloadTicketPdf(
+        reservationId,
+      );
+
+      await Printing.sharePdf(
+        bytes: Uint8List.fromList(pdfBytes),
+        filename: 'ticket_${reservation.numReservation ?? reservation.id}.pdf',
+      );
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              AppLocalizations.of(context)?.ticketPdfReady ??
+                  'Ticket PDF prêt ! 📄',
+            ),
+            backgroundColor: Colors.green,
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              AppLocalizations.of(context)?.downloadError(e.toString()) ??
+                  'Erreur lors du téléchargement : ${e.toString()}',
+            ),
+            backgroundColor: Colors.red,
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _downloadingReservations.remove(reservation.id));
+      }
+    }
   }
 }

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'dart:typed_data';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:printing/printing.dart';
 import '../../services/providers.dart';
 import '../../models/colis_model.dart';
 import '../../shared/others/app_bar.dart';
@@ -14,8 +17,10 @@ class MyColisPage extends ConsumerStatefulWidget {
   ConsumerState<MyColisPage> createState() => _MyColisPageState();
 }
 
-class _MyColisPageState extends ConsumerState<MyColisPage> with SingleTickerProviderStateMixin {
+class _MyColisPageState extends ConsumerState<MyColisPage>
+    with SingleTickerProviderStateMixin {
   late TabController _tabController;
+  final Set<int> _downloadingColis = {};
 
   @override
   void initState() {
@@ -68,18 +73,30 @@ class _MyColisPageState extends ConsumerState<MyColisPage> with SingleTickerProv
             Expanded(
               child: userAsync.when(
                 data: (user) {
-                  if (user == null) return Center(child: Text(localizations?.pleaseLogin ?? 'Veuillez vous connecter'));
-                  
+                  if (user == null)
+                    return Center(
+                      child: Text(
+                        localizations?.pleaseLogin ?? 'Veuillez vous connecter',
+                      ),
+                    );
+
                   return colisAsync.when(
                     data: (allColis) {
-                      final sentColis = allColis.where((ColisModel c) => 
-                        c.userId == user.id || c.telExpediteur == user.telephone
-                      ).toList();
-                      
-                      final receivedColis = allColis.where((ColisModel c) => 
-                        c.telDestinataire == user.telephone && c.userId != user.id
-                      ).toList();
+                      final sentColis = allColis
+                          .where(
+                            (ColisModel c) =>
+                                c.userId == user.id ||
+                                c.telExpediteur == user.telephone,
+                          )
+                          .toList();
 
+                      final receivedColis = allColis
+                          .where(
+                            (ColisModel c) =>
+                                c.telDestinataire == user.telephone &&
+                                c.userId != user.id,
+                          )
+                          .toList();
 
                       return TabBarView(
                         controller: _tabController,
@@ -89,6 +106,7 @@ class _MyColisPageState extends ConsumerState<MyColisPage> with SingleTickerProv
                         ],
                       );
                     },
+<<<<<<< HEAD
                     loading: () => const Center(child: CircularProgressIndicator()),
                     error: (e, s) => Center(
                       child: Text(
@@ -96,6 +114,13 @@ class _MyColisPageState extends ConsumerState<MyColisPage> with SingleTickerProv
                           e,
                           fallback: AppLocalizations.of(context)?.unknownError ?? 'Erreur inconnue',
                         )}',
+=======
+                    loading: () =>
+                        const Center(child: CircularProgressIndicator()),
+                    error: (e, s) => Center(
+                      child: Text(
+                        '${AppLocalizations.of(context)?.errorPrefix2 ?? 'Erreur: '}$e',
+>>>>>>> ba1fd260a3e5279e30d933afe0e1bf4699fbc9e1
                       ),
                     ),
                   );
@@ -103,10 +128,14 @@ class _MyColisPageState extends ConsumerState<MyColisPage> with SingleTickerProv
                 loading: () => const Center(child: CircularProgressIndicator()),
                 error: (e, s) => Center(
                   child: Text(
+<<<<<<< HEAD
                     '${AppLocalizations.of(context)?.errorPrefix2 ?? 'Erreur: '}${ApiErrorHandler.userMessage(
                       e,
                       fallback: AppLocalizations.of(context)?.unknownError ?? 'Erreur inconnue',
                     )}',
+=======
+                    '${AppLocalizations.of(context)?.errorPrefix2 ?? 'Erreur: '}$e',
+>>>>>>> ba1fd260a3e5279e30d933afe0e1bf4699fbc9e1
                   ),
                 ),
               ),
@@ -123,13 +152,22 @@ class _MyColisPageState extends ConsumerState<MyColisPage> with SingleTickerProv
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.inventory_2_outlined, size: 64, color: cs.onSurface.withOpacity(0.2)),
+            Icon(
+              Icons.inventory_2_outlined,
+              size: 64,
+              color: cs.onSurface.withOpacity(0.2),
+            ),
             const SizedBox(height: 16),
             Text(
               isSent
-                ? (AppLocalizations.of(context)?.noColisSent ?? 'Aucun colis envoyé')
-                : (AppLocalizations.of(context)?.noColisToReceive ?? 'Aucun colis à recevoir'),
-              style: TextStyle(color: cs.onSurface.withOpacity(0.5), fontSize: 16),
+                  ? (AppLocalizations.of(context)?.noColisSent ??
+                        'Aucun colis envoyé')
+                  : (AppLocalizations.of(context)?.noColisToReceive ??
+                        'Aucun colis à recevoir'),
+              style: TextStyle(
+                color: cs.onSurface.withOpacity(0.5),
+                fontSize: 16,
+              ),
             ),
           ],
         ),
@@ -148,7 +186,7 @@ class _MyColisPageState extends ConsumerState<MyColisPage> with SingleTickerProv
 
   Widget _buildColisCard(ColisModel colis, ColorScheme cs, bool isSent) {
     final dateFormat = DateFormat('dd MMM yyyy');
-    
+
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
@@ -168,7 +206,11 @@ class _MyColisPageState extends ConsumerState<MyColisPage> with SingleTickerProv
                     color: cs.primary.withOpacity(0.1),
                     shape: BoxShape.circle,
                   ),
-                  child: Icon(Icons.local_shipping_rounded, color: cs.primary, size: 24),
+                  child: Icon(
+                    Icons.local_shipping_rounded,
+                    color: cs.primary,
+                    size: 24,
+                  ),
                 ),
                 const SizedBox(width: 16),
                 Expanded(
@@ -179,11 +221,18 @@ class _MyColisPageState extends ConsumerState<MyColisPage> with SingleTickerProv
                         colis.nomColis,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
                       ),
                       Text(
-                        AppLocalizations.of(context)?.colisRef(colis.id) ?? 'Réf: #C-${colis.id}',
-                        style: TextStyle(color: cs.onSurface.withOpacity(0.5), fontSize: 12),
+                        AppLocalizations.of(context)?.colisRef(colis.id) ??
+                            'Réf: #C-${colis.id}',
+                        style: TextStyle(
+                          color: cs.onSurface.withOpacity(0.5),
+                          fontSize: 12,
+                        ),
                       ),
                     ],
                   ),
@@ -198,9 +247,22 @@ class _MyColisPageState extends ConsumerState<MyColisPage> with SingleTickerProv
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                _buildInfoColumn(AppLocalizations.of(context)?.colisOrigin ?? 'Origine', colis.villeSource ?? '...', cs),
-                Icon(Icons.arrow_forward, size: 16, color: cs.primary.withOpacity(0.3)),
-                _buildInfoColumn(AppLocalizations.of(context)?.colisDestination ?? 'Destination', colis.destination, cs),
+                _buildInfoColumn(
+                  AppLocalizations.of(context)?.colisOrigin ?? 'Origine',
+                  colis.villeSource ?? '...',
+                  cs,
+                ),
+                Icon(
+                  Icons.arrow_forward,
+                  size: 16,
+                  color: cs.primary.withOpacity(0.3),
+                ),
+                _buildInfoColumn(
+                  AppLocalizations.of(context)?.colisDestination ??
+                      'Destination',
+                  colis.destination,
+                  cs,
+                ),
               ],
             ),
           ),
@@ -213,23 +275,74 @@ class _MyColisPageState extends ConsumerState<MyColisPage> with SingleTickerProv
                 bottomRight: Radius.circular(20),
               ),
             ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            child: Column(
               children: [
-                Expanded(
-                  child: Text(
-                    isSent
-                      ? (AppLocalizations.of(context)?.colisRecipient(colis.nomDestinataire) ?? 'Destinataire: ${colis.nomDestinataire}')
-                      : (AppLocalizations.of(context)?.colisSender(colis.nomExpediteur) ?? 'Expéditeur: ${colis.nomExpediteur}'),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
-                  ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        isSent
+                            ? (AppLocalizations.of(
+                                    context,
+                                  )?.colisRecipient(colis.nomDestinataire) ??
+                                  'Destinataire: ${colis.nomDestinataire}')
+                            : (AppLocalizations.of(
+                                    context,
+                                  )?.colisSender(colis.nomExpediteur) ??
+                                  'Expéditeur: ${colis.nomExpediteur}'),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Text(
+                      dateFormat.format(colis.createdAt),
+                      style: TextStyle(
+                        fontSize: 11,
+                        color: cs.onSurface.withOpacity(0.6),
+                      ),
+                    ),
+                  ],
                 ),
-                const SizedBox(width: 12),
-                Text(
-                  dateFormat.format(colis.createdAt),
-                  style: TextStyle(fontSize: 11, color: cs.onSurface.withOpacity(0.6)),
+                const SizedBox(height: 12),
+                SizedBox(
+                  width: double.infinity,
+                  child: OutlinedButton.icon(
+                    onPressed: _downloadingColis.contains(colis.id)
+                        ? null
+                        : () => _downloadColisReceipt(colis.id),
+                    icon: _downloadingColis.contains(colis.id)
+                        ? const SizedBox(
+                            width: 18,
+                            height: 18,
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          )
+                        : const Icon(Icons.download_outlined),
+                    label: Text(
+                      _downloadingColis.contains(colis.id)
+                          ? (AppLocalizations.of(context)?.downloading ??
+                                'Téléchargement...')
+                          : (AppLocalizations.of(context)?.downloadPdf ??
+                                'Télécharger le reçu'),
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 12,
+                      ),
+                    ),
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: cs.primary,
+                      side: BorderSide(color: cs.primary.withOpacity(0.25)),
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -239,26 +352,76 @@ class _MyColisPageState extends ConsumerState<MyColisPage> with SingleTickerProv
     );
   }
 
+  Future<void> _downloadColisReceipt(int colisId) async {
+    if (_downloadingColis.contains(colisId)) return;
+    setState(() => _downloadingColis.add(colisId));
+
+    try {
+      final colisService = ref.read(colisServiceProvider);
+      final pdfBytes = await colisService.downloadColisReceipt(colisId);
+      await Printing.sharePdf(
+        bytes: pdfBytes,
+        filename: 'recu_colis_$colisId.pdf',
+      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              AppLocalizations.of(context)?.ticketPdfReady ?? 'Reçu prêt ! 📄',
+            ),
+            backgroundColor: Colors.green,
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              AppLocalizations.of(context)?.downloadError(e.toString()) ??
+                  'Erreur lors du téléchargement : ${e.toString()}',
+            ),
+            backgroundColor: Colors.red,
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _downloadingColis.remove(colisId));
+      }
+    }
+  }
+
   Widget _buildInfoColumn(String label, String value, ColorScheme cs) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: TextStyle(color: cs.onSurface.withOpacity(0.5), fontSize: 10)),
-        Text(value, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+        Text(
+          label,
+          style: TextStyle(color: cs.onSurface.withOpacity(0.5), fontSize: 10),
+        ),
+        Text(
+          value,
+          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+        ),
       ],
     );
   }
 
   Widget _buildStatusBadge(String status, ColorScheme cs) {
     Color color = Colors.orange;
-    String label = AppLocalizations.of(context)?.colisStatusPending ?? 'En attente';
-    
+    String label =
+        AppLocalizations.of(context)?.colisStatusPending ?? 'En attente';
+
     if (status == 'retire') {
       color = Colors.green;
       label = AppLocalizations.of(context)?.colisStatusDelivered ?? 'Livré';
     } else if (status == 'en cours') {
       color = Colors.blue;
-      label = AppLocalizations.of(context)?.colisStatusInTransit ?? 'En transit';
+      label =
+          AppLocalizations.of(context)?.colisStatusInTransit ?? 'En transit';
     }
 
     return Container(
@@ -269,7 +432,11 @@ class _MyColisPageState extends ConsumerState<MyColisPage> with SingleTickerProv
       ),
       child: Text(
         label.toUpperCase(),
-        style: TextStyle(color: color, fontSize: 10, fontWeight: FontWeight.bold),
+        style: TextStyle(
+          color: color,
+          fontSize: 10,
+          fontWeight: FontWeight.bold,
+        ),
       ),
     );
   }
