@@ -1,5 +1,6 @@
 import 'package:camer_trip/app/services/trip_filter_provider.dart';
 import 'package:camer_trip/app/shared/cards/scheduled_trip_card.dart';
+import 'package:camer_trip/app/utils/api_error_handler.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -53,7 +54,7 @@ class ScheduledTripsList extends ConsumerWidget {
       error: (e, s) => SliverToBoxAdapter(
         child: Padding(
           padding: const EdgeInsets.all(40),
-          child: Center(child: Text('Erreur: $e')),
+          child: Center(child: Text(ApiErrorHandler.userMessage(e))),
         ),
       ),
     );

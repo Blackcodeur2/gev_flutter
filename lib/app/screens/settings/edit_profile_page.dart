@@ -8,6 +8,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:camer_trip/app/services/api_client_service.dart';
 import 'package:camer_trip/app/shared/others/app_bar.dart';
 import 'package:camer_trip/app/config/const_config.dart';
+import 'package:camer_trip/app/utils/api_error_handler.dart';
 import 'package:go_router/go_router.dart';
 import 'package:camer_trip/l10n/app_localizations.dart';
 
@@ -104,7 +105,14 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('${localizations?.errorPrefix ?? 'Erreur : '}$e')),
+          SnackBar(
+            content: Text(
+              '${localizations?.errorPrefix ?? 'Erreur : '}${ApiErrorHandler.userMessage(
+                e,
+                fallback: localizations?.profileUpdatedError ?? 'Échec de la mise à jour',
+              )}',
+            ),
+          ),
         );
       }
     } finally {

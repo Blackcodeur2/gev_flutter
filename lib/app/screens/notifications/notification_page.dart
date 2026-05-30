@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:camer_trip/app/services/providers.dart';
 import 'package:camer_trip/app/models/notification_model.dart';
+import 'package:camer_trip/app/utils/api_error_handler.dart';
 import 'package:camer_trip/l10n/app_localizations.dart';
 
 class NotificationPage extends ConsumerStatefulWidget {
@@ -189,7 +190,16 @@ class _NotificationPageState extends ConsumerState<NotificationPage>
                         children: [
                           Icon(Icons.error_outline, size: 48, color: cs.error),
                           const SizedBox(height: 16),
-                          Text(localizations?.loadingError(e.toString()) ?? 'Erreur de chargement : $e', textAlign: TextAlign.center),
+                          Text(
+                            localizations?.loadingError(
+                              ApiErrorHandler.userMessage(
+                                e,
+                                fallback: localizations.unknownError,
+                              ),
+                            ) ??
+                                'Erreur de chargement',
+                            textAlign: TextAlign.center,
+                          ),
                           const SizedBox(height: 16),
                           ElevatedButton(
                             onPressed: () => ref.invalidate(myNotificationsProvider),

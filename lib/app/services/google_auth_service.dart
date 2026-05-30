@@ -1,4 +1,5 @@
 import 'package:google_sign_in/google_sign_in.dart';
+import '../utils/api_error_handler.dart';
 import 'auth_service.dart';
 
 class GoogleAuthService {
@@ -34,7 +35,13 @@ class GoogleAuthService {
       }
     } catch (error) {
       print("Erreur Google Sign-In: $error");
-      return AuthResponse(success: false, message: "Erreur lors de la connexion avec Google: $error");
+      return AuthResponse(
+        success: false,
+        message: ApiErrorHandler.userMessage(
+          error,
+          fallback: "Erreur lors de la connexion avec Google",
+        ),
+      );
     }
   }
 

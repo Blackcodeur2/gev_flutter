@@ -13,6 +13,7 @@ import 'package:camer_trip/app/shared/others/list_agence.dart';
 import 'package:camer_trip/app/shared/others/promo_carousel.dart';
 import 'package:camer_trip/app/shared/others/section_title.dart';
 import 'package:camer_trip/app/shared/others/scheduled_trips_list.dart';
+import 'package:camer_trip/app/utils/api_error_handler.dart';
 import 'package:camer_trip/app/shared/others/trip_filter_bar.dart';
 import 'package:camer_trip/app/services/providers.dart';
 import 'package:camer_trip/app/services/trip_filter_provider.dart';
@@ -125,7 +126,7 @@ class _HomePageState extends ConsumerState<HomePage>
                 agencesAsync.when(
                   data: (agences) => SliverToBoxAdapter(child: ListAgenceComponent(agences: agences)),
                   loading: () => const SliverToBoxAdapter(child: Padding(padding: EdgeInsets.all(20), child: Center(child: CircularProgressIndicator()))),
-                  error: (e, s) => SliverToBoxAdapter(child: Padding(padding: const EdgeInsets.all(20), child: Center(child: Text('Erreur: $e')))),
+                  error: (e, s) => SliverToBoxAdapter(child: Padding(padding: const EdgeInsets.all(20), child: Center(child: Text(ApiErrorHandler.userMessage(e, fallback: localizations?.unknownError ?? 'Erreur inconnue'))))),
                 ),
   
                 SliverToBoxAdapter(
@@ -174,7 +175,7 @@ class _HomePageState extends ConsumerState<HomePage>
                     error: (e, s) => SliverToBoxAdapter(
                       child: Padding(
                         padding: const EdgeInsets.all(20),
-                        child: Center(child: Text('Erreur: $e')),
+                        child: Center(child: Text(ApiErrorHandler.userMessage(e, fallback: localizations?.unknownError ?? 'Erreur inconnue'))),
                       ),
                     ),
                   )

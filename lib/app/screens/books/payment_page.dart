@@ -2,6 +2,7 @@
 
 import 'package:camer_trip/app/models/voyage_model.dart';
 import 'package:camer_trip/app/services/providers.dart';
+import 'package:camer_trip/app/utils/api_error_handler.dart';
 import 'package:camer_trip/app/shared/others/app_bar.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
@@ -118,8 +119,12 @@ class _PaymentPageState extends ConsumerState<PaymentPage> {
     } catch (e) {
       if (mounted) {
         setState(() => isLoading = false);
+        final message = ApiErrorHandler.userMessage(
+          e,
+          fallback: AppLocalizations.of(context)?.unknownError ?? 'Erreur inconnue',
+        );
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(AppLocalizations.of(context)?.paymentError(e.toString()) ?? 'Erreur: ${e.toString()}')),
+          SnackBar(content: Text(AppLocalizations.of(context)?.paymentError(message) ?? 'Erreur: $message')),
         );
       }
     }

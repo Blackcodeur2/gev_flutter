@@ -41,7 +41,7 @@ class _SettingPageState extends ConsumerState<SettingPage> {
     } catch (e) {
       if (mounted) {
         setState(() {
-          _appVersion = 'v1.0.0';
+          _appVersion = 'v1.0.1';
         });
       }
     }

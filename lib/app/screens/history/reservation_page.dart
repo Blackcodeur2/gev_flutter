@@ -1,6 +1,7 @@
 import 'package:camer_trip/app/models/reservation_model.dart';
 import 'package:camer_trip/app/services/providers.dart';
 import 'package:camer_trip/app/shared/others/app_bar.dart';
+import 'package:camer_trip/app/utils/api_error_handler.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -67,7 +68,14 @@ class _ReservationsPagesState extends ConsumerState<ReservationsPages>
                   ],
                 ),
                 loading: () => const Center(child: CircularProgressIndicator()),
-                error: (e, s) => Center(child: Text('${AppLocalizations.of(context)?.errorPrefix2 ?? 'Erreur: '}$e')),
+                error: (e, s) => Center(
+                  child: Text(
+                    '${AppLocalizations.of(context)?.errorPrefix2 ?? 'Erreur: '}${ApiErrorHandler.userMessage(
+                      e,
+                      fallback: AppLocalizations.of(context)?.unknownError ?? 'Erreur inconnue',
+                    )}',
+                  ),
+                ),
               ),
             ),
           ],

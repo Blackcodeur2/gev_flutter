@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import '../utils/api_error_handler.dart';
 import 'api_client_service.dart';
 
 class PaiementService {
@@ -41,7 +42,13 @@ class PaiementService {
       return {'statut': 'FAILED', 'reason': 'Erreur serveur'};
     } catch (e) {
       print("Erreur check status: $e");
-      return {'statut': 'ERROR', 'reason': e.toString()};
+      return {
+        'statut': 'ERROR',
+        'reason': ApiErrorHandler.userMessage(
+          e,
+          fallback: 'Impossible de vérifier le paiement',
+        ),
+      };
     }
   }
 }

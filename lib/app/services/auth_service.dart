@@ -5,6 +5,7 @@ import 'package:camer_trip/app/models/user_model.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import '../utils/api_error_handler.dart';
 import 'api_client_service.dart';
 import 'push_notification_service.dart';
 
@@ -55,7 +56,10 @@ class AuthService {
       }
       return AuthResponse(success: false, message: message);
     } catch (e) {
-      return AuthResponse(success: false, message: e.toString());
+      return AuthResponse(
+        success: false,
+        message: ApiErrorHandler.userMessage(e, fallback: "Une erreur est survenue"),
+      );
     }
   }
 
@@ -84,10 +88,21 @@ class AuthService {
 
       return AuthResponse(success: false, message: "Échec de la connexion Google");
     } on DioException catch (e) {
-      String message = e.response?.data['message'] ?? "Erreur lors de la connexion Google";
-      return AuthResponse(success: false, message: message);
+      return AuthResponse(
+        success: false,
+        message: ApiErrorHandler.userMessage(
+          e,
+          fallback: "Erreur lors de la connexion Google",
+        ),
+      );
     } catch (e) {
-      return AuthResponse(success: false, message: e.toString());
+      return AuthResponse(
+        success: false,
+        message: ApiErrorHandler.userMessage(
+          e,
+          fallback: "Erreur lors de la connexion Google",
+        ),
+      );
     }
   }
 
@@ -141,14 +156,20 @@ class AuthService {
           message = "Données déjà utilisées ou invalides";
         }
       } else {
-        message = e.response?.data['message'] ?? e.message ?? message;
+        message = ApiErrorHandler.userMessage(
+          e,
+          fallback: "Une erreur est survenue lors de l'inscription",
+        );
       }
       return AuthResponse(success: false, message: message);
     } catch (e) {
       print("Register Error: $e");
       return AuthResponse(
         success: false,
-        message: "Erreur locale : ${e.toString()}",
+        message: ApiErrorHandler.userMessage(
+          e,
+          fallback: "Une erreur est survenue lors de l'inscription",
+        ),
       );
     }
   }
@@ -209,10 +230,22 @@ class AuthService {
       return AuthResponse(success: false, message: "Impossible de synchroniser");
     } on DioException catch (e) {
       print("Sync DioException: ${e.response?.statusCode} - ${e.response?.data}");
-      return AuthResponse(success: false, message: e.message);
+      return AuthResponse(
+        success: false,
+        message: ApiErrorHandler.userMessage(
+          e,
+          fallback: "Impossible de synchroniser",
+        ),
+      );
     } catch (e) {
       print("Sync Error: $e");
-      return AuthResponse(success: false, message: e.toString());
+      return AuthResponse(
+        success: false,
+        message: ApiErrorHandler.userMessage(
+          e,
+          fallback: "Impossible de synchroniser",
+        ),
+      );
     }
   }
 
@@ -244,11 +277,19 @@ class AuthService {
       print("Upload Error: ${e.response?.data}");
       return AuthResponse(
         success: false,
-        message:
-            e.response?.data['message'] ?? "Erreur lors de l'envoi du document",
+        message: ApiErrorHandler.userMessage(
+          e,
+          fallback: "Erreur lors de l'envoi du document",
+        ),
       );
     } catch (e) {
-      return AuthResponse(success: false, message: e.toString());
+      return AuthResponse(
+        success: false,
+        message: ApiErrorHandler.userMessage(
+          e,
+          fallback: "Erreur lors de l'envoi du document",
+        ),
+      );
     }
   }
   Future<AuthResponse> updateProfile({
@@ -301,11 +342,20 @@ class AuthService {
           message = errors.values.first[0].toString();
         }
       } else {
-        message = e.response?.data['message'] ?? message;
+        message = ApiErrorHandler.userMessage(
+          e,
+          fallback: "Une erreur est survenue lors de la mise à jour",
+        );
       }
       return AuthResponse(success: false, message: message);
     } catch (e) {
-      return AuthResponse(success: false, message: e.toString());
+      return AuthResponse(
+        success: false,
+        message: ApiErrorHandler.userMessage(
+          e,
+          fallback: "Une erreur est survenue lors de la mise à jour",
+        ),
+      );
     }
   }
 
@@ -319,7 +369,10 @@ class AuthService {
     } on DioException catch (e) {
       return AuthResponse(
         success: false,
-        message: e.response?.data["message"] ?? "Erreur lors de l'envoi de l'email",
+        message: ApiErrorHandler.userMessage(
+          e,
+          fallback: "Erreur lors de l'envoi de l'email",
+        ),
       );
     }
   }
@@ -344,7 +397,10 @@ class AuthService {
     } on DioException catch (e) {
       return AuthResponse(
         success: false,
-        message: e.response?.data["message"] ?? "Erreur lors de la réinitialisation",
+        message: ApiErrorHandler.userMessage(
+          e,
+          fallback: "Erreur lors de la réinitialisation",
+        ),
       );
     }
   }
@@ -362,7 +418,10 @@ class AuthService {
     } on DioException catch (e) {
       return AuthResponse(
         success: false,
-        message: e.response?.data["message"] ?? "Code invalide ou expiré.",
+        message: ApiErrorHandler.userMessage(
+          e,
+          fallback: "Code invalide ou expiré.",
+        ),
       );
     }
   }
@@ -377,7 +436,10 @@ class AuthService {
     } on DioException catch (e) {
       return AuthResponse(
         success: false,
-        message: e.response?.data["message"] ?? "Lien invalide ou expiré.",
+        message: ApiErrorHandler.userMessage(
+          e,
+          fallback: "Lien invalide ou expiré.",
+        ),
       );
     }
   }
@@ -392,7 +454,10 @@ class AuthService {
     } catch (e) {
       return AuthResponse(
         success: false,
-        message: "Erreur lors de l'envoi.",
+        message: ApiErrorHandler.userMessage(
+          e,
+          fallback: "Erreur lors de l'envoi.",
+        ),
       );
     }
   }
@@ -416,10 +481,19 @@ class AuthService {
     } on DioException catch (e) {
       return AuthResponse(
         success: false,
-        message: e.response?.data["message"] ?? "Erreur lors du changement de mot de passe",
+        message: ApiErrorHandler.userMessage(
+          e,
+          fallback: "Erreur lors du changement de mot de passe",
+        ),
       );
     } catch (e) {
-      return AuthResponse(success: false, message: e.toString());
+      return AuthResponse(
+        success: false,
+        message: ApiErrorHandler.userMessage(
+          e,
+          fallback: "Erreur lors du changement de mot de passe",
+        ),
+      );
     }
   }
 }

@@ -9,6 +9,7 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:dio/dio.dart' as dio_lib;
 import 'package:camer_trip/app/services/api_client_service.dart';
+import 'package:camer_trip/app/utils/api_error_handler.dart';
 import 'package:printing/printing.dart';
 import 'package:go_router/go_router.dart';
 import 'package:camer_trip/app/config/const_config.dart';
@@ -256,8 +257,12 @@ class _ReservationDetailsPageState extends ConsumerState<ReservationDetailsPage>
     } catch (e) {
       if (mounted) {
         setState(() => isLoading = false);
+        final message = ApiErrorHandler.userMessage(
+          e,
+          fallback: AppLocalizations.of(context)?.unknownError ?? 'Erreur inconnue',
+        );
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(AppLocalizations.of(context)?.paymentError(e.toString()) ?? 'Erreur: ${e.toString()}')),
+          SnackBar(content: Text(AppLocalizations.of(context)?.paymentError(message) ?? 'Erreur: $message')),
         );
       }
     }
@@ -879,9 +884,13 @@ class _ReservationDetailsPageState extends ConsumerState<ReservationDetailsPage>
       }
     } catch (e) {
       if (mounted) {
+        final message = ApiErrorHandler.userMessage(
+          e,
+          fallback: 'Erreur lors du téléchargement',
+        );
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(AppLocalizations.of(context)?.downloadError(e.toString()) ?? 'Erreur lors du téléchargement : ${e.toString()}'),
+            content: Text(AppLocalizations.of(context)?.downloadError(message) ?? 'Erreur lors du téléchargement : $message'),
             backgroundColor: Colors.red,
             behavior: SnackBarBehavior.floating,
           ),
@@ -1148,7 +1157,14 @@ class _ReservationDetailsPageState extends ConsumerState<ReservationDetailsPage>
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Erreur lors de la sélection de la photo : $e')),
+        SnackBar(
+          content: Text(
+            ApiErrorHandler.userMessage(
+              e,
+              fallback: 'Erreur lors de la sélection de la photo',
+            ),
+          ),
+        ),
       );
     }
   }
@@ -1230,7 +1246,14 @@ class _ReservationDetailsPageState extends ConsumerState<ReservationDetailsPage>
           isLoading = false;
         });
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Erreur : $e')),
+          SnackBar(
+            content: Text(
+              ApiErrorHandler.userMessage(
+                e,
+                fallback: 'Erreur lors du signalement',
+              ),
+            ),
+          ),
         );
       }
     }

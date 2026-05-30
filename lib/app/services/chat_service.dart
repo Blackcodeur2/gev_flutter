@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import '../utils/api_error_handler.dart';
 import 'api_client_service.dart';
 
 class ChatService {
@@ -20,15 +21,19 @@ class ChatService {
       
       throw Exception("Erreur inattendue du serveur.");
     } on DioException catch (e) {
-      if (e.response?.statusCode == 401) {
-        throw Exception("Votre session a expiré. Veuillez vous reconnecter pour continuer la conversation.");
-      }
-      if (e.response?.statusCode == 422) {
-        throw Exception("Données invalides envoyées au serveur.");
-      }
-      throw Exception("Erreur de connexion. Veuillez vérifier votre accès à internet.");
+      throw Exception(
+        ApiErrorHandler.userMessage(
+          e,
+          fallback: "Erreur de connexion. Veuillez vérifier votre accès à internet.",
+        ),
+      );
     } catch (e) {
-      throw Exception("Une erreur s'est produite. Veuillez réessayer.");
+      throw Exception(
+        ApiErrorHandler.userMessage(
+          e,
+          fallback: "Une erreur s'est produite. Veuillez réessayer.",
+        ),
+      );
     }
   }
   Future<List<Map<String, dynamic>>> getChatHistory() async {

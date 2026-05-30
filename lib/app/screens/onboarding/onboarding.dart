@@ -1,5 +1,6 @@
 import 'package:camer_trip/app/config/colors_config.dart';
-import 'package:camer_trip/app/config/const_config.dart';
+import 'package:camer_trip/app/config/theme_provider.dart';
+import 'package:camer_trip/app/shared/buttons/theme_toogle.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -58,6 +59,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context);
     final localeProvider = context.watch<LocaleProvider>();
+    final themeProvider = context.watch<ThemeProvider>();
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final isEnglish = localeProvider.locale.languageCode == 'en';
 
     final pages = [
@@ -83,11 +86,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       body: SafeArea(
         child: Column(
           children: [
-            // 🔹 Header (Language Toggle & Skip button)
+            // 🔹 Header (Language, Theme & Skip)
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   TextButton.icon(
                     onPressed: () {
@@ -106,6 +108,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       foregroundColor: Theme.of(context).colorScheme.primary,
                     ),
                   ),
+                  const Spacer(),
+                  ThemeToggleButton(
+                    isDark: isDark,
+                    onTap: () => themeProvider.toggleTheme(),
+                  ),
+                  const SizedBox(width: 12),
                   TextButton(
                     onPressed: finishOnboarding,
                     child: Text(localizations?.skip ?? "Passer"),

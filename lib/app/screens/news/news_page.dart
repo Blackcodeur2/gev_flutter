@@ -2,6 +2,7 @@ import 'package:camer_trip/app/models/annonce_model.dart';
 import 'package:camer_trip/app/shared/cards/annonce_card.dart';
 import 'package:camer_trip/app/shared/others/app_bar.dart';
 import 'package:camer_trip/app/services/providers.dart';
+import 'package:camer_trip/app/utils/api_error_handler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
 import 'package:camer_trip/l10n/app_localizations.dart';
@@ -67,7 +68,14 @@ class NewsPage extends ConsumerWidget {
                     children: [
                       _buildNewsHeader(context, cs, isDark),
                       const SizedBox(height: 48),
-                      Center(child: Text('Erreur : $error')),
+                      Center(
+                        child: Text(
+                          ApiErrorHandler.userMessage(
+                            error,
+                            fallback: localizations?.unknownError ?? 'Erreur inconnue',
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ),

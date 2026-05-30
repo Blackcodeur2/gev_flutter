@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:camer_trip/app/shared/others/app_bar.dart';
 import 'package:camer_trip/app/models/chat_message_model.dart';
 import 'package:camer_trip/app/services/chat_service.dart';
+import 'package:camer_trip/app/utils/api_error_handler.dart';
 import 'package:flutter/material.dart';
 import 'package:camer_trip/l10n/app_localizations.dart';
 
@@ -166,7 +167,10 @@ class _ChatBotPageState extends ConsumerState<ChatBotPage> {
         setState(() {
           _isTyping = false;
           _messages.insert(0, ChatMessage(
-            text: e.toString().replaceFirst("Exception: ", ""),
+            text: ApiErrorHandler.userMessage(
+              e,
+              fallback: "Une erreur s'est produite. Veuillez réessayer.",
+            ),
             isUser: false,
             time: DateTime.now(),
             isError: true,

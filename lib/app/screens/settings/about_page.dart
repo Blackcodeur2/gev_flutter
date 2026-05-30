@@ -43,7 +43,7 @@ class AboutPage extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      localizations?.appVersionString('1.0.0') ?? 'Version 1.0.0',
+                      localizations?.appVersionString('1.0.1') ?? 'Version 1.0.1',
                       style: TextStyle(color: cs.onSurface.withOpacity(0.5)),
                     ),
                     const SizedBox(height: 48),

@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import '../../services/providers.dart';
 import '../../models/colis_model.dart';
 import '../../shared/others/app_bar.dart';
+import '../../utils/api_error_handler.dart';
 import 'package:camer_trip/l10n/app_localizations.dart';
 
 class MyColisPage extends ConsumerStatefulWidget {
@@ -89,11 +90,25 @@ class _MyColisPageState extends ConsumerState<MyColisPage> with SingleTickerProv
                       );
                     },
                     loading: () => const Center(child: CircularProgressIndicator()),
-                    error: (e, s) => Center(child: Text('${AppLocalizations.of(context)?.errorPrefix2 ?? 'Erreur: '}$e')),
+                    error: (e, s) => Center(
+                      child: Text(
+                        '${AppLocalizations.of(context)?.errorPrefix2 ?? 'Erreur: '}${ApiErrorHandler.userMessage(
+                          e,
+                          fallback: AppLocalizations.of(context)?.unknownError ?? 'Erreur inconnue',
+                        )}',
+                      ),
+                    ),
                   );
                 },
                 loading: () => const Center(child: CircularProgressIndicator()),
-                error: (e, s) => Center(child: Text('${AppLocalizations.of(context)?.errorPrefix2 ?? 'Erreur: '}$e')),
+                error: (e, s) => Center(
+                  child: Text(
+                    '${AppLocalizations.of(context)?.errorPrefix2 ?? 'Erreur: '}${ApiErrorHandler.userMessage(
+                      e,
+                      fallback: AppLocalizations.of(context)?.unknownError ?? 'Erreur inconnue',
+                    )}',
+                  ),
+                ),
               ),
             ),
           ],
